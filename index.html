@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="es">
@@ -12,285 +13,415 @@
 
 <style>
 
-* {
+*{box-sizing:border-box;margin:0;padding:0}
 
-    box-sizing: border-box;
+body{
 
-}
+  font-family:Arial,sans-serif;
 
-body {
+  background:#0b0b0d;
 
-    margin: 0;
+  color:#eee;
 
-    font-family: Arial, sans-serif;
-
-    background: #080b0f;
-
-    color: #ffffff;
+  min-height:100vh;
 
 }
 
-header {
+header{
 
-    background: linear-gradient(135deg, #111820, #05070a);
+  background:#09090a;
 
-    padding: 35px 20px;
+  border-bottom:1px solid #29292d;
 
-    text-align: center;
+  padding:18px 20px;
 
-    border-bottom: 2px solid #f04b23;
+  display:flex;
 
-}
+  align-items:center;
 
-header h1 {
+  justify-content:space-between;
 
-    margin: 0;
+  position:sticky;
 
-    font-size: 42px;
+  top:0;
 
-    letter-spacing: 2px;
-
-}
-
-header p {
-
-    color: #aaa;
-
-    margin-top: 10px;
+  z-index:10;
 
 }
 
-nav {
+.logo{
 
-    display: flex;
+  font-size:27px;
 
-    justify-content: center;
+  font-weight:900;
 
-    gap: 10px;
+  color:#ff9800;
 
-    padding: 15px;
-
-    background: #0d1218;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 10;
+  letter-spacing:1px;
 
 }
 
-nav button {
+.logo span{color:#fff}
 
-    background: #151c24;
+.menu-btn{
 
-    color: white;
+  border:1px solid #444;
 
-    border: 1px solid #303943;
+  background:#151519;
 
-    padding: 12px 18px;
+  color:#fff;
 
-    border-radius: 8px;
+  border-radius:8px;
 
-    cursor: pointer;
+  padding:10px 14px;
 
-}
-
-nav button:hover {
-
-    background: #f04b23;
+  font-size:22px;
 
 }
 
-.container {
+.container{
 
-    max-width: 1000px;
+  max-width:900px;
 
-    margin: auto;
+  margin:auto;
 
-    padding: 25px 15px;
-
-}
-
-.hero {
-
-    background: linear-gradient(135deg, #151c24, #0d1116);
-
-    padding: 35px 20px;
-
-    border-radius: 15px;
-
-    text-align: center;
-
-    border: 1px solid #29313b;
-
-    margin-bottom: 25px;
+  padding:25px 16px 60px;
 
 }
 
-.hero h2 {
+.hero{
 
-    font-size: 32px;
-
-    margin-top: 0;
+  padding:30px 10px;
 
 }
 
-.hero p {
+.hero h1{
 
-    color: #aaa;
+  font-size:38px;
 
-}
-
-.section {
-
-    margin-top: 30px;
+  margin-bottom:10px;
 
 }
 
-.section h2 {
+.orange{color:#ff9800}
 
-    border-left: 5px solid #f04b23;
+.hero p{
 
-    padding-left: 12px;
+  color:#aaa;
 
-}
+  font-size:17px;
 
-.card {
-
-    background: #11171e;
-
-    border: 1px solid #29313b;
-
-    border-radius: 12px;
-
-    padding: 18px;
-
-    margin: 12px 0;
+  line-height:1.6;
 
 }
 
-table {
+.section-title{
 
-    width: 100%;
+  font-size:15px;
 
-    border-collapse: collapse;
+  color:#ff9800;
 
-    background: #11171e;
+  letter-spacing:3px;
 
-    border-radius: 12px;
+  margin:30px 0 12px;
 
-    overflow: hidden;
-
-}
-
-th, td {
-
-    padding: 14px 10px;
-
-    border-bottom: 1px solid #29313b;
-
-    text-align: center;
+  text-transform:uppercase;
 
 }
 
-th {
+.card{
 
-    background: #1a222c;
+  background:#17171b;
 
-    color: #f04b23;
+  border:1px solid #303035;
 
-}
+  border-radius:8px;
 
-.team {
+  padding:20px;
 
-    font-weight: bold;
-
-}
-
-.position {
-
-    color: #f04b23;
-
-    font-weight: bold;
+  margin-bottom:14px;
 
 }
 
-.match {
+.card h2{
 
-    display: flex;
+  font-size:20px;
 
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
+  margin-bottom:8px;
 
 }
 
-.vs {
+.card p{
 
-    color: #777;
+  color:#aaa;
 
-    font-weight: bold;
-
-}
-
-.badge {
-
-    display: inline-block;
-
-    background: #f04b23;
-
-    padding: 5px 9px;
-
-    border-radius: 20px;
-
-    font-size: 12px;
+  line-height:1.5;
 
 }
 
-footer {
+.btn{
 
-    margin-top: 50px;
+  display:inline-block;
 
-    padding: 30px 15px;
+  border:0;
 
-    text-align: center;
+  background:#ff9800;
 
-    color: #777;
+  color:#111;
 
-    background: #05070a;
+  font-weight:900;
 
-    border-top: 1px solid #222a33;
+  padding:13px 18px;
+
+  border-radius:5px;
+
+  margin-top:15px;
+
+  cursor:pointer;
 
 }
 
-@media(max-width:600px) {
+.btn:hover{background:#ffad2f}
 
-    header h1 {
+.stats{
 
-        font-size: 32px;
+  display:grid;
 
-    }
+  grid-template-columns:repeat(3,1fr);
 
-    .match {
+  gap:10px;
 
-        flex-direction: column;
+  margin-top:20px;
 
-    }
+}
 
-    table {
+.stat{
 
-        font-size: 13px;
+  background:#17171b;
 
-    }
+  border:1px solid #303035;
 
-    th, td {
+  padding:18px 10px;
 
-        padding: 10px 5px;
+  text-align:center;
 
-    }
+  border-radius:7px;
+
+}
+
+.stat strong{
+
+  display:block;
+
+  font-size:25px;
+
+  color:#ff9800;
+
+}
+
+.stat span{
+
+  color:#888;
+
+  font-size:12px;
+
+}
+
+nav{
+
+  display:grid;
+
+  gap:8px;
+
+  margin-top:20px;
+
+}
+
+nav button{
+
+  width:100%;
+
+  text-align:left;
+
+  padding:17px;
+
+  background:#17171b;
+
+  border:1px solid #303035;
+
+  color:#ddd;
+
+  border-radius:7px;
+
+  font-size:16px;
+
+}
+
+nav button.active{
+
+  color:#ff9800;
+
+  border-color:#ff9800;
+
+}
+
+.page{display:none}
+
+.page.active{display:block}
+
+.challenge{
+
+  border-left:4px solid #ff9800;
+
+}
+
+.challenge-top{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  align-items:center;
+
+}
+
+.badge{
+
+  background:#ff9800;
+
+  color:#111;
+
+  padding:5px 8px;
+
+  border-radius:4px;
+
+  font-size:11px;
+
+  font-weight:bold;
+
+}
+
+.small{
+
+  color:#888;
+
+  font-size:13px;
+
+  margin-top:7px;
+
+}
+
+.ranking{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+}
+
+.ranking th{
+
+  color:#888;
+
+  font-size:11px;
+
+  text-align:left;
+
+  padding:12px 8px;
+
+}
+
+.ranking td{
+
+  padding:15px 8px;
+
+  border-top:1px solid #303035;
+
+}
+
+.position{
+
+  color:#ff9800;
+
+  font-weight:bold;
+
+}
+
+.points{
+
+  color:#ff9800;
+
+  font-weight:bold;
+
+}
+
+.win{color:#35d879}
+
+.loss{color:#ff5252}
+
+.rules li{
+
+  margin:14px 0;
+
+  color:#bbb;
+
+  line-height:1.5;
+
+}
+
+footer{
+
+  border-top:1px solid #29292d;
+
+  margin-top:40px;
+
+  padding:35px 10px;
+
+  color:#777;
+
+  text-align:center;
+
+}
+
+.chat{
+
+  position:fixed;
+
+  right:20px;
+
+  bottom:20px;
+
+  width:58px;
+
+  height:58px;
+
+  border-radius:50%;
+
+  background:#ff9800;
+
+  color:#111;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:25px;
+
+  box-shadow:0 5px 20px #000;
+
+}
+
+@media(max-width:600px){
+
+  .hero h1{font-size:32px}
+
+  .stats{grid-template-columns:1fr 1fr 1fr}
+
+  .ranking{font-size:13px}
 
 }
 
@@ -302,212 +433,338 @@ footer {
 
 <header>
 
-    <h1>🎮 BLACKOPS2LIGA</h1>
+  <div class="logo">BLACK<span>OPS2</span>LIGA</div>
 
-    <p>La liga competitiva de Black Ops 2</p>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
 </header>
 
-<nav>
-
-    <button onclick="mostrar('clasificacion')">🏆 Clasificación</button>
-
-    <button onclick="mostrar('partidos')">🎮 Partidos</button>
-
-    <button onclick="mostrar('equipos')">👥 Equipos</button>
-
-</nav>
-
 <div class="container">
 
-    <div class="hero">
+<section class="hero">
 
-        <h2>BLACK OPS 2 LIGA</h2>
+  <h1>BLACK<span class="orange">OPS2</span>LIGA</h1>
 
-        <p>Bienvenido a la competición. Aquí podrás consultar clasificación, partidos y equipos.</p>
+  <p>
 
-        <span class="badge">TEMPORADA 1</span>
+    La comunidad competitiva de Black Ops 2.
 
-    </div>
+    Crea retos, encuentra rival y sube posiciones en el ranking.
 
-    <div id="clasificacion" class="section">
+  </p>
 
-        <h2>🏆 Clasificación</h2>
+</section>
 
-        <table>
+<div id="menu">
 
-            <tr>
+  <div class="section-title">Competición</div>
 
-                <th>#</th>
+  <nav>
 
-                <th>Equipo</th>
+    <button class="active" onclick="showPage('inicio',this)">INICIO</button>
 
-                <th>PJ</th>
+    <button onclick="showPage('retos',this)">⚔️ RETOS</button>
 
-                <th>V</th>
+    <button onclick="showPage('ranking',this)">🏆 RANKING</button>
 
-                <th>D</th>
+    <button onclick="showPage('reglas',this)">📜 REGLAS</button>
 
-                <th>PTS</th>
+  </nav>
 
-            </tr>
+  <div class="section-title">Comunidad</div>
 
-            <tr>
+  <nav>
 
-                <td class="position">1</td>
+    <button onclick="showPage('equipos',this)">👥 EQUIPOS</button>
 
-                <td class="team">Team 1</td>
+    <button onclick="showPage('jugadores',this)">🎮 JUGADORES</button>
 
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-            </tr>
-
-            <tr>
-
-                <td class="position">2</td>
-
-                <td class="team">Team 2</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-            </tr>
-
-            <tr>
-
-                <td class="position">3</td>
-
-                <td class="team">Team 3</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-            </tr>
-
-            <tr>
-
-                <td class="position">4</td>
-
-                <td class="team">Team 4</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-                <td>0</td>
-
-            </tr>
-
-        </table>
-
-    </div>
-
-    <div id="partidos" class="section">
-
-        <h2>🎮 Próximos partidos</h2>
-
-        <div class="card match">
-
-            <strong>Team 1</strong>
-
-            <span class="vs">VS</span>
-
-            <strong>Team 2</strong>
-
-        </div>
-
-        <div class="card match">
-
-            <strong>Team 3</strong>
-
-            <span class="vs">VS</span>
-
-            <strong>Team 4</strong>
-
-        </div>
-
-    </div>
-
-    <div id="equipos" class="section">
-
-        <h2>👥 Equipos</h2>
-
-        <div class="card">
-
-            <h3>🎯 Team 1</h3>
-
-            <p>Jugador 1 · Jugador 2 · Jugador 3 · Jugador 4</p>
-
-        </div>
-
-        <div class="card">
-
-            <h3>🎯 Team 2</h3>
-
-            <p>Jugador 1 · Jugador 2 · Jugador 3 · Jugador 4</p>
-
-        </div>
-
-        <div class="card">
-
-            <h3>🎯 Team 3</h3>
-
-            <p>Jugador 1 · Jugador 2 · Jugador 3 · Jugador 4</p>
-
-        </div>
-
-        <div class="card">
-
-            <h3>🎯 Team 4</h3>
-
-            <p>Jugador 1 · Jugador 2 · Jugador 3 · Jugador 4</p>
-
-        </div>
-
-    </div>
+  </nav>
 
 </div>
 
-<footer>
+<!-- INICIO -->
 
-    BLACKOPS2LIGA © 2026<br>
+<section id="inicio" class="page active">
 
-    Liga comunitaria de Call of Duty: Black Ops 2
+  <div class="section-title">Tu competición</div>
 
-</footer>
+  <div class="card">
 
-<script>
+    <h2>⚔️ Retos</h2>
 
-function mostrar(seccion) {
+    <p>
 
-    document.getElementById(seccion).scrollIntoView({
+      Encuentra un rival aleatorio y compite por puntos.
 
-        behavior: "smooth"
+    </p>
 
-    });
+    <button class="btn" onclick="showPage('retos')">
 
-}
+      VER RETOS
 
-</script>
+    </button>
 
-</body>
+  </div>
 
-</html>
+  <div class="stats">
+
+    <div class="stat">
+
+      <strong>20</strong>
+
+      <span>VICTORIA</span>
+
+    </div>
+
+    <div class="stat">
+
+      <strong>-10</strong>
+
+      <span>DERROTA</span>
+
+    </div>
+
+    <div class="stat">
+
+      <strong>4V4</strong>
+
+      <span>FORMATO</span>
+
+    </div>
+
+  </div>
+
+  <div class="section-title">Top 3</div>
+
+  <div class="card">
+
+    <p>🥇 BlackOps Elite — <b class="points">240 XP</b></p>
+
+    <br>
+
+    <p>🥈 Virtual Gamers — <b class="points">180 XP</b></p>
+
+    <br>
+
+    <p>🥉 Team Luque — <b class="points">150 XP</b></p>
+
+  </div>
+
+</section>
+
+<!-- RETOS -->
+
+<section id="retos" class="page">
+
+  <div class="section-title">Competición</div>
+
+  <div class="card challenge">
+
+    <div class="challenge-top">
+
+      <h2>Rival aleatorio</h2>
+
+      <span class="badge">ABIERTO</span>
+
+    </div>
+
+    <p class="small">
+
+      BLACKOPS2LIGA · 4V4
+
+    </p>
+
+    <p style="margin-top:15px">
+
+      Publica tu reto y el sistema buscará un rival disponible.
+
+    </p>
+
+    <button class="btn" onclick="crearReto()">
+
+      PUBLICAR RETO
+
+    </button>
+
+  </div>
+
+  <div class="section-title">Retos abiertos</div>
+
+  <div id="listaRetos">
+
+    <div class="card">
+
+      <h2>No hay retos abiertos ahora mismo.</h2>
+
+      <p>
+
+        Sé el primero en publicar un reto y espera a tu rival.
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="section-title">Sistema de puntos</div>
+
+  <div class="card">
+
+    <p>🟢 Ganador del reto: <b class="win">+20 puntos</b></p>
+
+    <br>
+
+    <p>🔴 Perdedor del reto: <b class="loss">−10 puntos</b></p>
+
+  </div>
+
+</section>
+
+<!-- RANKING -->
+
+<section id="ranking" class="page">
+
+  <div class="section-title">Clasificación</div>
+
+  <div class="card">
+
+    <table class="ranking">
+
+      <thead>
+
+        <tr>
+
+          <th>POS</th>
+
+          <th>EQUIPO</th>
+
+          <th>PJ</th>
+
+          <th>V</th>
+
+          <th>D</th>
+
+          <th>XP</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td class="position">01 ⭐</td>
+
+          <td>BlackOps Elite</td>
+
+          <td>12</td>
+
+          <td class="win">10</td>
+
+          <td class="loss">2</td>
+
+          <td class="points">240</td>
+
+        </tr>
+
+        <tr>
+
+          <td class="position">02 ⭐</td>
+
+          <td>Virtual Gamers</td>
+
+          <td>10</td>
+
+          <td class="win">8</td>
+
+          <td class="loss">2</td>
+
+          <td class="points">180</td>
+
+        </tr>
+
+        <tr>
+
+          <td class="position">03 ⭐</td>
+
+          <td>Team Luque</td>
+
+          <td>9</td>
+
+          <td class="win">7</td>
+
+          <td class="loss">2</td>
+
+          <td class="points">150</td>
+
+        </tr>
+
+        <tr>
+
+          <td>04</td>
+
+          <td>Ghost Team</td>
+
+          <td>8</td>
+
+          <td class="win">5</td>
+
+          <td class="loss">3</td>
+
+          <td class="points">100</td>
+
+        </tr>
+
+        <tr>
+
+          <td>05</td>
+
+          <td>Black Squad</td>
+
+          <td>6</td>
+
+          <td class="win">4</td>
+
+          <td class="loss">2</td>
+
+          <td class="points">80</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+<!-- REGLAS -->
+
+<section id="reglas" class="page">
+
+  <div class="section-title">Reglas</div>
+
+  <div class="card">
+
+    <h2>Reglas BlackOps2Liga</h2>
+
+    <ul class="rules">
+
+      <li>🎮 Los retos se juegan en Black Ops 2.</li>
+
+      <li>⚔️ Formato principal: 4 contra 4.</li>
+
+      <li>🎲 Los jugadores pueden solicitar un rival aleatorio.</li>
+
+      <li>🟢 El ganador recibe <b>+20 puntos</b>.</li>
+
+      <li>🔴 El perdedor pierde <b>10 puntos</b>.</li>
+
+      <li>📸 Los resultados deberán ser demostrables.</li>
+
+      <li>🚫 No se permiten hacks ni trampas.</li>
+
+      <li>🏆 El ranking
