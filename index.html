@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="es">
@@ -17,23 +16,21 @@
 
 body{
 
-  font-family:Arial,sans-serif;
-
-  background:#0b0b0d;
+  background:#08090b;
 
   color:#eee;
 
-  min-height:100vh;
+  font-family:Arial,sans-serif;
 
 }
 
 header{
 
-  background:#09090a;
+  height:70px;
 
-  border-bottom:1px solid #29292d;
+  background:#0d0e11;
 
-  padding:18px 20px;
+  border-bottom:1px solid #292b30;
 
   display:flex;
 
@@ -41,65 +38,93 @@ header{
 
   justify-content:space-between;
 
+  padding:0 18px;
+
   position:sticky;
 
   top:0;
 
-  z-index:10;
+  z-index:20;
 
 }
 
 .logo{
 
-  font-size:27px;
+  color:#ff9800;
+
+  font-size:23px;
 
   font-weight:900;
 
-  color:#ff9800;
+}
 
-  letter-spacing:1px;
+.logo span{color:white}
+
+.header-buttons{
+
+  display:flex;
+
+  gap:8px;
 
 }
 
-.logo span{color:#fff}
+button{
 
-.menu-btn{
+  cursor:pointer;
 
-  border:1px solid #444;
+}
 
-  background:#151519;
+.login{
 
-  color:#fff;
+  background:#17191d;
 
-  border-radius:8px;
+  border:1px solid #3a3d43;
+
+  color:white;
 
   padding:10px 14px;
 
-  font-size:22px;
+  border-radius:6px;
+
+}
+
+.register{
+
+  background:#ff9800;
+
+  border:0;
+
+  color:#111;
+
+  font-weight:bold;
+
+  padding:10px 14px;
+
+  border-radius:6px;
 
 }
 
 .container{
 
-  max-width:900px;
+  max-width:950px;
 
   margin:auto;
 
-  padding:25px 16px 60px;
+  padding:25px 16px 70px;
 
 }
 
 .hero{
 
-  padding:30px 10px;
+  padding:45px 5px 30px;
 
 }
 
 .hero h1{
 
-  font-size:38px;
+  font-size:42px;
 
-  margin-bottom:10px;
+  margin-bottom:12px;
 
 }
 
@@ -107,33 +132,33 @@ header{
 
 .hero p{
 
-  color:#aaa;
+  color:#999;
 
-  font-size:17px;
+  line-height:1.7;
 
-  line-height:1.6;
+  max-width:650px;
 
 }
 
 .section-title{
 
-  font-size:15px;
-
   color:#ff9800;
+
+  font-size:13px;
+
+  font-weight:bold;
 
   letter-spacing:3px;
 
-  margin:30px 0 12px;
-
-  text-transform:uppercase;
+  margin:28px 0 12px;
 
 }
 
 .card{
 
-  background:#17171b;
+  background:#14161a;
 
-  border:1px solid #303035;
+  border:1px solid #292c32;
 
   border-radius:8px;
 
@@ -145,43 +170,63 @@ header{
 
 .card h2{
 
-  font-size:20px;
-
   margin-bottom:8px;
 
 }
 
-.card p{
+.muted{
 
-  color:#aaa;
+  color:#92959b;
 
-  line-height:1.5;
-
-}
-
-.btn{
-
-  display:inline-block;
-
-  border:0;
-
-  background:#ff9800;
-
-  color:#111;
-
-  font-weight:900;
-
-  padding:13px 18px;
-
-  border-radius:5px;
-
-  margin-top:15px;
-
-  cursor:pointer;
+  line-height:1.6;
 
 }
 
-.btn:hover{background:#ffad2f}
+.main-buttons{
+
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:12px;
+
+  margin-top:20px;
+
+}
+
+.big-btn{
+
+  padding:20px;
+
+  background:#15171b;
+
+  color:white;
+
+  border:1px solid #30343b;
+
+  border-radius:8px;
+
+  text-align:left;
+
+  font-size:17px;
+
+}
+
+.big-btn:hover{
+
+  border-color:#ff9800;
+
+}
+
+.big-btn strong{
+
+  display:block;
+
+  color:#ff9800;
+
+  margin-bottom:7px;
+
+}
 
 .stats{
 
@@ -191,99 +236,95 @@ header{
 
   gap:10px;
 
-  margin-top:20px;
-
 }
 
 .stat{
 
-  background:#17171b;
+  background:#14161a;
 
-  border:1px solid #303035;
+  border:1px solid #292c32;
 
-  padding:18px 10px;
+  border-radius:8px;
+
+  padding:18px 8px;
 
   text-align:center;
 
-  border-radius:7px;
-
 }
 
-.stat strong{
+.stat b{
 
   display:block;
 
-  font-size:25px;
-
   color:#ff9800;
+
+  font-size:25px;
 
 }
 
 .stat span{
 
-  color:#888;
+  color:#777;
 
-  font-size:12px;
-
-}
-
-nav{
-
-  display:grid;
-
-  gap:8px;
-
-  margin-top:20px;
+  font-size:11px;
 
 }
 
-nav button{
+table{
 
   width:100%;
 
-  text-align:left;
-
-  padding:17px;
-
-  background:#17171b;
-
-  border:1px solid #303035;
-
-  color:#ddd;
-
-  border-radius:7px;
-
-  font-size:16px;
+  border-collapse:collapse;
 
 }
 
-nav button.active{
+th{
+
+  color:#777;
+
+  font-size:11px;
+
+  text-align:left;
+
+  padding:12px 8px;
+
+}
+
+td{
+
+  border-top:1px solid #292c32;
+
+  padding:14px 8px;
+
+}
+
+.points{
 
   color:#ff9800;
 
-  border-color:#ff9800;
+  font-weight:bold;
 
 }
 
-.page{display:none}
+.win{color:#36d779}
 
-.page.active{display:block}
+.loss{color:#ff5050}
+
+.page{
+
+  display:none;
+
+}
+
+.page.active{
+
+  display:block;
+
+}
 
 .challenge{
 
   border-left:4px solid #ff9800;
-
-}
-
-.challenge-top{
-
-  display:flex;
-
-  justify-content:space-between;
-
-  gap:10px;
-
-  align-items:center;
 
 }
 
@@ -297,75 +338,167 @@ nav button.active{
 
   border-radius:4px;
 
-  font-size:11px;
+  font-size:10px;
 
   font-weight:bold;
 
 }
 
-.small{
+.challenge-head{
 
-  color:#888;
+  display:flex;
 
-  font-size:13px;
+  justify-content:space-between;
 
-  margin-top:7px;
+  align-items:center;
+
+  gap:10px;
 
 }
 
-.ranking{
+.map-grid{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:8px;
+
+  margin-top:15px;
+
+}
+
+.map{
+
+  height:80px;
+
+  background:linear-gradient(135deg,#272a30,#101114);
+
+  border:1px solid #393c43;
+
+  border-radius:6px;
+
+  display:flex;
+
+  align-items:end;
+
+  padding:8px;
+
+  font-weight:bold;
+
+}
+
+.form{
+
+  max-width:430px;
+
+  margin:30px auto;
+
+}
+
+input{
 
   width:100%;
 
-  border-collapse:collapse;
+  padding:13px;
+
+  margin:7px 0 12px;
+
+  background:#0c0d10;
+
+  border:1px solid #363940;
+
+  color:white;
+
+  border-radius:6px;
+
+  font-size:15px;
 
 }
 
-.ranking th{
+.full{
 
-  color:#888;
-
-  font-size:11px;
-
-  text-align:left;
-
-  padding:12px 8px;
+  width:100%;
 
 }
 
-.ranking td{
+.error{
 
-  padding:15px 8px;
+  color:#ff5050;
 
-  border-top:1px solid #303035;
-
-}
-
-.position{
-
-  color:#ff9800;
-
-  font-weight:bold;
+  margin-top:12px;
 
 }
 
-.points{
+.success{
 
-  color:#ff9800;
+  color:#36d779;
 
-  font-weight:bold;
+  margin-top:12px;
 
 }
 
-.win{color:#35d879}
+.modal{
 
-.loss{color:#ff5252}
+  position:fixed;
+
+  inset:0;
+
+  background:#000b;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:20px;
+
+  z-index:50;
+
+}
+
+.modal.active{
+
+  display:flex;
+
+}
+
+.modal-box{
+
+  background:#14161a;
+
+  border:1px solid #353940;
+
+  width:100%;
+
+  max-width:430px;
+
+  border-radius:10px;
+
+  padding:24px;
+
+}
+
+.close{
+
+  float:right;
+
+  background:none;
+
+  border:0;
+
+  color:#aaa;
+
+  font-size:22px;
+
+}
 
 .rules li{
 
-  margin:14px 0;
+  margin:15px 0;
 
-  color:#bbb;
+  color:#aaa;
 
   line-height:1.5;
 
@@ -373,45 +506,13 @@ nav button.active{
 
 footer{
 
-  border-top:1px solid #29292d;
-
-  margin-top:40px;
-
-  padding:35px 10px;
-
-  color:#777;
+  border-top:1px solid #292c32;
 
   text-align:center;
 
-}
+  padding:35px 10px;
 
-.chat{
-
-  position:fixed;
-
-  right:20px;
-
-  bottom:20px;
-
-  width:58px;
-
-  height:58px;
-
-  border-radius:50%;
-
-  background:#ff9800;
-
-  color:#111;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  font-size:25px;
-
-  box-shadow:0 5px 20px #000;
+  color:#666;
 
 }
 
@@ -419,9 +520,15 @@ footer{
 
   .hero h1{font-size:32px}
 
-  .stats{grid-template-columns:1fr 1fr 1fr}
+  .main-buttons{grid-template-columns:1fr}
 
-  .ranking{font-size:13px}
+  .map-grid{grid-template-columns:repeat(2,1fr)}
+
+  .stats{grid-template-columns:repeat(3,1fr)}
+
+  .header-buttons .login{display:none}
+
+  table{font-size:12px}
 
 }
 
@@ -433,9 +540,19 @@ footer{
 
 <header>
 
-  <div class="logo">BLACK<span>OPS2</span>LIGA</div>
+  <div class="logo">
 
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    BLACK<span>OPS2</span>LIGA
+
+  </div>
+
+  <div class="header-buttons">
+
+    <button class="login" onclick="abrirLogin()">ENTRAR</button>
+
+    <button class="register" onclick="abrirRegistro()">REGISTRARSE</button>
+
+  </div>
 
 </header>
 
@@ -443,145 +560,123 @@ footer{
 
 <section class="hero">
 
-  <h1>BLACK<span class="orange">OPS2</span>LIGA</h1>
+  <h1>
+
+    BLACK<span class="orange">OPS2</span>LIGA
+
+  </h1>
 
   <p>
 
-    La comunidad competitiva de Black Ops 2.
+    Liga competitiva de Black Ops 2.
 
-    Crea retos, encuentra rival y sube posiciones en el ranking.
+    Crea tu clan, encuentra rival y compite
+
+    por puntos en la clasificación.
 
   </p>
 
-</section>
+  <div class="main-buttons">
 
-<div id="menu">
+    <button class="big-btn" onclick="mostrar('retos')">
 
-  <div class="section-title">Competición</div>
+      <strong>⚔️ RETOS</strong>
 
-  <nav>
+      Busca un rival y compite.
 
-    <button class="active" onclick="showPage('inicio',this)">INICIO</button>
+    </button>
 
-    <button onclick="showPage('retos',this)">⚔️ RETOS</button>
+    <button class="big-btn" onclick="mostrar('ranking')">
 
-    <button onclick="showPage('ranking',this)">🏆 RANKING</button>
+      <strong>🏆 RANKING</strong>
 
-    <button onclick="showPage('reglas',this)">📜 REGLAS</button>
+      Consulta la clasificación.
 
-  </nav>
+    </button>
 
-  <div class="section-title">Comunidad</div>
+    <button class="big-btn" onclick="abrirRegistro()">
 
-  <nav>
+      <strong>👤 CREAR CUENTA</strong>
 
-    <button onclick="showPage('equipos',this)">👥 EQUIPOS</button>
+      Regístrate en la liga.
 
-    <button onclick="showPage('jugadores',this)">🎮 JUGADORES</button>
+    </button>
 
-  </nav>
+    <button class="big-btn" onclick="mostrar('reglas')">
 
-</div>
+      <strong>📜 REGLAS</strong>
 
-<!-- INICIO -->
-
-<section id="inicio" class="page active">
-
-  <div class="section-title">Tu competición</div>
-
-  <div class="card">
-
-    <h2>⚔️ Retos</h2>
-
-    <p>
-
-      Encuentra un rival aleatorio y compite por puntos.
-
-    </p>
-
-    <button class="btn" onclick="showPage('retos')">
-
-      VER RETOS
+      Consulta las normas.
 
     </button>
 
   </div>
 
-  <div class="stats">
-
-    <div class="stat">
-
-      <strong>20</strong>
-
-      <span>VICTORIA</span>
-
-    </div>
-
-    <div class="stat">
-
-      <strong>-10</strong>
-
-      <span>DERROTA</span>
-
-    </div>
-
-    <div class="stat">
-
-      <strong>4V4</strong>
-
-      <span>FORMATO</span>
-
-    </div>
-
-  </div>
-
-  <div class="section-title">Top 3</div>
-
-  <div class="card">
-
-    <p>🥇 BlackOps Elite — <b class="points">240 XP</b></p>
-
-    <br>
-
-    <p>🥈 Virtual Gamers — <b class="points">180 XP</b></p>
-
-    <br>
-
-    <p>🥉 Team Luque — <b class="points">150 XP</b></p>
-
-  </div>
-
 </section>
+
+<div class="stats">
+
+  <div class="stat">
+
+    <b>+20</b>
+
+    <span>VICTORIA</span>
+
+  </div>
+
+  <div class="stat">
+
+    <b>-10</b>
+
+    <span>DERROTA</span>
+
+  </div>
+
+  <div class="stat">
+
+    <b>4V4</b>
+
+    <span>FORMATO</span>
+
+  </div>
+
+</div>
 
 <!-- RETOS -->
 
 <section id="retos" class="page">
 
-  <div class="section-title">Competición</div>
+  <div class="section-title">
+
+    COMPETICIÓN
+
+  </div>
 
   <div class="card challenge">
 
-    <div class="challenge-top">
+    <div class="challenge-head">
 
-      <h2>Rival aleatorio</h2>
+      <h2>🎲 Rival aleatorio</h2>
 
-      <span class="badge">ABIERTO</span>
+      <span class="badge">
+
+        DISPONIBLE
+
+      </span>
 
     </div>
 
-    <p class="small">
+    <p class="muted" style="margin-top:12px">
 
-      BLACKOPS2LIGA · 4V4
+      Publica un reto y el sistema buscará
 
-    </p>
-
-    <p style="margin-top:15px">
-
-      Publica tu reto y el sistema buscará un rival disponible.
+      automáticamente otro jugador disponible.
 
     </p>
 
-    <button class="btn" onclick="crearReto()">
+    <button class="register" style="margin-top:18px"
+
+      onclick="abrirLogin()">
 
       PUBLICAR RETO
 
@@ -589,33 +684,35 @@ footer{
 
   </div>
 
-  <div class="section-title">Retos abiertos</div>
+  <div class="section-title">
 
-  <div id="listaRetos">
-
-    <div class="card">
-
-      <h2>No hay retos abiertos ahora mismo.</h2>
-
-      <p>
-
-        Sé el primero en publicar un reto y espera a tu rival.
-
-      </p>
-
-    </div>
+    MAPAS
 
   </div>
 
-  <div class="section-title">Sistema de puntos</div>
-
   <div class="card">
 
-    <p>🟢 Ganador del reto: <b class="win">+20 puntos</b></p>
+    <p class="muted">
 
-    <br>
+      Los mapas disponibles para los retos:
 
-    <p>🔴 Perdedor del reto: <b class="loss">−10 puntos</b></p>
+    </p>
+
+    <div class="map-grid">
+
+      <div class="map">SLUMS</div>
+
+      <div class="map">STANDOFF</div>
+
+      <div class="map">YEMEN</div>
+
+      <div class="map">EXPRESS</div>
+
+      <div class="map">RAID</div>
+
+      <div class="map">PLAZA</div>
+
+    </div>
 
   </div>
 
@@ -625,19 +722,23 @@ footer{
 
 <section id="ranking" class="page">
 
-  <div class="section-title">Clasificación</div>
+  <div class="section-title">
+
+    CLASIFICACIÓN
+
+  </div>
 
   <div class="card">
 
-    <table class="ranking">
+    <table>
 
       <thead>
 
         <tr>
 
-          <th>POS</th>
+          <th>#</th>
 
-          <th>EQUIPO</th>
+          <th>JUGADOR</th>
 
           <th>PJ</th>
 
@@ -645,7 +746,7 @@ footer{
 
           <th>D</th>
 
-          <th>XP</th>
+          <th>PTS</th>
 
         </tr>
 
@@ -655,87 +756,61 @@ footer{
 
         <tr>
 
-          <td class="position">01 ⭐</td>
+          <td>🥇</td>
 
-          <td>BlackOps Elite</td>
+          <td>—</td>
 
-          <td>12</td>
+          <td>0</td>
 
-          <td class="win">10</td>
+          <td class="win">0</td>
 
-          <td class="loss">2</td>
+          <td class="loss">0</td>
 
-          <td class="points">240</td>
-
-        </tr>
-
-        <tr>
-
-          <td class="position">02 ⭐</td>
-
-          <td>Virtual Gamers</td>
-
-          <td>10</td>
-
-          <td class="win">8</td>
-
-          <td class="loss">2</td>
-
-          <td class="points">180</td>
+          <td class="points">0</td>
 
         </tr>
 
         <tr>
 
-          <td class="position">03 ⭐</td>
+          <td>🥈</td>
 
-          <td>Team Luque</td>
+          <td>—</td>
 
-          <td>9</td>
+          <td>0</td>
 
-          <td class="win">7</td>
+          <td class="win">0</td>
 
-          <td class="loss">2</td>
+          <td class="loss">0</td>
 
-          <td class="points">150</td>
-
-        </tr>
-
-        <tr>
-
-          <td>04</td>
-
-          <td>Ghost Team</td>
-
-          <td>8</td>
-
-          <td class="win">5</td>
-
-          <td class="loss">3</td>
-
-          <td class="points">100</td>
+          <td class="points">0</td>
 
         </tr>
 
         <tr>
 
-          <td>05</td>
+          <td>🥉</td>
 
-          <td>Black Squad</td>
+          <td>—</td>
 
-          <td>6</td>
+          <td>0</td>
 
-          <td class="win">4</td>
+          <td class="win">0</td>
 
-          <td class="loss">2</td>
+          <td class="loss">0</td>
 
-          <td class="points">80</td>
+          <td class="points">0</td>
 
         </tr>
 
       </tbody>
 
     </table>
+
+    <p class="muted" style="margin-top:18px">
+
+      Los jugadores aparecerán aquí cuando se registren.
+
+    </p>
 
   </div>
 
@@ -745,26 +820,188 @@ footer{
 
 <section id="reglas" class="page">
 
-  <div class="section-title">Reglas</div>
+  <div class="section-title">
+
+    REGLAS
+
+  </div>
 
   <div class="card">
 
-    <h2>Reglas BlackOps2Liga</h2>
+    <h2>Reglas de BlackOps2Liga</h2>
 
     <ul class="rules">
 
       <li>🎮 Los retos se juegan en Black Ops 2.</li>
 
-      <li>⚔️ Formato principal: 4 contra 4.</li>
+      <li>👥 Los clanes pueden tener hasta 8 jugadores.</li>
 
-      <li>🎲 Los jugadores pueden solicitar un rival aleatorio.</li>
+      <li>🎮 Para un reto pueden jugar hasta 4 jugadores.</li>
 
-      <li>🟢 El ganador recibe <b>+20 puntos</b>.</li>
+      <li>🎲 El rival puede ser seleccionado aleatoriamente.</li>
 
-      <li>🔴 El perdedor pierde <b>10 puntos</b>.</li>
+      <li>🗺️ Los mapas disponibles son Slums, Standoff,
 
-      <li>📸 Los resultados deberán ser demostrables.</li>
+      Yemen, Express, Raid y Plaza.</li>
+
+      <li>🏆 El ganador recibe <b>+20 puntos</b>.</li>
+
+      <li>💀 El perdedor recibe <b>-10 puntos</b>.</li>
 
       <li>🚫 No se permiten hacks ni trampas.</li>
 
-      <li>🏆 El ranking
+    </ul>
+
+  </div>
+
+</section>
+
+<!-- EQUIPOS -->
+
+<section id="equipos" class="page">
+
+  <div class="section-title">
+
+    COMUNIDAD
+
+  </div>
+
+  <div class="card">
+
+    <h2>👥 Clanes</h2>
+
+    <p class="muted">
+
+      Los clanes aparecerán aquí cuando los jugadores
+
+      comiencen a crearlos.
+
+    </p>
+
+    <button class="register" style="margin-top:18px"
+
+      onclick="abrirRegistro()">
+
+      CREAR CUENTA
+
+    </button>
+
+  </div>
+
+</section>
+
+<footer>
+
+  <h2 class="orange">
+
+    BLACKOPS2LIGA
+
+  </h2>
+
+  <p style="margin-top:10px">
+
+    Liga competitiva de Black Ops 2
+
+  </p>
+
+</footer>
+
+</div>
+
+<!-- REGISTRO -->
+
+<div id="registro" class="modal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="cerrarModales()">×</button>
+
+    <h2>Crear cuenta</h2>
+
+    <p class="muted" style="margin:10px 0 20px">
+
+      Regístrate para entrar en BlackOps2Liga.
+
+    </p>
+
+    <input
+
+      id="regNombre"
+
+      placeholder="Nombre de jugador"
+
+      maxlength="20">
+
+    <input
+
+      id="regPassword"
+
+      type="password"
+
+      placeholder="Contraseña">
+
+    <button
+
+      class="register full"
+
+      onclick="registrar()">
+
+      REGISTRARME
+
+    </button>
+
+    <p id="regMensaje"></p>
+
+  </div>
+
+</div>
+
+<!-- LOGIN -->
+
+<div id="login" class="modal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="cerrarModales()">×</button>
+
+    <h2>Entrar</h2>
+
+    <p class="muted" style="margin:10px 0 20px">
+
+      Accede a tu cuenta.
+
+    </p>
+
+    <input
+
+      id="loginNombre"
+
+      placeholder="Nombre de jugador">
+
+    <input
+
+      id="loginPassword"
+
+      type="password"
+
+      placeholder="Contraseña">
+
+    <button
+
+      class="register full"
+
+      onclick="entrar()">
+
+      ENTRAR
+
+    </button>
+
+    <p id="loginMensaje"></p>
+
+  </div>
+
+</div>
+
+<script>
+
+function mostrar(id
