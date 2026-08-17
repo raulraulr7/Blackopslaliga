@@ -1857,7 +1857,7 @@ async function api(
             THEN 0
             ELSE 1
           END,
-          m.id ASC
+          m.user_id ASC
       `)
       .bind(
         clan.id
