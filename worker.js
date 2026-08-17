@@ -10,10 +10,9 @@ const MAPS = [
 const COOKIE = "bol_session";
 const SESSION_DAYS = 7;
 
-
-/* =========================================================
-   RESPUESTAS
-========================================================= */
+/* =========================
+   RESPONSES
+========================= */
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -24,11 +23,6 @@ function json(data, status = 200, extraHeaders = {}) {
     }
   });
 }
-
-
-/* =========================================================
-   CORS
-========================================================= */
 
 function corsHeaders(request) {
   const origin = request.headers.get("Origin");
@@ -52,11 +46,6 @@ function corsHeaders(request) {
   return headers;
 }
 
-
-/* =========================================================
-   BODY
-========================================================= */
-
 async function body(request) {
   try {
     return await request.json();
@@ -65,10 +54,9 @@ async function body(request) {
   }
 }
 
-
-/* =========================================================
+/* =========================
    COOKIES
-========================================================= */
+========================= */
 
 function getCookie(request, name) {
   const cookies =
@@ -87,7 +75,6 @@ function getCookie(request, name) {
     : null;
 }
 
-
 function sessionCookie(token) {
   return [
     `${COOKIE}=${encodeURIComponent(token)}`,
@@ -98,7 +85,6 @@ function sessionCookie(token) {
     "Secure"
   ].join("; ");
 }
-
 
 function deleteSessionCookie() {
   return [
@@ -111,16 +97,11 @@ function deleteSessionCookie() {
   ].join("; ");
 }
 
-
-/* =========================================================
-   CONTRASEÑAS
-   IMPORTANTE:
-   Cloudflare Workers no acepta 120000.
-   Máximo compatible: 100000.
-========================================================= */
+/* =========================
+   PASSWORD
+========================= */
 
 async function passwordKey(password, salt) {
-
   const encoder =
     new TextEncoder();
 
@@ -138,7 +119,10 @@ async function passwordKey(password, salt) {
       {
         name: "PBKDF2",
         salt: encoder.encode(salt),
+
+        // Cloudflare permite hasta 100000
         iterations: 100000,
+
         hash: "SHA-256"
       },
       key,
@@ -152,28 +136,23 @@ async function passwordKey(password, salt) {
   ).replaceAll("=", "");
 }
 
-
 async function hashPassword(password) {
-
   const salt =
     crypto.randomUUID();
 
-  return (
-    salt +
-    "." +
+  const hash =
     await passwordKey(
       password,
       salt
-    )
-  );
-}
+    );
 
+  return `${salt}.${hash}`;
+}
 
 async function verifyPassword(
   password,
   stored
 ) {
-
   if (
     !stored ||
     !stored.includes(".")
@@ -200,241 +179,14 @@ async function verifyPassword(
   return calculated === hash;
 }
 
-
-/* =========================================================
-   BASE DE DATOS
-========================================================= */
-
-async function initDatabase(env) {
-
-  /*
-   * TABLAS PRINCIPALES
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS sessions (
-      token TEXT PRIMARY KEY,
-      user_id INTEGER NOT NULL,
-      expires INTEGER NOT NULL
-    )
-  `).run();
-
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS clans (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE NOT NULL,
-      captain_id INTEGER NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS members (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      clan_id INTEGER NOT NULL,
-      user_id INTEGER UNIQUE NOT NULL,
-      role TEXT DEFAULT 'member',
-      joined_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS scores (
-      clan_id INTEGER PRIMARY KEY,
-      points INTEGER DEFAULT 0,
-      wins INTEGER DEFAULT 0,
-      losses INTEGER DEFAULT 0,
-      played INTEGER DEFAULT 0
-    )
-  `).run();
-
-
-  /*
-   * INVITACIONES
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS invites (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      clan_id INTEGER NOT NULL,
-      inviter_id INTEGER NOT NULL,
-      invitee_id INTEGER NOT NULL,
-      status TEXT DEFAULT 'pending',
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  /*
-   * NOTIFICACIONES
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS notifications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      title TEXT NOT NULL,
-      message TEXT NOT NULL,
-      type TEXT DEFAULT 'general',
-      is_read INTEGER DEFAULT 0,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  /*
-   * CHAT
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS chat_messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      challenge_id INTEGER NOT NULL,
-      user_id INTEGER NOT NULL,
-      message TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-
-  /*
-   * RETOS
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS challenges (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      creator_clan_id INTEGER NOT NULL,
-      accepter_clan_id INTEGER,
-      map1 TEXT,
-      map2 TEXT,
-      map3 TEXT,
-      status TEXT DEFAULT 'open',
-      winner_clan_id INTEGER,
-      completed_at TEXT
-    )
-  `).run();
-
-
-  /*
-   * REPORTES
-   */
-
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS reports (
-      challenge_id INTEGER NOT NULL,
-      clan_id INTEGER NOT NULL,
-      winner_clan_id INTEGER NOT NULL,
-      PRIMARY KEY (challenge_id, clan_id)
-    )
-  `).run();
-
-
-  /*
-   * COLUMNAS NUEVAS DE RETOS
-   */
-
-  await addColumn(
-    env,
-    "challenges",
-    "team_size",
-    "INTEGER DEFAULT 4"
-  );
-
-  await addColumn(
-    env,
-    "challenges",
-    "game_modes",
-    "TEXT DEFAULT '[\"snd\"]'"
-  );
-
-  await addColumn(
-    env,
-    "challenges",
-    "scheduled_at",
-    "TEXT"
-  );
-
-  await addColumn(
-    env,
-    "challenges",
-    "cancel_reason",
-    "TEXT"
-  );
-
-  await addColumn(
-    env,
-    "challenges",
-    "cancelled_at",
-    "TEXT"
-  );
-}
-
-
-async function addColumn(
-  env,
-  table,
-  column,
-  definition
-) {
-
-  try {
-
-    const columns =
-      await env.DB
-        .prepare(
-          `PRAGMA table_info(${table})`
-        )
-        .all();
-
-    const exists =
-      columns.results.some(
-        c => c.name === column
-      );
-
-    if (!exists) {
-
-      await env.DB.prepare(
-        `ALTER TABLE ${table}
-         ADD COLUMN ${column}
-         ${definition}`
-      ).run();
-    }
-
-  } catch (error) {
-
-    console.log(
-      "COLUMN ERROR",
-      table,
-      column,
-      error
-    );
-  }
-}
-
-
-/* =========================================================
-   USUARIO ACTUAL
-========================================================= */
+/* =========================
+   USER
+========================= */
 
 async function getUser(
   request,
   env
 ) {
-
   const token =
     getCookie(
       request,
@@ -457,48 +209,57 @@ async function getUser(
         WHERE
           s.token = ?
           AND s.expires > ?
+        LIMIT 1
       `)
       .bind(
         token,
         Date.now()
       )
-      .first();
+      .all();
 
-  return result || null;
+  return result.results?.[0] || null;
 }
 
+/* =========================
+   CLAN
+========================= */
 
-/* =========================================================
-   CLAN DEL USUARIO
-========================================================= */
+/*
+ * IMPORTANTE:
+ * Usamos all() y devolvemos la primera fila.
+ * Evitamos first() en esta consulta.
+ */
 
 async function getClan(
   env,
   userId
 ) {
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          c.id,
+          c.name,
+          c.captain_id,
+          c.created_at
+        FROM clans c
+        JOIN members m
+          ON m.clan_id = c.id
+        WHERE
+          m.user_id = ?
+        LIMIT 1
+      `)
+      .bind(userId)
+      .all();
 
-  return await env.DB
-    .prepare(`
-      SELECT
-        c.*
-      FROM clans c
-      JOIN members m
-        ON m.clan_id = c.id
-      WHERE
-        m.user_id = ?
-      LIMIT 1
-    `)
-    .bind(userId)
-    .first();
+  return result.results?.[0] || null;
 }
 
-
-/* =========================================================
-   MAPAS
-========================================================= */
+/* =========================
+   MAPS
+========================= */
 
 function randomMaps() {
-
   return [...MAPS]
     .sort(
       () => Math.random() - 0.5
@@ -506,10 +267,9 @@ function randomMaps() {
     .slice(0, 3);
 }
 
-
-/* =========================================================
-   NOTIFICAR
-========================================================= */
+/* =========================
+   NOTIFICATIONS
+========================= */
 
 async function notify(
   env,
@@ -518,7 +278,6 @@ async function notify(
   message,
   type = "general"
 ) {
-
   await env.DB
     .prepare(`
       INSERT INTO notifications
@@ -539,29 +298,24 @@ async function notify(
     .run();
 }
 
-
-/* =========================================================
+/* =========================
    API
-========================================================= */
+========================= */
 
 async function api(
   request,
   env,
   path
 ) {
-
   const headers =
     corsHeaders(request);
 
-
-  /*
-   * OPTIONS
-   */
+  /* OPTIONS */
 
   if (
-    request.method === "OPTIONS"
+    request.method ===
+    "OPTIONS"
   ) {
-
     return new Response(
       null,
       {
@@ -571,10 +325,7 @@ async function api(
     );
   }
 
-
-  /*
-   * USUARIO ACTUAL
-   */
+  /* CURRENT USER */
 
   const currentUser =
     await getUser(
@@ -582,43 +333,40 @@ async function api(
       env
     );
 
-
-  /* =======================================================
+  /* =========================
      ME
-  ======================================================= */
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/me"
   ) {
+    const clan =
+      currentUser
+        ? await getClan(
+            env,
+            currentUser.id
+          )
+        : null;
 
     return json(
       {
         user: currentUser,
-
-        clan:
-          currentUser
-            ? await getClan(
-                env,
-                currentUser.id
-              )
-            : null
+        clan
       },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     REGISTRO
-  ======================================================= */
+  /* =========================
+     REGISTER
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/register"
   ) {
-
     const data =
       await body(request);
 
@@ -636,7 +384,6 @@ async function api(
       username.length < 3 ||
       username.length > 20
     ) {
-
       return json(
         {
           error:
@@ -650,7 +397,6 @@ async function api(
     if (
       password.length < 6
     ) {
-
       return json(
         {
           error:
@@ -661,17 +407,20 @@ async function api(
       );
     }
 
-
     const existing =
       await env.DB
-        .prepare(
-          "SELECT id FROM users WHERE username = ?"
-        )
+        .prepare(`
+          SELECT id
+          FROM users
+          WHERE username = ?
+          LIMIT 1
+        `)
         .bind(username)
-        .first();
+        .all();
 
-    if (existing) {
-
+    if (
+      existing.results?.length
+    ) {
       return json(
         {
           error:
@@ -682,9 +431,7 @@ async function api(
       );
     }
 
-
     try {
-
       const passwordHash =
         await hashPassword(
           password
@@ -709,10 +456,8 @@ async function api(
       const userId =
         created.meta.last_row_id;
 
-
       const token =
         crypto.randomUUID();
-
 
       await env.DB
         .prepare(`
@@ -733,11 +478,9 @@ async function api(
         )
         .run();
 
-
       return json(
         {
           ok: true,
-
           user: {
             id: userId,
             username
@@ -746,14 +489,11 @@ async function api(
         200,
         {
           ...headers,
-
           "Set-Cookie":
             sessionCookie(token)
         }
       );
-
     } catch (error) {
-
       console.error(
         "REGISTER ERROR:",
         error
@@ -763,7 +503,6 @@ async function api(
         {
           error:
             "No se pudo crear la cuenta.",
-
           detail:
             error?.message ||
             String(error)
@@ -774,16 +513,14 @@ async function api(
     }
   }
 
-
-  /* =======================================================
+  /* =========================
      LOGIN
-  ======================================================= */
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/login"
   ) {
-
     const data =
       await body(request);
 
@@ -797,15 +534,19 @@ async function api(
         data.password || ""
       );
 
+    const users =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM users
+          WHERE username = ?
+          LIMIT 1
+        `)
+        .bind(username)
+        .all();
 
     const user =
-      await env.DB
-        .prepare(
-          "SELECT * FROM users WHERE username = ?"
-        )
-        .bind(username)
-        .first();
-
+      users.results?.[0] || null;
 
     if (
       !user ||
@@ -814,7 +555,6 @@ async function api(
         user.password_hash
       ))
     ) {
-
       return json(
         {
           error:
@@ -825,10 +565,8 @@ async function api(
       );
     }
 
-
     const token =
       crypto.randomUUID();
-
 
     await env.DB
       .prepare(`
@@ -849,36 +587,32 @@ async function api(
       )
       .run();
 
-
     return json(
       {
         ok: true,
-
         user: {
           id: user.id,
-          username: user.username
+          username:
+            user.username
         }
       },
       200,
       {
         ...headers,
-
         "Set-Cookie":
           sessionCookie(token)
       }
     );
   }
 
-
-  /* =======================================================
+  /* =========================
      LOGOUT
-  ======================================================= */
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/logout"
   ) {
-
     const token =
       getCookie(
         request,
@@ -886,15 +620,14 @@ async function api(
       );
 
     if (token) {
-
       await env.DB
-        .prepare(
-          "DELETE FROM sessions WHERE token = ?"
-        )
+        .prepare(`
+          DELETE FROM sessions
+          WHERE token = ?
+        `)
         .bind(token)
         .run();
     }
-
 
     return json(
       {
@@ -903,20 +636,17 @@ async function api(
       200,
       {
         ...headers,
-
         "Set-Cookie":
           deleteSessionCookie()
       }
     );
   }
 
-
-  /* =======================================================
-     DESDE AQUÍ NECESITA LOGIN
-  ======================================================= */
+  /* =========================
+     LOGIN REQUIRED
+  ========================= */
 
   if (!currentUser) {
-
     return json(
       {
         error:
@@ -927,16 +657,14 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     NOTIFICACIONES
-  ======================================================= */
+  /* =========================
+     NOTIFICATIONS
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/notifications"
   ) {
-
     const result =
       await env.DB
         .prepare(`
@@ -957,7 +685,6 @@ async function api(
         )
         .all();
 
-
     return json(
       result.results,
       200,
@@ -965,16 +692,10 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     MARCAR NOTIFICACIONES COMO LEÍDAS
-  ======================================================= */
-
   if (
     request.method === "POST" &&
     path === "/api/notifications/read"
   ) {
-
     await env.DB
       .prepare(`
         UPDATE notifications
@@ -986,35 +707,28 @@ async function api(
       )
       .run();
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
+  /* =========================
      INVITAR JUGADOR
-  ======================================================= */
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/clan/invite"
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           error:
@@ -1025,12 +739,10 @@ async function api(
       );
     }
 
-
     if (
       clan.captain_id !==
       currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -1041,7 +753,6 @@ async function api(
       );
     }
 
-
     const count =
       await env.DB
         .prepare(`
@@ -1049,16 +760,16 @@ async function api(
           FROM members
           WHERE clan_id = ?
         `)
-        .bind(
-          clan.id
-        )
-        .first();
+        .bind(clan.id)
+        .all();
 
+    const total =
+      Number(
+        count.results?.[0]?.total ||
+        0
+      );
 
-    if (
-      Number(count?.total || 0) >= 6
-    ) {
-
+    if (total >= 6) {
       return json(
         {
           error:
@@ -1069,7 +780,6 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
 
@@ -1078,9 +788,7 @@ async function api(
         data.username || ""
       ).trim();
 
-
     if (!username) {
-
       return json(
         {
           error:
@@ -1091,8 +799,7 @@ async function api(
       );
     }
 
-
-    const invited =
+    const invitedResult =
       await env.DB
         .prepare(`
           SELECT
@@ -1100,13 +807,16 @@ async function api(
             username
           FROM users
           WHERE username = ?
+          LIMIT 1
         `)
         .bind(username)
-        .first();
+        .all();
 
+    const invited =
+      invitedResult.results?.[0] ||
+      null;
 
     if (!invited) {
-
       return json(
         {
           error:
@@ -1117,12 +827,10 @@ async function api(
       );
     }
 
-
     if (
       invited.id ===
       currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -1133,16 +841,13 @@ async function api(
       );
     }
 
-
     const invitedClan =
       await getClan(
         env,
         invited.id
       );
 
-
     if (invitedClan) {
-
       return json(
         {
           error:
@@ -1153,7 +858,6 @@ async function api(
       );
     }
 
-
     const existing =
       await env.DB
         .prepare(`
@@ -1163,16 +867,17 @@ async function api(
             clan_id = ?
             AND invitee_id = ?
             AND status = 'pending'
+          LIMIT 1
         `)
         .bind(
           clan.id,
           invited.id
         )
-        .first();
+        .all();
 
-
-    if (existing) {
-
+    if (
+      existing.results?.length
+    ) {
       return json(
         {
           error:
@@ -1182,7 +887,6 @@ async function api(
         headers
       );
     }
-
 
     const invite =
       await env.DB
@@ -1203,7 +907,6 @@ async function api(
         )
         .run();
 
-
     await notify(
       env,
       invited.id,
@@ -1211,7 +914,6 @@ async function api(
       `${clan.name} te ha invitado a su equipo.`,
       "clan_invite"
     );
-
 
     return json(
       {
@@ -1224,16 +926,14 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     LISTAR INVITACIONES
-  ======================================================= */
+  /* =========================
+     LIST INVITES
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/invites"
   ) {
-
     const result =
       await env.DB
         .prepare(`
@@ -1258,7 +958,6 @@ async function api(
         )
         .all();
 
-
     return json(
       result.results,
       200,
@@ -1266,29 +965,25 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     ACEPTAR INVITACIÓN
-  ======================================================= */
+  /* =========================
+     ACCEPT INVITE
+  ========================= */
 
   const acceptInvite =
     path.match(
       /^\/api\/invites\/(\d+)\/accept$/
     );
 
-
   if (
     request.method === "POST" &&
     acceptInvite
   ) {
-
     const inviteId =
       Number(
         acceptInvite[1]
       );
 
-
-    const invite =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
@@ -1297,16 +992,19 @@ async function api(
             id = ?
             AND invitee_id = ?
             AND status = 'pending'
+          LIMIT 1
         `)
         .bind(
           inviteId,
           currentUser.id
         )
-        .first();
+        .all();
 
+    const invite =
+      result.results?.[0] ||
+      null;
 
     if (!invite) {
-
       return json(
         {
           error:
@@ -1317,16 +1015,13 @@ async function api(
       );
     }
 
-
     const already =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (already) {
-
       return json(
         {
           error:
@@ -1336,7 +1031,6 @@ async function api(
         headers
       );
     }
-
 
     const count =
       await env.DB
@@ -1348,13 +1042,15 @@ async function api(
         .bind(
           invite.clan_id
         )
-        .first();
+        .all();
 
+    const total =
+      Number(
+        count.results?.[0]?.total ||
+        0
+      );
 
-    if (
-      Number(count?.total || 0) >= 6
-    ) {
-
+    if (total >= 6) {
       return json(
         {
           error:
@@ -1365,47 +1061,53 @@ async function api(
       );
     }
 
-
     await env.DB.batch([
+      env.DB
+        .prepare(`
+          INSERT INTO members
+          (
+            clan_id,
+            user_id,
+            role,
+            joined_at
+          )
+          VALUES
+          (?, ?, 'member', CURRENT_TIMESTAMP)
+        `)
+        .bind(
+          invite.clan_id,
+          currentUser.id
+        ),
 
-      env.DB.prepare(`
-        INSERT INTO members
-        (
-          clan_id,
-          user_id,
-          role,
-          joined_at
+      env.DB
+        .prepare(`
+          UPDATE invites
+          SET status = 'accepted'
+          WHERE id = ?
+        `)
+        .bind(
+          inviteId
         )
-        VALUES (?, ?, 'member', CURRENT_TIMESTAMP)
-      `).bind(
-        invite.clan_id,
-        currentUser.id
-      ),
-
-      env.DB.prepare(`
-        UPDATE invites
-        SET status = 'accepted'
-        WHERE id = ?
-      `).bind(
-        inviteId
-      )
-
     ]);
 
-
-    const clan =
+    const clanResult =
       await env.DB
-        .prepare(
-          "SELECT * FROM clans WHERE id = ?"
-        )
+        .prepare(`
+          SELECT *
+          FROM clans
+          WHERE id = ?
+          LIMIT 1
+        `)
         .bind(
           invite.clan_id
         )
-        .first();
+        .all();
 
+    const clan =
+      clanResult.results?.[0] ||
+      null;
 
     if (clan) {
-
       await notify(
         env,
         clan.captain_id,
@@ -1415,57 +1117,49 @@ async function api(
       );
     }
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     RECHAZAR INVITACIÓN
-  ======================================================= */
+  /* =========================
+     REJECT INVITE
+  ========================= */
 
   const rejectInvite =
     path.match(
       /^\/api\/invites\/(\d+)\/reject$/
     );
 
-
   if (
     request.method === "POST" &&
     rejectInvite
   ) {
-
     const inviteId =
       Number(
         rejectInvite[1]
       );
 
-
-    const invite =
+    const result =
       await env.DB
         .prepare(`
-          SELECT *
+          SELECT id
           FROM invites
           WHERE
             id = ?
             AND invitee_id = ?
             AND status = 'pending'
+          LIMIT 1
         `)
         .bind(
           inviteId,
           currentUser.id
         )
-        .first();
+        .all();
 
-
-    if (!invite) {
-
+    if (!result.results?.length) {
       return json(
         {
           error:
@@ -1475,7 +1169,6 @@ async function api(
         headers
       );
     }
-
 
     await env.DB
       .prepare(`
@@ -1488,35 +1181,28 @@ async function api(
       )
       .run();
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     CREAR CLAN
-  ======================================================= */
+  /* =========================
+     CREATE CLAN
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/clans"
   ) {
-
     const existingClan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (existingClan) {
-
       return json(
         {
           error:
@@ -1527,7 +1213,6 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
 
@@ -1536,12 +1221,10 @@ async function api(
         data.name || ""
       ).trim();
 
-
     if (
       name.length < 2 ||
       name.length > 24
     ) {
-
       return json(
         {
           error:
@@ -1552,9 +1235,7 @@ async function api(
       );
     }
 
-
     try {
-
       const created =
         await env.DB
           .prepare(`
@@ -1571,43 +1252,44 @@ async function api(
           )
           .run();
 
-
       const clanId =
         created.meta.last_row_id;
 
-
       await env.DB.batch([
+        env.DB
+          .prepare(`
+            INSERT INTO members
+            (
+              clan_id,
+              user_id,
+              role,
+              joined_at
+            )
+            VALUES
+            (?, ?, 'captain', CURRENT_TIMESTAMP)
+          `)
+          .bind(
+            clanId,
+            currentUser.id
+          ),
 
-        env.DB.prepare(`
-          INSERT INTO members
-          (
-            clan_id,
-            user_id,
-            role,
-            joined_at
+        env.DB
+          .prepare(`
+            INSERT INTO scores
+            (
+              clan_id,
+              points,
+              wins,
+              losses,
+              played
+            )
+            VALUES
+            (?, 0, 0, 0, 0)
+          `)
+          .bind(
+            clanId
           )
-          VALUES (?, ?, 'captain', CURRENT_TIMESTAMP)
-        `).bind(
-          clanId,
-          currentUser.id
-        ),
-
-        env.DB.prepare(`
-          INSERT INTO scores
-          (
-            clan_id,
-            points,
-            wins,
-            losses,
-            played
-          )
-          VALUES (?, 0, 0, 0, 0)
-        `).bind(
-          clanId
-        )
-
       ]);
-
 
       return json(
         {
@@ -1617,14 +1299,16 @@ async function api(
         200,
         headers
       );
-
     } catch (error) {
+      console.error(
+        "CREATE CLAN ERROR:",
+        error
+      );
 
       return json(
         {
           error:
             "No se pudo crear el equipo.",
-
           detail:
             error?.message ||
             String(error)
@@ -1635,25 +1319,21 @@ async function api(
     }
   }
 
-
-  /* =======================================================
-     MI CLAN
-  ======================================================= */
+  /* =========================
+     MY CLAN
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/clan"
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           clan: null,
@@ -1664,7 +1344,6 @@ async function api(
         headers
       );
     }
-
 
     const members =
       await env.DB
@@ -1692,25 +1371,28 @@ async function api(
         )
         .all();
 
-
-    const score =
+    const scoreResult =
       await env.DB
         .prepare(`
           SELECT *
           FROM scores
           WHERE clan_id = ?
+          LIMIT 1
         `)
         .bind(
           clan.id
         )
-        .first();
+        .all();
 
+    const score =
+      scoreResult.results?.[0] ||
+      null;
 
     return json(
       {
         clan,
         members:
-          members.results,
+          members.results || [],
         score
       },
       200,
@@ -1718,25 +1400,21 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     ABANDONAR EQUIPO
-  ======================================================= */
+  /* =========================
+     LEAVE CLAN
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/clan/leave"
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           error:
@@ -1747,22 +1425,19 @@ async function api(
       );
     }
 
-
     if (
       clan.captain_id ===
       currentUser.id
     ) {
-
       return json(
         {
           error:
-            "El capitán no puede abandonar el equipo. Primero debe gestionar el equipo."
+            "El capitán no puede abandonar el equipo."
         },
         400,
         headers
       );
     }
-
 
     await env.DB
       .prepare(`
@@ -1777,65 +1452,52 @@ async function api(
       )
       .run();
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
+  /* =========================
      RANKING
-  ======================================================= */
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/leaderboard"
   ) {
-
     const result =
       await env.DB
         .prepare(`
           SELECT
             c.id,
             c.name,
-
             COALESCE(
               s.points,
               0
             ) AS points,
-
             COALESCE(
               s.wins,
               0
             ) AS wins,
-
             COALESCE(
               s.losses,
               0
             ) AS losses,
-
             COALESCE(
               s.played,
               0
             ) AS played
-
           FROM clans c
-
           LEFT JOIN scores s
             ON s.clan_id = c.id
-
           ORDER BY
             points DESC,
             wins DESC,
             c.name ASC
         `)
         .all();
-
 
     return json(
       result.results,
@@ -1844,25 +1506,21 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     CREAR RETO
-  ======================================================= */
+  /* =========================
+     CREATE CHALLENGE
+  ========================= */
 
   if (
     request.method === "POST" &&
     path === "/api/challenges"
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           error:
@@ -1873,12 +1531,10 @@ async function api(
       );
     }
 
-
     if (
       clan.captain_id !==
       currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -1888,11 +1544,6 @@ async function api(
         headers
       );
     }
-
-
-    /*
-     * UN RETO ACTIVO A LA VEZ
-     */
 
     const active =
       await env.DB
@@ -1912,11 +1563,11 @@ async function api(
           clan.id,
           clan.id
         )
-        .first();
+        .all();
 
-
-    if (active) {
-
+    if (
+      active.results?.length
+    ) {
       return json(
         {
           error:
@@ -1927,23 +1578,19 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
-
 
     const teamSize =
       Number(
         data.team_size || 4
       );
 
-
     if (
-      ![2,3,4].includes(
+      ![2, 3, 4].includes(
         teamSize
       )
     ) {
-
       return json(
         {
           error:
@@ -1954,6 +1601,11 @@ async function api(
       );
     }
 
+    const allowedModes = [
+      "snd",
+      "hardpoint",
+      "ctf"
+    ];
 
     let gameModes =
       Array.isArray(
@@ -1961,14 +1613,6 @@ async function api(
       )
         ? data.game_modes
         : ["snd"];
-
-
-    const allowedModes = [
-      "snd",
-      "hardpoint",
-      "ctf"
-    ];
-
 
     gameModes =
       gameModes.filter(
@@ -1978,9 +1622,9 @@ async function api(
           )
       );
 
-
-    if (!gameModes.length) {
-
+    if (
+      !gameModes.length
+    ) {
       return json(
         {
           error:
@@ -1991,7 +1635,6 @@ async function api(
       );
     }
 
-
     const scheduledAt =
       data.scheduled_at
         ? String(
@@ -1999,13 +1642,10 @@ async function api(
           )
         : null;
 
-
     const selectedMaps =
       randomMaps();
 
-
     try {
-
       const created =
         await env.DB
           .prepare(`
@@ -2022,7 +1662,17 @@ async function api(
               scheduled_at
             )
             VALUES
-            (?, NULL, ?, ?, ?, 'open', ?, ?, ?)
+            (
+              ?,
+              NULL,
+              ?,
+              ?,
+              ?,
+              'open',
+              ?,
+              ?,
+              ?
+            )
           `)
           .bind(
             clan.id,
@@ -2037,25 +1687,25 @@ async function api(
           )
           .run();
 
-
       return json(
         {
           ok: true,
-
           id:
             created.meta.last_row_id
         },
         200,
         headers
       );
-
     } catch (error) {
+      console.error(
+        "CREATE CHALLENGE ERROR:",
+        error
+      );
 
       return json(
         {
           error:
             "No se pudo publicar el reto.",
-
           detail:
             error?.message ||
             String(error)
@@ -2066,52 +1716,41 @@ async function api(
     }
   }
 
-
-  /* =======================================================
-     LISTAR RETOS
-  ======================================================= */
+  /* =========================
+     LIST CHALLENGES
+  ========================= */
 
   if (
     request.method === "GET" &&
     path === "/api/challenges"
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     const clanId =
       clan?.id || -1;
-
 
     const result =
       await env.DB
         .prepare(`
           SELECT
             ch.*,
-
             a.name AS creator_name,
-
             b.name AS accepter_name
-
           FROM challenges ch
-
           JOIN clans a
             ON a.id =
               ch.creator_clan_id
-
           LEFT JOIN clans b
             ON b.id =
               ch.accepter_clan_id
-
           WHERE
             ch.status = 'open'
             OR ch.creator_clan_id = ?
             OR ch.accepter_clan_id = ?
-
           ORDER BY
             ch.id DESC
         `)
@@ -2121,46 +1760,39 @@ async function api(
         )
         .all();
 
-
     const challenges =
-      result.results.map(
-        challenge => {
+      (result.results || [])
+        .map(
+          challenge => {
+            let modes = [];
 
-          let modes = [];
+            try {
+              modes =
+                JSON.parse(
+                  challenge.game_modes ||
+                  '["snd"]'
+                );
+            } catch {
+              modes = ["snd"];
+            }
 
-          try {
-
-            modes =
-              JSON.parse(
-                challenge.game_modes ||
-                '["snd"]'
-              );
-
-          } catch {
-
-            modes = ["snd"];
+            return {
+              ...challenge,
+              game_modes:
+                modes,
+              maps: [
+                challenge.map1,
+                challenge.map2,
+                challenge.map3
+              ],
+              mine:
+                challenge.creator_clan_id ===
+                  clanId ||
+                challenge.accepter_clan_id ===
+                  clanId
+            };
           }
-
-
-          return {
-            ...challenge,
-
-            game_modes:
-              modes,
-
-            maps: [
-              challenge.map1,
-              challenge.map2,
-              challenge.map3
-            ],
-
-            mine:
-              challenge.creator_clan_id === clanId ||
-              challenge.accepter_clan_id === clanId
-          };
-        }
-      );
-
+        );
 
     return json(
       challenges,
@@ -2169,31 +1801,26 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     ACEPTAR RETO
-  ======================================================= */
+  /* =========================
+     ACCEPT CHALLENGE
+  ========================= */
 
   const acceptMatch =
     path.match(
       /^\/api\/challenges\/(\d+)\/accept$/
     );
 
-
   if (
     request.method === "POST" &&
     acceptMatch
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           error:
@@ -2204,12 +1831,10 @@ async function api(
       );
     }
 
-
     if (
       clan.captain_id !==
       currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -2219,7 +1844,6 @@ async function api(
         headers
       );
     }
-
 
     const active =
       await env.DB
@@ -2239,11 +1863,11 @@ async function api(
           clan.id,
           clan.id
         )
-        .first();
+        .all();
 
-
-    if (active) {
-
+    if (
+      active.results?.length
+    ) {
       return json(
         {
           error:
@@ -2254,8 +1878,7 @@ async function api(
       );
     }
 
-
-    const challenge =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
@@ -2263,19 +1886,22 @@ async function api(
           WHERE
             id = ?
             AND status = 'open'
+          LIMIT 1
         `)
         .bind(
           acceptMatch[1]
         )
-        .first();
+        .all();
 
+    const challenge =
+      result.results?.[0] ||
+      null;
 
     if (
       !challenge ||
       challenge.creator_clan_id ===
-      clan.id
+        clan.id
     ) {
-
       return json(
         {
           error:
@@ -2285,7 +1911,6 @@ async function api(
         headers
       );
     }
-
 
     await env.DB
       .prepare(`
@@ -2303,22 +1928,24 @@ async function api(
       )
       .run();
 
-
-    const creator =
+    const creatorResult =
       await env.DB
         .prepare(`
           SELECT captain_id
           FROM clans
           WHERE id = ?
+          LIMIT 1
         `)
         .bind(
           challenge.creator_clan_id
         )
-        .first();
+        .all();
 
+    const creator =
+      creatorResult.results?.[0] ||
+      null;
 
     if (creator) {
-
       await notify(
         env,
         creator.captain_id,
@@ -2328,41 +1955,33 @@ async function api(
       );
     }
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     CANCELAR RETO
-  ======================================================= */
+  /* =========================
+     CANCEL CHALLENGE
+  ========================= */
 
   const cancelMatch =
     path.match(
       /^\/api\/challenges\/(\d+)\/cancel$/
     );
 
-
   if (
     request.method === "POST" &&
     cancelMatch
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (!clan) {
-
       return json(
         {
           error:
@@ -2373,12 +1992,10 @@ async function api(
       );
     }
 
-
     if (
       clan.captain_id !==
       currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -2389,24 +2006,27 @@ async function api(
       );
     }
 
-
-    const challenge =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
           FROM challenges
-          WHERE id = ?
-          AND status IN
-          ('open', 'accepted')
+          WHERE
+            id = ?
+            AND status IN
+            ('open', 'accepted')
+          LIMIT 1
         `)
         .bind(
           cancelMatch[1]
         )
-        .first();
+        .all();
 
+    const challenge =
+      result.results?.[0] ||
+      null;
 
     if (!challenge) {
-
       return json(
         {
           error:
@@ -2417,14 +2037,12 @@ async function api(
       );
     }
 
-
     if (
       challenge.creator_clan_id !==
         clan.id &&
       challenge.accepter_clan_id !==
         clan.id
     ) {
-
       return json(
         {
           error:
@@ -2435,17 +2053,14 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
-
 
     const reason =
       String(
         data.reason ||
         "Reto cancelado."
-      ).slice(0,500);
-
+      ).slice(0, 500);
 
     await env.DB
       .prepare(`
@@ -2453,7 +2068,8 @@ async function api(
         SET
           status = 'cancelled',
           cancel_reason = ?,
-          cancelled_at = CURRENT_TIMESTAMP
+          cancelled_at =
+            CURRENT_TIMESTAMP
         WHERE id = ?
       `)
       .bind(
@@ -2462,31 +2078,31 @@ async function api(
       )
       .run();
 
-
     const otherClanId =
       challenge.creator_clan_id ===
-      clan.id
+        clan.id
         ? challenge.accepter_clan_id
         : challenge.creator_clan_id;
 
-
     if (otherClanId) {
-
-      const otherClan =
+      const otherResult =
         await env.DB
           .prepare(`
             SELECT captain_id
             FROM clans
             WHERE id = ?
+            LIMIT 1
           `)
           .bind(
             otherClanId
           )
-          .first();
+          .all();
 
+      const otherClan =
+        otherResult.results?.[0] ||
+        null;
 
       if (otherClan) {
-
         await notify(
           env,
           otherClan.captain_id,
@@ -2497,53 +2113,49 @@ async function api(
       }
     }
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     CHAT - GET
-  ======================================================= */
+  /* =========================
+     CHAT GET
+  ========================= */
 
   const chatGet =
     path.match(
       /^\/api\/challenges\/(\d+)\/chat$/
     );
 
-
   if (
     request.method === "GET" &&
     chatGet
   ) {
-
     const challengeId =
       Number(
         chatGet[1]
       );
 
-
-    const challenge =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
           FROM challenges
           WHERE id = ?
+          LIMIT 1
         `)
         .bind(
           challengeId
         )
-        .first();
+        .all();
 
+    const challenge =
+      result.results?.[0] ||
+      null;
 
     if (!challenge) {
-
       return json(
         {
           error:
@@ -2554,13 +2166,11 @@ async function api(
       );
     }
 
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
-
 
     if (
       !clan ||
@@ -2571,7 +2181,6 @@ async function api(
           challenge.accepter_clan_id
       )
     ) {
-
       return json(
         {
           error:
@@ -2581,7 +2190,6 @@ async function api(
         headers
       );
     }
-
 
     const messages =
       await env.DB
@@ -2605,51 +2213,49 @@ async function api(
         )
         .all();
 
-
     return json(
-      messages.results,
+      messages.results || [],
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     CHAT - POST
-  ======================================================= */
+  /* =========================
+     CHAT POST
+  ========================= */
 
   const chatPost =
     path.match(
       /^\/api\/challenges\/(\d+)\/chat$/
     );
 
-
   if (
     request.method === "POST" &&
     chatPost
   ) {
-
     const challengeId =
       Number(
         chatPost[1]
       );
 
-
-    const challenge =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
           FROM challenges
           WHERE id = ?
+          LIMIT 1
         `)
         .bind(
           challengeId
         )
-        .first();
+        .all();
 
+    const challenge =
+      result.results?.[0] ||
+      null;
 
     if (!challenge) {
-
       return json(
         {
           error:
@@ -2660,13 +2266,11 @@ async function api(
       );
     }
 
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
-
 
     if (
       !clan ||
@@ -2677,7 +2281,6 @@ async function api(
           challenge.accepter_clan_id
       )
     ) {
-
       return json(
         {
           error:
@@ -2688,19 +2291,15 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
-
 
     const message =
       String(
         data.message || ""
       ).trim();
 
-
     if (!message) {
-
       return json(
         {
           error:
@@ -2711,11 +2310,9 @@ async function api(
       );
     }
 
-
     if (
       message.length > 1000
     ) {
-
       return json(
         {
           error:
@@ -2725,7 +2322,6 @@ async function api(
         headers
       );
     }
-
 
     await env.DB
       .prepare(`
@@ -2744,31 +2340,31 @@ async function api(
       )
       .run();
 
-
     const otherClanId =
       clan.id ===
-      challenge.creator_clan_id
+        challenge.creator_clan_id
         ? challenge.accepter_clan_id
         : challenge.creator_clan_id;
 
-
     if (otherClanId) {
-
-      const otherClan =
+      const otherResult =
         await env.DB
           .prepare(`
             SELECT captain_id
             FROM clans
             WHERE id = ?
+            LIMIT 1
           `)
           .bind(
             otherClanId
           )
-          .first();
+          .all();
 
+      const otherClan =
+        otherResult.results?.[0] ||
+        null;
 
       if (otherClan) {
-
         await notify(
           env,
           otherClan.captain_id,
@@ -2779,45 +2375,37 @@ async function api(
       }
     }
 
-
     return json(
-      {
-        ok: true
-      },
+      { ok: true },
       200,
       headers
     );
   }
 
-
-  /* =======================================================
-     REPORTAR RESULTADO
-  ======================================================= */
+  /* =========================
+     REPORT RESULT
+  ========================= */
 
   const reportMatch =
     path.match(
       /^\/api\/challenges\/(\d+)\/report$/
     );
 
-
   if (
     request.method === "POST" &&
     reportMatch
   ) {
-
     const clan =
       await getClan(
         env,
         currentUser.id
       );
 
-
     if (
       !clan ||
       clan.captain_id !==
-      currentUser.id
+        currentUser.id
     ) {
-
       return json(
         {
           error:
@@ -2828,12 +2416,10 @@ async function api(
       );
     }
 
-
     const data =
       await body(request);
 
-
-    const challenge =
+    const result =
       await env.DB
         .prepare(`
           SELECT *
@@ -2841,15 +2427,18 @@ async function api(
           WHERE
             id = ?
             AND status = 'accepted'
+          LIMIT 1
         `)
         .bind(
           reportMatch[1]
         )
-        .first();
+        .all();
 
+    const challenge =
+      result.results?.[0] ||
+      null;
 
     if (!challenge) {
-
       return json(
         {
           error:
@@ -2860,14 +2449,12 @@ async function api(
       );
     }
 
-
     if (
       challenge.creator_clan_id !==
         clan.id &&
       challenge.accepter_clan_id !==
         clan.id
     ) {
-
       return json(
         {
           error:
@@ -2878,12 +2465,10 @@ async function api(
       );
     }
 
-
     const winner =
       Number(
         data.winner_clan_id
       );
-
 
     if (
       winner !==
@@ -2891,7 +2476,6 @@ async function api(
       winner !==
         challenge.accepter_clan_id
     ) {
-
       return json(
         {
           error:
@@ -2901,7 +2485,6 @@ async function api(
         headers
       );
     }
-
 
     await env.DB
       .prepare(`
@@ -2920,7 +2503,6 @@ async function api(
       )
       .run();
 
-
     const reports =
       await env.DB
         .prepare(`
@@ -2933,15 +2515,8 @@ async function api(
         )
         .all();
 
-
     const results =
-      reports.results;
-
-
-    /*
-     * LOS DOS CAPITANES HAN DADO
-     * EL MISMO RESULTADO
-     */
+      reports.results || [];
 
     if (
       results.length === 2 &&
@@ -2952,125 +2527,124 @@ async function api(
         results[1].winner_clan_id
       )
     ) {
-
       const loser =
         winner ===
           challenge.creator_clan_id
           ? challenge.accepter_clan_id
           : challenge.creator_clan_id;
 
-
       await env.DB.batch([
+        env.DB
+          .prepare(`
+            UPDATE challenges
+            SET
+              status = 'completed',
+              winner_clan_id = ?,
+              completed_at =
+                CURRENT_TIMESTAMP
+            WHERE id = ?
+          `)
+          .bind(
+            winner,
+            challenge.id
+          ),
 
-        env.DB.prepare(`
-          UPDATE challenges
-          SET
-            status = 'completed',
-            winner_clan_id = ?,
-            completed_at =
-              CURRENT_TIMESTAMP
-          WHERE id = ?
-        `).bind(
-          winner,
-          challenge.id
-        ),
+        env.DB
+          .prepare(`
+            UPDATE scores
+            SET
+              points =
+                MAX(
+                  0,
+                  points + 10
+                ),
+              wins =
+                wins + 1,
+              played =
+                played + 1
+            WHERE clan_id = ?
+          `)
+          .bind(
+            winner
+          ),
 
-
-        env.DB.prepare(`
-          UPDATE scores
-          SET
-            points =
-              MAX(
-                0,
-                points + 10
-              ),
-            wins =
-              wins + 1,
-            played =
-              played + 1
-          WHERE clan_id = ?
-        `).bind(
-          winner
-        ),
-
-
-        env.DB.prepare(`
-          UPDATE scores
-          SET
-            points =
-              MAX(
-                0,
-                points - 5
-              ),
-            losses =
-              losses + 1,
-            played =
-              played + 1
-          WHERE clan_id = ?
-        `).bind(
-          loser
-        )
-
+        env.DB
+          .prepare(`
+            UPDATE scores
+            SET
+              points =
+                MAX(
+                  0,
+                  points - 5
+                ),
+              losses =
+                losses + 1,
+              played =
+                played + 1
+            WHERE clan_id = ?
+          `)
+          .bind(
+            loser
+          )
       ]);
 
-
-      /*
-       * AVISAR A LOS DOS EQUIPOS
-       */
-
-      const creator =
+      const creatorResult =
         await env.DB
           .prepare(`
             SELECT captain_id
             FROM clans
             WHERE id = ?
+            LIMIT 1
           `)
           .bind(
             challenge.creator_clan_id
           )
-          .first();
+          .all();
 
-
-      const accepter =
+      const accepterResult =
         await env.DB
           .prepare(`
             SELECT captain_id
             FROM clans
             WHERE id = ?
+            LIMIT 1
           `)
           .bind(
             challenge.accepter_clan_id
           )
-          .first();
+          .all();
 
+      const creator =
+        creatorResult.results?.[0] ||
+        null;
+
+      const accepter =
+        accepterResult.results?.[0] ||
+        null;
 
       if (creator) {
-
         await notify(
           env,
           creator.captain_id,
           "Resultado confirmado",
-          `El reto #${challenge.id} ha terminado.`,
+          `El reto #${challenge.id} ha terminado. Ya puedes jugar otro reto.`,
           "result"
         );
       }
-
 
       if (
         accepter &&
         accepter.captain_id !==
-        creator?.captain_id
+          creator?.captain_id
       ) {
-
         await notify(
           env,
           accepter.captain_id,
           "Resultado confirmado",
-          `El reto #${challenge.id} ha terminado.`,
+          `El reto #${challenge.id} ha terminado. Ya puedes jugar otro reto.`,
           "result"
         );
       }
-
 
       return json(
         {
@@ -3082,13 +2656,10 @@ async function api(
       );
     }
 
-
     return json(
       {
         ok: true,
-
         completed: false,
-
         message:
           "Resultado enviado. Falta la confirmación del otro capitán."
       },
@@ -3097,10 +2668,9 @@ async function api(
     );
   }
 
-
-  /* =======================================================
-     NO ENCONTRADO
-  ======================================================= */
+  /* =========================
+     NOT FOUND
+  ========================= */
 
   return json(
     {
@@ -3112,10 +2682,9 @@ async function api(
   );
 }
 
-
-/* =========================================================
+/* =========================
    WORKER
-========================================================= */
+========================= */
 
 export default {
 
@@ -3123,35 +2692,25 @@ export default {
     request,
     env
   ) {
-
     try {
 
       /*
-       * Preparamos las tablas y columnas
-       * necesarias.
+       * MUY IMPORTANTE:
+       *
+       * NO llamamos a initDatabase()
+       * en cada petición.
+       *
+       * Las tablas ya existen en D1.
        */
-
-      await initDatabase(
-        env
-      );
-
 
       const url =
-        new URL(
-          request.url
-        );
-
-
-      /*
-       * API
-       */
+        new URL(request.url);
 
       if (
         url.pathname.startsWith(
           "/api/"
         )
       ) {
-
         return await api(
           request,
           env,
@@ -3159,25 +2718,17 @@ export default {
         );
       }
 
-
-      /*
-       * WEB
-       */
-
       if (env.ASSETS) {
-
         return await env.ASSETS.fetch(
           request
         );
       }
 
-
       return new Response(
         "ASSETS no está configurado.",
         {
-          status:500,
-
-          headers:{
+          status: 500,
+          headers: {
             "content-type":
               "text/plain; charset=UTF-8"
           }
@@ -3191,12 +2742,10 @@ export default {
         error
       );
 
-
       return json(
         {
           error:
             "Error interno del servidor.",
-
           detail:
             error?.message ||
             String(error)
