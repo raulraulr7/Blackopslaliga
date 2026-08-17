@@ -6,426 +6,680 @@
 <title>BlackOps2Liga</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
-font-family:Arial,sans-serif;
-background:#090a0c;
-color:#fff;
-min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#090a0c;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
 }
 
 header{
-position:sticky;
-top:0;
-z-index:100;
-background:#0c0d0f;
-border-bottom:1px solid #292d33;
-padding:16px 22px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#0c0d0f;
+  border-bottom:1px solid #292d33;
+  padding:14px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .logo{
-font-size:25px;
-font-weight:900;
-letter-spacing:1px;
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:1px;
 }
 
-.orange{color:#ff9800}
+.orange{
+  color:#ff9800;
+}
 
 .header-right{
-display:flex;
-gap:8px;
-align-items:center;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  position:relative;
 }
 
 .header-btn{
-background:#ff9800;
-color:#111;
-border:0;
-padding:11px 16px;
-border-radius:7px;
-font-weight:900;
-cursor:pointer;
+  background:#ff9800;
+  color:#111;
+  border:0;
+  padding:10px 15px;
+  border-radius:7px;
+  font-weight:900;
+}
+
+.header-btn:hover{
+  background:#ffad32;
+}
+
+.user-menu-wrap{
+  position:relative;
+}
+
+.user-button{
+  background:#ff9800;
+  color:#111;
+  border:0;
+  padding:10px 15px;
+  border-radius:7px;
+  font-weight:900;
+}
+
+.user-dropdown{
+  display:none;
+  position:absolute;
+  right:0;
+  top:calc(100% + 8px);
+  width:230px;
+  background:#16181c;
+  border:1px solid #3a3e44;
+  border-radius:9px;
+  box-shadow:0 15px 40px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+
+.user-dropdown.show{
+  display:block;
+}
+
+.user-dropdown .user-name{
+  padding:15px;
+  border-bottom:1px solid #30343a;
+  color:#ff9800;
+  font-weight:bold;
+}
+
+.user-dropdown button{
+  width:100%;
+  text-align:left;
+  background:none;
+  border:0;
+  color:#ddd;
+  padding:13px 15px;
+}
+
+.user-dropdown button:hover{
+  background:#24272c;
+  color:#ff9800;
+}
+
+.user-dropdown .logout{
+  color:#ff6b6b;
+  border-top:1px solid #30343a;
 }
 
 .container{
-max-width:950px;
-margin:auto;
-padding:30px 18px 80px;
+  max-width:1100px;
+  margin:auto;
+  padding:28px 18px 80px;
 }
 
 .hero{
-padding:35px 5px;
+  padding:35px 5px 25px;
 }
 
 .hero h1{
-font-size:44px;
-margin-bottom:12px;
+  font-size:46px;
+  margin-bottom:12px;
 }
 
 .hero p{
-color:#aaa;
-font-size:18px;
-line-height:1.6;
+  color:#aaa;
+  font-size:18px;
+  line-height:1.6;
+  max-width:800px;
 }
 
 .section-title{
-color:#ff9800;
-font-size:13px;
-letter-spacing:3px;
-margin:28px 0 12px;
-font-weight:bold;
+  color:#ff9800;
+  font-size:12px;
+  letter-spacing:3px;
+  margin:26px 0 12px;
+  font-weight:bold;
 }
 
 .menu{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
 }
 
 .menu button{
-background:#16181c;
-border:1px solid #30343a;
-color:#ddd;
-padding:17px;
-border-radius:8px;
-text-align:left;
-font-size:16px;
-cursor:pointer;
+  background:#16181c;
+  border:1px solid #30343a;
+  color:#ddd;
+  padding:17px;
+  border-radius:8px;
+  text-align:left;
+  font-size:15px;
 }
 
 .menu button:hover{
-border-color:#ff9800;
-color:#ff9800;
+  border-color:#ff9800;
+  color:#ff9800;
 }
 
-.page{display:none}
-.page.active{display:block}
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
 
 .card{
-background:#16181c;
-border:1px solid #30343a;
-border-radius:9px;
-padding:20px;
-margin-bottom:14px;
+  background:#16181c;
+  border:1px solid #30343a;
+  border-radius:9px;
+  padding:20px;
+  margin-bottom:14px;
 }
 
-.card h2{margin-bottom:9px}
-.card p{color:#aaa;line-height:1.5}
+.card h2{
+  margin-bottom:9px;
+}
+
+.card h3{
+  margin-bottom:10px;
+}
+
+.card p{
+  color:#aaa;
+  line-height:1.55;
+}
 
 .btn{
-margin-top:15px;
-padding:12px 17px;
-border:0;
-border-radius:6px;
-background:#ff9800;
-color:#111;
-font-weight:900;
-cursor:pointer;
+  margin-top:15px;
+  padding:11px 16px;
+  border:0;
+  border-radius:6px;
+  background:#ff9800;
+  color:#111;
+  font-weight:900;
 }
 
-.btn:hover{background:#ffad32}
+.btn:hover{
+  background:#ffad32;
+}
 
 .btn-dark{
-background:#292d33;
-color:#fff;
+  background:#292d33;
+  color:#fff;
 }
 
 .btn-danger{
-background:#d83232;
-color:#fff;
+  background:#7c2525;
+  color:#fff;
+}
+
+.btn-danger:hover{
+  background:#a93232;
+}
+
+.btn-small{
+  margin-top:0;
+  padding:8px 11px;
+  font-size:12px;
 }
 
 .stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin:18px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:18px 0;
 }
 
 .stat{
-background:#16181c;
-border:1px solid #30343a;
-border-radius:8px;
-padding:18px 8px;
-text-align:center;
+  background:#16181c;
+  border:1px solid #30343a;
+  border-radius:8px;
+  padding:18px 8px;
+  text-align:center;
 }
 
 .stat strong{
-display:block;
-color:#ff9800;
-font-size:26px;
+  display:block;
+  color:#ff9800;
+  font-size:26px;
 }
 
 .stat span{
-color:#888;
-font-size:11px;
+  color:#888;
+  font-size:11px;
 }
 
 .form{
-margin-top:18px;
+  margin-top:18px;
 }
 
 .form label{
-display:block;
-color:#aaa;
-font-size:13px;
-margin-top:12px;
+  display:block;
+  color:#aaa;
+  font-size:13px;
+  margin-top:12px;
 }
 
 .form input,
-.form select{
-width:100%;
-padding:14px;
-margin-top:6px;
-background:#0d0f12;
-border:1px solid #3a3e44;
-border-radius:6px;
-color:#fff;
-font-size:16px;
+.form select,
+.form textarea{
+  width:100%;
+  padding:13px;
+  margin-top:6px;
+  background:#0d0f12;
+  border:1px solid #3a3e44;
+  border-radius:6px;
+  color:#fff;
+}
+
+.form textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
 .form input:focus,
-.form select:focus{
-outline:none;
-border-color:#ff9800;
+.form select:focus,
+.form textarea:focus{
+  outline:none;
+  border-color:#ff9800;
+}
+
+.check-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:8px;
+}
+
+.check{
+  background:#0d0f12;
+  border:1px solid #3a3e44;
+  padding:12px;
+  border-radius:7px;
+  color:#ddd;
+}
+
+.check input{
+  width:auto;
+  margin-right:8px;
 }
 
 .message{
-display:none;
-margin-top:14px;
-padding:12px;
-border-radius:6px;
+  display:none;
+  margin-top:14px;
+  padding:12px;
+  border-radius:6px;
 }
 
 .message.ok{
-display:block;
-background:#12351f;
-color:#55e88b;
+  display:block;
+  background:#12351f;
+  color:#55e88b;
 }
 
 .message.error{
-display:block;
-background:#351313;
-color:#ff7777;
+  display:block;
+  background:#351313;
+  color:#ff7777;
+}
+
+.message.info{
+  display:block;
+  background:#162a3d;
+  color:#7dc4ff;
 }
 
 .ranking{
-width:100%;
-border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
 }
 
 .ranking th{
-color:#888;
-text-align:left;
-padding:11px 6px;
-font-size:11px;
+  color:#888;
+  text-align:left;
+  padding:11px 6px;
+  font-size:11px;
 }
 
 .ranking td{
-padding:14px 6px;
-border-top:1px solid #30343a;
+  padding:14px 6px;
+  border-top:1px solid #30343a;
 }
 
 .points{
-color:#ff9800;
-font-weight:bold;
+  color:#ff9800;
+  font-weight:bold;
 }
 
-.win{color:#35d879}
-.loss{color:#ff5252}
+.win{
+  color:#35d879;
+}
+
+.loss{
+  color:#ff5252;
+}
 
 .badge{
-display:inline-block;
-background:#ff9800;
-color:#111;
-padding:5px 8px;
-border-radius:4px;
-font-size:10px;
-font-weight:bold;
+  display:inline-block;
+  background:#ff9800;
+  color:#111;
+  padding:5px 8px;
+  border-radius:4px;
+  font-size:10px;
+  font-weight:bold;
 }
 
 .badge-dark{
-background:#292d33;
-color:#fff;
+  background:#292d33;
+  color:#ddd;
 }
 
 .badge-green{
-background:#12351f;
-color:#55e88b;
+  background:#164f2d;
+  color:#55e88b;
+}
+
+.badge-red{
+  background:#5b2020;
+  color:#ff7777;
 }
 
 .challenge{
-border-left:4px solid #ff9800;
+  border-left:4px solid #ff9800;
 }
 
 .row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
 }
 
-.player{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-background:#0d0f12;
-border:1px solid #30343a;
-padding:12px;
-border-radius:7px;
-margin-top:8px;
+.row-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
 }
 
-.player-name{
-font-weight:bold;
+.challenge-meta{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:15px;
 }
 
-.player-psn{
-font-size:12px;
-color:#888;
-margin-top:3px;
+.meta{
+  background:#0d0f12;
+  border:1px solid #30343a;
+  padding:11px;
+  border-radius:6px;
+}
+
+.meta small{
+  display:block;
+  color:#777;
+  font-size:10px;
+  margin-bottom:4px;
+}
+
+.meta strong{
+  font-size:13px;
 }
 
 .rules li{
-color:#bbb;
-line-height:1.5;
-margin:14px 0;
+  color:#bbb;
+  line-height:1.5;
+  margin:14px 0;
 }
 
-footer{
-border-top:1px solid #292d33;
-margin-top:40px;
-padding:35px;
-text-align:center;
-color:#666;
+.notification{
+  border-left:4px solid #ff9800;
 }
 
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.82);
-z-index:500;
-align-items:center;
-justify-content:center;
-padding:18px;
+.notification.unread{
+  background:#1d1b16;
 }
 
-.modal.show{display:flex}
-
-.modal-box{
-width:100%;
-max-width:460px;
-max-height:90vh;
-overflow:auto;
-background:#16181c;
-border:1px solid #444;
-border-radius:10px;
-padding:24px;
+.notification small{
+  color:#777;
 }
 
-.modal-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
+.member{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #30343a;
 }
 
-.close{
-background:none;
-border:0;
-color:#aaa;
-font-size:28px;
-cursor:pointer;
+.member:last-child{
+  border-bottom:0;
 }
 
-.info{
-background:#0d0f12;
-border:1px solid #30343a;
-border-radius:7px;
-padding:13px;
-margin-top:12px;
-color:#aaa;
-line-height:1.5;
+.chat{
+  max-height:420px;
+  overflow-y:auto;
+  background:#0d0f12;
+  border:1px solid #30343a;
+  border-radius:8px;
+  padding:12px;
 }
 
-.challenge-time{
-font-size:18px;
-font-weight:bold;
-color:#fff;
-margin-top:10px;
+.chat-message{
+  margin-bottom:10px;
+  padding:10px;
+  background:#16181c;
+  border-radius:7px;
 }
 
-.challenge-map{
-display:inline-block;
-background:#292d33;
-padding:6px 9px;
-border-radius:5px;
-margin:4px 4px 0 0;
-font-size:12px;
+.chat-message strong{
+  color:#ff9800;
+}
+
+.chat-message small{
+  color:#666;
+  margin-left:8px;
 }
 
 .empty{
-color:#888;
-padding:10px 0;
+  color:#777;
+  padding:15px 0;
+}
+
+.map-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.map-card{
+  min-height:120px;
+  background:linear-gradient(135deg,#1a1d21,#0d0f12);
+  border:1px solid #30343a;
+  border-radius:8px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.map-card strong{
+  color:#ff9800;
+  font-size:18px;
+}
+
+.map-card span{
+  color:#888;
+  font-size:12px;
+  margin-top:5px;
+}
+
+footer{
+  border-top:1px solid #292d33;
+  margin-top:40px;
+  padding:35px;
+  text-align:center;
+  color:#666;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  z-index:500;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:500px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:#16181c;
+  border:1px solid #444;
+  border-radius:10px;
+  padding:24px;
+}
+
+.modal-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.close{
+  background:none;
+  border:0;
+  color:#aaa;
+  font-size:28px;
+}
+
+.close:hover{
+  color:#fff;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.notification-count{
+  display:inline-flex;
+  min-width:18px;
+  height:18px;
+  align-items:center;
+  justify-content:center;
+  background:#ff3b30;
+  color:#fff;
+  border-radius:50%;
+  font-size:10px;
+  margin-left:5px;
+}
+
+@media(max-width:800px){
+
+  .menu{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .challenge-meta{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .map-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
 @media(max-width:600px){
 
-header{padding:14px 15px}
+  header{
+    padding:12px 14px;
+  }
 
-.logo{font-size:21px}
+  .logo{
+    font-size:19px;
+  }
 
-.header-btn{
-padding:10px 12px;
-}
+  .header-btn,
+  .user-button{
+    padding:9px 10px;
+    font-size:12px;
+  }
 
-.container{
-padding:20px 15px 60px;
-}
+  .container{
+    padding:20px 15px 60px;
+  }
 
-.hero h1{
-font-size:34px;
-}
+  .hero h1{
+    font-size:34px;
+  }
 
-.hero p{
-font-size:16px;
-}
+  .hero p{
+    font-size:16px;
+  }
 
-.menu{
-grid-template-columns:1fr;
-}
+  .menu{
+    grid-template-columns:1fr;
+  }
 
-.stats{
-grid-template-columns:repeat(3,1fr);
-}
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
 
-.stat strong{
-font-size:22px;
-}
+  .stat strong{
+    font-size:21px;
+  }
 
-.ranking{
-font-size:12px;
-}
+  .challenge-meta{
+    grid-template-columns:1fr 1fr;
+  }
 
-.ranking th,
-.ranking td{
-padding:9px 3px;
-}
+  .map-grid{
+    grid-template-columns:1fr;
+  }
 
-.row{
-align-items:flex-start;
-}
+  .check-grid{
+    grid-template-columns:1fr;
+  }
 
-.player{
-align-items:flex-start;
-flex-direction:column;
-}
+  .row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
+  .ranking{
+    font-size:12px;
+  }
+
+  .ranking th,
+  .ranking td{
+    padding:9px 3px;
+  }
 }
 </style>
 </head>
@@ -434,80 +688,150 @@ flex-direction:column;
 
 <header>
 
-<div class="logo">
-BLACK<span class="orange">OPS2</span>LIGA
-</div>
+  <div class="logo">
+    BLACK<span class="orange">OPS2</span>LIGA
+  </div>
 
-<div class="header-right">
+  <div class="header-right">
 
-<button
-id="loginButton"
-class="header-btn"
-onclick="abrirLogin()">
-INICIAR SESIÓN
-</button>
+    <button
+      id="loginButton"
+      class="header-btn"
+      onclick="abrirLogin()">
+      INICIAR SESIÓN
+    </button>
 
-<button
-id="registerButton"
-class="header-btn"
-onclick="abrirRegistro()">
-REGISTRARSE
-</button>
+    <button
+      id="registerButton"
+      class="header-btn"
+      onclick="abrirRegistro()">
+      REGISTRARSE
+    </button>
 
-</div>
+    <div
+      id="userMenuWrap"
+      class="user-menu-wrap hidden">
+
+      <button
+        id="userButton"
+        class="user-button"
+        onclick="toggleUserMenu()">
+        USUARIO
+      </button>
+
+      <div
+        id="userDropdown"
+        class="user-dropdown">
+
+        <div
+          id="dropdownUsername"
+          class="user-name">
+          Usuario
+        </div>
+
+        <button onclick="mostrar('perfil');cerrarUserMenu()">
+          👤 Mi perfil
+        </button>
+
+        <button onclick="mostrar('equipo');cerrarUserMenu()">
+          👥 Mi equipo
+        </button>
+
+        <button onclick="mostrar('notificaciones');cerrarUserMenu()">
+          🔔 Notificaciones
+          <span
+            id="notificationCount"
+            class="notification-count hidden">
+            0
+          </span>
+        </button>
+
+        <button
+          class="logout"
+          onclick="cerrarSesion()">
+          🚪 Cerrar sesión
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </header>
+
 
 <div class="container">
 
 <section class="hero">
 
-<h1>
-BLACK<span class="orange">OPS2</span>LIGA
-</h1>
+  <h1>
+    BLACK<span class="orange">OPS2</span>LIGA
+  </h1>
 
-<p>
-La liga competitiva de Black Ops 2.
-Crea tu equipo, invita jugadores,
-publica retos de Buscar y Destruir
-y sube posiciones en el ranking.
-</p>
+  <p>
+    Liga competitiva de Black Ops 2.
+    Crea tu equipo, encuentra rival, programa
+    enfrentamientos y sube posiciones en el ranking.
+  </p>
 
 </section>
 
-<div class="section-title">COMPETICIÓN</div>
+
+<div class="section-title">
+  COMPETICIÓN
+</div>
 
 <div class="menu">
 
-<button onclick="mostrar('inicio')">
-🏠 INICIO
-</button>
+  <button onclick="mostrar('inicio')">
+    🏠 INICIO
+  </button>
 
-<button onclick="mostrar('retos')">
-⚔️ RETOS
-</button>
+  <button onclick="mostrar('retos')">
+    ⚔️ RETOS
+  </button>
 
-<button onclick="mostrar('ranking')">
-🏆 RANKING
-</button>
+  <button onclick="mostrar('ranking')">
+    🏆 RANKING
+  </button>
 
-<button onclick="mostrar('reglas')">
-📜 REGLAS
-</button>
+  <button onclick="mostrar('historial')">
+    📊 HISTORIAL
+  </button>
+
+  <button onclick="mostrar('reglas')">
+    📜 REGLAMENTO
+  </button>
+
+  <button onclick="mostrar('mapas')">
+    🗺️ MAPAS
+  </button>
 
 </div>
 
-<div class="section-title">COMUNIDAD</div>
+
+<div class="section-title">
+  COMUNIDAD
+</div>
 
 <div class="menu">
 
-<button onclick="mostrar('equipo')">
-👥 MI EQUIPO
-</button>
+  <button onclick="mostrar('equipo')">
+    👥 MI EQUIPO
+  </button>
 
-<button onclick="mostrar('jugadores')">
-🎮 JUGADORES
-</button>
+  <button onclick="mostrar('jugadores')">
+    🎮 JUGADORES
+  </button>
+
+  <button onclick="mostrar('notificaciones')">
+    🔔 NOTIFICACIONES
+  </button>
+
+  <button onclick="mostrar('perfil')">
+    👤 MI PERFIL
+  </button>
 
 </div>
 
@@ -516,55 +840,57 @@ y sube posiciones en el ranking.
 
 <section id="inicio" class="page active">
 
-<div class="section-title">TU COMPETICIÓN</div>
+  <div class="section-title">
+    TU COMPETICIÓN
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>⚔️ Buscar y Destruir 4v4</h2>
+    <h2>⚔️ Encuentra rival</h2>
 
-<p>
-Todos los retos de la Temporada 1 se juegan
-en Buscar y Destruir 4 contra 4.
-</p>
+    <p>
+      Publica un reto indicando el formato,
+      los modos de juego, el día y la hora.
+    </p>
 
-<button
-class="btn"
-onclick="mostrar('retos')">
-VER RETOS
-</button>
+    <button
+      class="btn"
+      onclick="mostrar('retos')">
+      VER RETOS
+    </button>
 
-</div>
+  </div>
 
-<div class="stats">
+  <div class="stats">
 
-<div class="stat">
-<strong>+10</strong>
-<span>VICTORIA</span>
-</div>
+    <div class="stat">
+      <strong>2v2</strong>
+      <span>FORMATO</span>
+    </div>
 
-<div class="stat">
-<strong>-5</strong>
-<span>DERROTA</span>
-</div>
+    <div class="stat">
+      <strong>3v3</strong>
+      <span>FORMATO</span>
+    </div>
 
-<div class="stat">
-<strong>4v4</strong>
-<span>FORMATO</span>
-</div>
+    <div class="stat">
+      <strong>4v4</strong>
+      <span>FORMATO</span>
+    </div>
 
-</div>
+  </div>
 
-<div class="section-title">
-TOP RANKING
-</div>
+  <div class="section-title">
+    TOP RANKING
+  </div>
 
-<div id="topRanking">
+  <div id="topRanking">
 
-<div class="card">
-<p>Cargando clasificación...</p>
-</div>
+    <div class="card">
+      <p>Cargando clasificación...</p>
+    </div>
 
-</div>
+  </div>
 
 </section>
 
@@ -573,53 +899,127 @@ TOP RANKING
 
 <section id="retos" class="page">
 
-<div class="section-title">
-RETOS
-</div>
+  <div class="section-title">
+    RETOS
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>⚔️ Publicar reto</h2>
+    <h2>⚔️ Publicar reto</h2>
 
-<p>
-Elige cuándo quieres jugar. El formato es
-Buscar y Destruir 4v4.
-</p>
+    <p>
+      Elige cómo quieres jugar y cuándo.
+      Solo puedes tener un reto activo a la vez.
+    </p>
 
-<div class="form">
+    <div class="form">
 
-<label>Día y hora del reto</label>
+      <label>
+        Formato
+      </label>
 
-<input
-id="fechaReto"
-type="datetime-local">
+      <select id="retoTeamSize">
 
-</div>
+        <option value="2">
+          2 VS 2
+        </option>
 
-<button
-class="btn"
-onclick="publicarReto()">
-PUBLICAR RETO
-</button>
+        <option value="3">
+          3 VS 3
+        </option>
 
-<div
-id="retoMensaje"
-class="message">
-</div>
+        <option value="4" selected>
+          4 VS 4
+        </option>
 
-</div>
+      </select>
 
-<div class="section-title">
-RETOS
-</div>
 
-<div id="listaRetos">
+      <label>
+        Modos de juego
+      </label>
 
-<div class="card">
-<p>Cargando retos...</p>
-</div>
+      <div class="check-grid">
 
-</div>
+        <label class="check">
+          <input
+            type="checkbox"
+            name="gameMode"
+            value="snd"
+            checked>
+          Buscar y Destruir
+        </label>
+
+        <label class="check">
+          <input
+            type="checkbox"
+            name="gameMode"
+            value="hardpoint">
+          Punto Caliente
+        </label>
+
+        <label class="check">
+          <input
+            type="checkbox"
+            name="gameMode"
+            value="ctf">
+          Tomar la Bandera
+        </label>
+
+      </div>
+
+
+      <label>
+        Día y hora
+      </label>
+
+      <input
+        id="retoFecha"
+        type="datetime-local">
+
+
+      <button
+        class="btn"
+        onclick="publicarReto()">
+        ⚔️ PUBLICAR RETO
+      </button>
+
+    </div>
+
+    <div
+      id="retoMensaje"
+      class="message">
+    </div>
+
+  </div>
+
+
+  <div class="section-title">
+    MI RETO ACTIVO
+  </div>
+
+  <div id="miReto">
+
+    <div class="card">
+      <p>
+        No tienes ningún reto activo.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="section-title">
+    RETOS ABIERTOS
+  </div>
+
+  <div id="listaRetos">
+
+    <div class="card">
+      <p>Cargando retos...</p>
+    </div>
+
+  </div>
 
 </section>
 
@@ -628,40 +1028,70 @@ RETOS
 
 <section id="ranking" class="page">
 
-<div class="section-title">
-CLASIFICACIÓN
-</div>
+  <div class="section-title">
+    CLASIFICACIÓN
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<table class="ranking">
+    <table class="ranking">
 
-<thead>
+      <thead>
 
-<tr>
-<th>POS</th>
-<th>EQUIPO</th>
-<th>PJ</th>
-<th>V</th>
-<th>D</th>
-<th>XP</th>
-</tr>
+        <tr>
+          <th>POS</th>
+          <th>EQUIPO</th>
+          <th>PJ</th>
+          <th>V</th>
+          <th>D</th>
+          <th>XP</th>
+        </tr>
 
-</thead>
+      </thead>
 
-<tbody id="tablaRanking">
+      <tbody id="tablaRanking">
 
-<tr>
-<td colspan="6">
-Cargando...
-</td>
-</tr>
+        <tr>
+          <td colspan="6">
+            Cargando...
+          </td>
+        </tr>
 
-</tbody>
+      </tbody>
 
-</table>
+    </table>
 
-</div>
+  </div>
+
+</section>
+
+
+<!-- HISTORIAL -->
+
+<section id="historial" class="page">
+
+  <div class="section-title">
+    HISTORIAL
+  </div>
+
+  <div class="card">
+
+    <h2>📊 Historial de competición</h2>
+
+    <p>
+      Aquí aparecerán tus enfrentamientos
+      completados y sus resultados.
+    </p>
+
+  </div>
+
+  <div id="historialLista">
+
+    <div class="card">
+      <p>Inicia sesión para consultar tu historial.</p>
+    </div>
+
+  </div>
 
 </section>
 
@@ -670,17 +1100,23 @@ Cargando...
 
 <section id="equipo" class="page">
 
-<div class="section-title">
-MI EQUIPO
-</div>
+  <div class="section-title">
+    MI EQUIPO
+  </div>
 
-<div id="miEquipo">
+  <div id="miEquipo">
 
-<div class="card">
-<p>Cargando equipo...</p>
-</div>
+    <div class="card">
 
-</div>
+      <h2>🔐 Inicia sesión</h2>
+
+      <p>
+        Inicia sesión para gestionar tu equipo.
+      </p>
+
+    </div>
+
+  </div>
 
 </section>
 
@@ -689,20 +1125,117 @@ MI EQUIPO
 
 <section id="jugadores" class="page">
 
-<div class="section-title">
-JUGADORES
-</div>
+  <div class="section-title">
+    JUGADORES
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>🎮 Jugadores de la liga</h2>
+    <h2>🎮 Jugadores de la liga</h2>
 
-<p>
-Los jugadores registrados podrán formar parte
-de equipos de hasta 6 miembros.
-</p>
+    <p>
+      El buscador completo de jugadores se añadirá
+      a la siguiente versión del panel.
+    </p>
 
-</div>
+  </div>
+
+</section>
+
+
+<!-- NOTIFICACIONES -->
+
+<section id="notificaciones" class="page">
+
+  <div class="section-title">
+    NOTIFICACIONES
+  </div>
+
+  <div
+    id="notificacionesLista">
+
+    <div class="card">
+      <p>
+        Inicia sesión para ver tus notificaciones.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PERFIL -->
+
+<section id="perfil" class="page">
+
+  <div class="section-title">
+    MI PERFIL
+  </div>
+
+  <div id="perfilContenido">
+
+    <div class="card">
+      <h2>🔐 Inicia sesión</h2>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- MAPAS -->
+
+<section id="mapas" class="page">
+
+  <div class="section-title">
+    POOL DE MAPAS
+  </div>
+
+  <div class="card">
+
+    <h2>🗺️ Mapas competitivos</h2>
+
+    <p>
+      Los mapas utilizados por los retos se
+      seleccionan automáticamente.
+    </p>
+
+  </div>
+
+  <div class="map-grid">
+
+    <div class="map-card">
+      <strong>Raid</strong>
+      <span>Competitivo</span>
+    </div>
+
+    <div class="map-card">
+      <strong>Standoff</strong>
+      <span>Competitivo</span>
+    </div>
+
+    <div class="map-card">
+      <strong>Slums</strong>
+      <span>Competitivo</span>
+    </div>
+
+    <div class="map-card">
+      <strong>Yemen</strong>
+      <span>Competitivo</span>
+    </div>
+
+    <div class="map-card">
+      <strong>Meltdown</strong>
+      <span>Competitivo</span>
+    </div>
+
+    <div class="map-card">
+      <strong>Express</strong>
+      <span>Competitivo</span>
+    </div>
+
+  </div>
 
 </section>
 
@@ -711,73 +1244,83 @@ de equipos de hasta 6 miembros.
 
 <section id="reglas" class="page">
 
-<div class="section-title">
-REGLAMENTO
-</div>
+  <div class="section-title">
+    REGLAMENTO
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>📜 Reglas principales</h2>
+    <h2>📜 Reglas BlackOps2Liga</h2>
 
-<ul class="rules">
+    <ul class="rules">
 
-<li>
-🎮 Plataforma: PlayStation PS5 y PS4.
-</li>
+      <li>
+        🎮 Plataforma oficial: PlayStation 4 y PlayStation 5.
+      </li>
 
-<li>
-⚔️ Todos los retos: Buscar y Destruir 4v4.
-</li>
+      <li>
+        👥 Los formatos disponibles son 2v2, 3v3 y 4v4.
+      </li>
 
-<li>
-👥 Máximo 6 jugadores por equipo:
-4 titulares y 2 reservas.
-</li>
+      <li>
+        👥 Cada equipo puede tener hasta 6 jugadores.
+      </li>
 
-<li>
-📅 El capitán programa día y hora del reto.
-</li>
+      <li>
+        🏆 El XP pertenece al equipo.
+      </li>
 
-<li>
-🔒 Un equipo solo puede tener un reto activo
-a la vez.
-</li>
+      <li>
+        ⚔️ Los modos disponibles son Buscar y Destruir,
+        Punto Caliente y Tomar la Bandera.
+      </li>
 
-<li>
-🟢 Victoria: +10 XP.
-</li>
+      <li>
+        📅 Los retos pueden programarse con día y hora.
+      </li>
 
-<li>
-🔴 Derrota: -5 XP.
-</li>
+      <li>
+        🚫 Un equipo no puede tener más de un reto activo.
+      </li>
 
-<li>
-⬇️ El XP nunca puede bajar de 0.
-</li>
+      <li>
+        ❌ El capitán puede cancelar un reto.
+      </li>
 
-<li>
-🗺️ Pool de mapas: Raid, Standoff, Meltdown y Express.
-</li>
+      <li>
+        📸 Se recomienda conservar capturas del resultado.
+      </li>
 
-<li>
-🚫 Hacks, macros, glitches y ventajas ilegales
-están prohibidos.
-</li>
+      <li>
+        🚫 Hacks, mods, macros y trampas están prohibidos.
+      </li>
 
-</ul>
+      <li>
+        🏆 Ambos capitanes deben confirmar el resultado.
+      </li>
 
-</div>
+      <li>
+        🟢 Victoria: +10 XP.
+      </li>
+
+      <li>
+        🔴 Derrota: -5 XP sin bajar de 0.
+      </li>
+
+    </ul>
+
+  </div>
 
 </section>
 
 
 <footer>
 
-BLACKOPS2LIGA © 2026
+  BLACKOPS2LIGA © 2026
 
-<br><br>
+  <br><br>
 
-Liga competitiva de Black Ops 2
+  Liga competitiva de Black Ops 2
 
 </footer>
 
@@ -787,54 +1330,58 @@ Liga competitiva de Black Ops 2
 <!-- REGISTRO -->
 
 <div
-id="registroModal"
-class="modal">
+  id="registroModal"
+  class="modal">
 
-<div class="modal-box">
+  <div class="modal-box">
 
-<div class="modal-top">
+    <div class="modal-top">
 
-<h2>📝 Crear cuenta</h2>
+      <h2>📝 Crear cuenta</h2>
 
-<button
-class="close"
-onclick="cerrarRegistro()">
-×
-</button>
+      <button
+        class="close"
+        onclick="cerrarRegistro()">
+        ×
+      </button>
 
-</div>
+    </div>
 
-<div class="form">
+    <div class="form">
 
-<label>Nombre de jugador</label>
+      <label>
+        Nombre de jugador
+      </label>
 
-<input
-id="registroUsuario"
-type="text"
-maxlength="20"
-placeholder="Tu nick">
+      <input
+        id="registroUsuario"
+        type="text"
+        maxlength="20"
+        placeholder="Tu nick">
 
-<label>Contraseña</label>
+      <label>
+        Contraseña
+      </label>
 
-<input
-id="registroPassword"
-type="password"
-placeholder="Mínimo 6 caracteres">
+      <input
+        id="registroPassword"
+        type="password"
+        placeholder="Mínimo 6 caracteres">
 
-<button
-class="btn"
-onclick="registrar()">
-CREAR CUENTA
-</button>
+      <button
+        class="btn"
+        onclick="registrar()">
+        CREAR CUENTA
+      </button>
 
-</div>
+    </div>
 
-<div
-id="registroMensaje"
-class="message">
-</div>
+    <div
+      id="registroMensaje"
+      class="message">
+    </div>
 
-</div>
+  </div>
 
 </div>
 
@@ -842,1601 +1389,2580 @@ class="message">
 <!-- LOGIN -->
 
 <div
-id="loginModal"
-class="modal">
+  id="loginModal"
+  class="modal">
 
-<div class="modal-box">
+  <div class="modal-box">
 
-<div class="modal-top">
+    <div class="modal-top">
 
-<h2>🔐 Iniciar sesión</h2>
+      <h2>🔐 Iniciar sesión</h2>
 
-<button
-class="close"
-onclick="cerrarLogin()">
-×
-</button>
+      <button
+        class="close"
+        onclick="cerrarLogin()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="form">
+
+      <label>
+        Usuario
+      </label>
+
+      <input
+        id="loginUsuario"
+        type="text"
+        placeholder="Tu nick">
+
+      <label>
+        Contraseña
+      </label>
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Tu contraseña">
+
+      <button
+        class="btn"
+        onclick="login()">
+        ENTRAR
+      </button>
+
+    </div>
+
+    <div
+      id="loginMensaje"
+      class="message">
+    </div>
+
+  </div>
 
 </div>
 
-<div class="form">
 
-<label>Usuario</label>
-
-<input
-id="loginUsuario"
-type="text"
-placeholder="Tu nick">
-
-<label>Contraseña</label>
-
-<input
-id="loginPassword"
-type="password"
-placeholder="Tu contraseña">
-
-<button
-class="btn"
-onclick="login()">
-ENTRAR
-</button>
-
-</div>
+<!-- CHAT -->
 
 <div
-id="loginMensaje"
-class="message">
-</div>
+  id="chatModal"
+  class="modal">
 
-</div>
+  <div class="modal-box">
+
+    <div class="modal-top">
+
+      <h2>💬 Chat del reto</h2>
+
+      <button
+        class="close"
+        onclick="cerrarChat()">
+        ×
+      </button>
+
+    </div>
+
+    <div
+      id="chatContenido"
+      class="chat">
+
+      <p class="empty">
+        Cargando mensajes...
+      </p>
+
+    </div>
+
+    <div class="form">
+
+      <input
+        id="chatInput"
+        maxlength="1000"
+        placeholder="Escribe un mensaje...">
+
+      <button
+        class="btn"
+        onclick="enviarMensaje()">
+        ENVIAR
+      </button>
+
+    </div>
+
+    <div
+      id="chatMensaje"
+      class="message">
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
 
-const API =
-"https://blackopslaliga.diazluqueraul.workers.dev/api";
+/* ==========================================
+   CONFIGURACIÓN
+========================================== */
 
+const API = "/api";
+
+let usuarioActual = null;
+let clanActual = null;
+let chatChallengeId = null;
+
+
+/* ==========================================
+   API
+========================================== */
+
+async function apiFetch(endpoint, options = {}){
+
+  const config = {
+    credentials:"include",
+    ...options,
+    headers:{
+      ...(options.headers || {})
+    }
+  };
+
+  const respuesta =
+    await fetch(
+      API + endpoint,
+      config
+    );
+
+  let datos = {};
+
+  try{
+    datos = await respuesta.json();
+  }catch{
+    datos = {};
+  }
+
+  return {
+    respuesta,
+    datos
+  };
+}
+
+
+/* ==========================================
+   NAVEGACIÓN
+========================================== */
 
 function mostrar(id){
 
-document
-.querySelectorAll(".page")
-.forEach(function(p){
-p.classList.remove("active");
-});
+  document
+    .querySelectorAll(".page")
+    .forEach(function(page){
+      page.classList.remove("active");
+    });
 
-const pagina =
-document.getElementById(id);
+  const pagina =
+    document.getElementById(id);
 
-if(pagina){
-pagina.classList.add("active");
+  if(pagina){
+    pagina.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  if(id === "ranking"){
+    cargarRanking();
+  }
+
+  if(id === "retos"){
+    cargarRetos();
+  }
+
+  if(id === "equipo"){
+    cargarMiEquipo();
+  }
+
+  if(id === "notificaciones"){
+    cargarNotificaciones();
+  }
+
+  if(id === "perfil"){
+    cargarPerfil();
+  }
+
+  if(id === "historial"){
+    cargarHistorial();
+  }
 }
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
 
-if(id==="ranking"){
-cargarRanking();
+/* ==========================================
+   MENÚ USUARIO
+========================================== */
+
+function toggleUserMenu(){
+
+  const menu =
+    document.getElementById(
+      "userDropdown"
+    );
+
+  menu.classList.toggle("show");
 }
 
-if(id==="retos"){
-cargarRetos();
+function cerrarUserMenu(){
+
+  document
+    .getElementById(
+      "userDropdown"
+    )
+    .classList.remove("show");
 }
 
-if(id==="equipo"){
-cargarMiEquipo();
-}
 
-}
-
+/* ==========================================
+   MODALES
+========================================== */
 
 function abrirRegistro(){
 
-document
-.getElementById("registroModal")
-.classList.add("show");
-
+  document
+    .getElementById("registroModal")
+    .classList.add("show");
 }
-
 
 function cerrarRegistro(){
 
-document
-.getElementById("registroModal")
-.classList.remove("show");
-
+  document
+    .getElementById("registroModal")
+    .classList.remove("show");
 }
-
 
 function abrirLogin(){
 
-document
-.getElementById("loginModal")
-.classList.add("show");
-
+  document
+    .getElementById("loginModal")
+    .classList.add("show");
 }
-
 
 function cerrarLogin(){
 
-document
-.getElementById("loginModal")
-.classList.remove("show");
+  document
+    .getElementById("loginModal")
+    .classList.remove("show");
+}
 
+function cerrarChat(){
+
+  document
+    .getElementById("chatModal")
+    .classList.remove("show");
+
+  chatChallengeId = null;
 }
 
 
-function mostrarMensaje(elemento,tipo,texto){
-
-elemento.className =
-"message " + tipo;
-
-elemento.textContent =
-texto;
-
-}
-
+/* ==========================================
+   REGISTRO
+========================================== */
 
 async function registrar(){
 
-const username =
-document
-.getElementById("registroUsuario")
-.value
-.trim();
+  const username =
+    document
+      .getElementById("registroUsuario")
+      .value
+      .trim();
 
-const password =
-document
-.getElementById("registroPassword")
-.value;
+  const password =
+    document
+      .getElementById("registroPassword")
+      .value;
 
-const mensaje =
-document.getElementById(
-"registroMensaje"
-);
+  const mensaje =
+    document.getElementById(
+      "registroMensaje"
+    );
 
-if(username.length<3){
+  if(username.length < 3){
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ El usuario debe tener al menos 3 caracteres."
-);
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ El usuario debe tener al menos 3 caracteres."
+    );
 
-return;
+    return;
+  }
+
+  if(password.length < 6){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ La contraseña debe tener al menos 6 caracteres."
+    );
+
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/register",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.detail ||
+          result.datos.error ||
+          "No se pudo crear la cuenta."
+        )
+      );
+
+      return;
+    }
+
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Cuenta creada correctamente."
+    );
+
+    setTimeout(
+      async function(){
+
+        cerrarRegistro();
+
+        await cargarUsuario();
+
+      },
+      700
+    );
+
+  }catch(error){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión con el servidor."
+    );
+  }
 }
 
-if(password.length<6){
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ La contraseña debe tener al menos 6 caracteres."
-);
-
-return;
-}
-
-try{
-
-const respuesta =
-await fetch(
-API+"/register",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-credentials:"include",
-body:JSON.stringify({
-username:username,
-password:password
-})
-}
-);
-
-const datos =
-await respuesta.json();
-
-if(!respuesta.ok){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ "+(
-datos.detail ||
-datos.error ||
-"No se pudo registrar."
-)
-);
-
-return;
-}
-
-mostrarMensaje(
-mensaje,
-"ok",
-"✅ Cuenta creada correctamente."
-);
-
-setTimeout(function(){
-
-cerrarRegistro();
-
-cargarUsuario();
-
-},800);
-
-}catch(error){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Error de conexión con el servidor."
-);
-
-console.error(error);
-
-}
-
-}
-
+/* ==========================================
+   LOGIN
+========================================== */
 
 async function login(){
 
-const username =
-document
-.getElementById("loginUsuario")
-.value
-.trim();
+  const username =
+    document
+      .getElementById("loginUsuario")
+      .value
+      .trim();
 
-const password =
-document
-.getElementById("loginPassword")
-.value;
+  const password =
+    document
+      .getElementById("loginPassword")
+      .value;
 
-const mensaje =
-document.getElementById(
-"loginMensaje"
-);
+  const mensaje =
+    document.getElementById(
+      "loginMensaje"
+    );
 
-if(!username||!password){
+  if(!username || !password){
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Completa todos los campos."
-);
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Completa todos los campos."
+    );
 
-return;
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/login",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.error ||
+          "Error al iniciar sesión."
+        )
+      );
+
+      return;
+    }
+
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Sesión iniciada."
+    );
+
+    setTimeout(
+      async function(){
+
+        cerrarLogin();
+
+        await cargarUsuario();
+
+      },
+      500
+    );
+
+  }catch(error){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
 }
 
-try{
 
-const respuesta =
-await fetch(
-API+"/login",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-credentials:"include",
-body:JSON.stringify({
-username:username,
-password:password
-})
+/* ==========================================
+   CERRAR SESIÓN
+========================================== */
+
+async function cerrarSesion(){
+
+  cerrarUserMenu();
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/logout",
+        {
+          method:"POST"
+        }
+      );
+
+    /*
+      Aunque el servidor devuelva error,
+      limpiamos la interfaz para evitar
+      que parezca que la sesión continúa.
+    */
+
+    usuarioActual = null;
+    clanActual = null;
+
+    actualizarInterfazUsuario();
+
+    mostrar("inicio");
+
+    if(!result.respuesta.ok){
+
+      alert(
+        "La sesión se ha cerrado en esta página."
+      );
+
+      return;
+    }
+
+    alert(
+      "✅ Sesión cerrada correctamente."
+    );
+
+  }catch(error){
+
+    /*
+      Limpiamos igualmente la interfaz.
+    */
+
+    usuarioActual = null;
+    clanActual = null;
+
+    actualizarInterfazUsuario();
+
+    mostrar("inicio");
+
+    alert(
+      "La sesión se ha cerrado en esta página."
+    );
+  }
 }
-);
 
-const datos =
-await respuesta.json();
 
-if(!respuesta.ok){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ "+(
-datos.detail ||
-datos.error ||
-"Error al iniciar sesión."
-)
-);
-
-return;
-}
-
-mostrarMensaje(
-mensaje,
-"ok",
-"✅ Sesión iniciada."
-);
-
-setTimeout(function(){
-
-cerrarLogin();
-
-cargarUsuario();
-
-},700);
-
-}catch(error){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Error de conexión con el servidor."
-);
-
-}
-
-}
-
+/* ==========================================
+   USUARIO
+========================================== */
 
 async function cargarUsuario(){
 
-try{
+  try{
 
-const respuesta =
-await fetch(
-API+"/me",
-{
-credentials:"include"
-}
-);
+    const result =
+      await apiFetch(
+        "/me"
+      );
 
-const datos =
-await respuesta.json();
+    if(!result.respuesta.ok){
 
-const boton =
-document.getElementById(
-"loginButton"
-);
+      usuarioActual = null;
+      clanActual = null;
 
-const registro =
-document.getElementById(
-"registerButton"
-);
+      actualizarInterfazUsuario();
 
-if(datos.user){
+      return;
+    }
 
-boton.textContent =
-datos.user.username;
+    usuarioActual =
+      result.datos.user || null;
 
-registro.style.display =
-"none";
+    clanActual =
+      result.datos.clan || null;
 
-}else{
+    actualizarInterfazUsuario();
 
-boton.textContent =
-"INICIAR SESIÓN";
+    cargarRanking();
+    cargarNotificaciones();
 
-registro.style.display =
-"block";
+  }catch(error){
 
-}
+    console.log(
+      "ME ERROR",
+      error
+    );
 
-cargarRanking();
+    usuarioActual = null;
+    clanActual = null;
 
-}catch(error){
-
-console.log(error);
-
+    actualizarInterfazUsuario();
+  }
 }
 
+
+function actualizarInterfazUsuario(){
+
+  const loginButton =
+    document.getElementById(
+      "loginButton"
+    );
+
+  const registerButton =
+    document.getElementById(
+      "registerButton"
+    );
+
+  const userWrap =
+    document.getElementById(
+      "userMenuWrap"
+    );
+
+  const userButton =
+    document.getElementById(
+      "userButton"
+    );
+
+  const dropdownUsername =
+    document.getElementById(
+      "dropdownUsername"
+    );
+
+  if(usuarioActual){
+
+    loginButton.classList.add(
+      "hidden"
+    );
+
+    registerButton.classList.add(
+      "hidden"
+    );
+
+    userWrap.classList.remove(
+      "hidden"
+    );
+
+    userButton.textContent =
+      usuarioActual.username;
+
+    dropdownUsername.textContent =
+      "👤 " +
+      usuarioActual.username;
+
+  }else{
+
+    loginButton.classList.remove(
+      "hidden"
+    );
+
+    registerButton.classList.remove(
+      "hidden"
+    );
+
+    userWrap.classList.add(
+      "hidden"
+    );
+
+  }
 }
 
+
+/* ==========================================
+   EQUIPO
+========================================== */
 
 async function cargarMiEquipo(){
 
-const contenedor =
-document.getElementById(
-"miEquipo"
-);
+  const contenedor =
+    document.getElementById(
+      "miEquipo"
+    );
 
-try{
+  if(!usuarioActual){
 
-const respuesta =
-await fetch(
-API+"/clan",
-{
-credentials:"include"
-}
-);
+    contenedor.innerHTML = `
+      <div class="card">
+        <h2>🔐 Inicia sesión</h2>
+        <p>
+          Necesitas iniciar sesión para gestionar tu equipo.
+        </p>
+        <button class="btn" onclick="abrirLogin()">
+          INICIAR SESIÓN
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  try{
 
-const datos =
-await respuesta.json();
+    const result =
+      await apiFetch(
+        "/clan"
+      );
 
-if(!respuesta.ok){
+    if(!result.respuesta.ok){
 
-contenedor.innerHTML=`
+      contenedor.innerHTML = `
+        <div class="card">
+          <p>❌ ${escapeHTML(
+            result.datos.error ||
+            "No se pudo cargar el equipo."
+          )}</p>
+        </div>
+      `;
 
-<div class="card">
+      return;
+    }
 
-<h2>🔐 Inicia sesión</h2>
+    if(!result.datos.clan){
 
-<p>
-Necesitas iniciar sesión para gestionar
-tu equipo.
-</p>
+      contenedor.innerHTML = `
+        <div class="card">
 
-<button
-class="btn"
-onclick="abrirLogin()">
-INICIAR SESIÓN
-</button>
+          <h2>👥 Crear equipo</h2>
 
-</div>
+          <p>
+            Todavía no perteneces a ningún equipo.
+          </p>
 
-`;
+          <div class="form">
 
-return;
+            <label>
+              Nombre del equipo
+            </label>
 
-}
-
-if(!datos.clan){
-
-contenedor.innerHTML=`
-
-<div class="card">
-
-<h2>👥 Crear equipo</h2>
-
-<p>
-Todavía no perteneces a ningún equipo.
-</p>
-
-<div class="form">
-
-<label>Nombre del equipo</label>
-
-<input
-id="nombreClan"
-placeholder="Ej: Virtual Gamers">
-
-</div>
-
-<button
-class="btn"
-onclick="crearClan()">
-CREAR EQUIPO
-</button>
-
-<div
-id="clanMensaje"
-class="message">
-</div>
-
-</div>
-
-`;
-
-return;
-
-}
-
-let jugadores="";
-
-(datos.members||[])
-.forEach(function(m){
-
-jugadores+=`
-
-<div class="player">
-
-<div>
-
-<div class="player-name">
-🎮 ${escapeHTML(m.username)}
-</div>
-
-<div class="player-psn">
-PSN: ${
-m.psn_id
-? escapeHTML(m.psn_id)
-: "No configurado"
-}
-</div>
-
-</div>
-
-<div>
-
-<span class="badge ${
-m.role==="reserva"
-? "badge-dark"
-: ""
-}">
-${
-m.role==="reserva"
-? "RESERVA"
-: "TITULAR"
-}
-</span>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-let botonesCapitan="";
-
-if(datos.clan.captain_id===datos.members.find(
-m=>m.username===datos.clan.captain_username
-)?.id){
-
-botonesCapitan="";
-}
-
-const esCapitan =
-datos.members.some(function(m){
-return m.id===datos.clan.captain_id &&
-m.username===datos.clan.captain_username;
-});
-
-contenedor.innerHTML=`
-
-<div class="card">
-
-<div class="row">
-
-<div>
-
-<h2>
-👥 ${escapeHTML(datos.clan.name)}
-</h2>
-
-<p>
-Tu equipo
-</p>
-
-</div>
-
-<span class="badge">
-${datos.score?.points||0} XP
-</span>
-
-</div>
-
-<div class="stats">
-
-<div class="stat">
-<strong>
-${datos.score?.played||0}
-</strong>
-<span>PARTIDOS</span>
-</div>
-
-<div class="stat">
-<strong>
-${datos.score?.wins||0}
-</strong>
-<span>VICTORIAS</span>
-</div>
-
-<div class="stat">
-<strong>
-${datos.score?.losses||0}
-</strong>
-<span>DERROTAS</span>
-</div>
-
-</div>
-
-<h3>Jugadores</h3>
-
-${jugadores}
-
-</div>
-
-<div class="card">
-
-<h2>📨 Invitar jugador</h2>
-
-<p>
-El equipo puede tener hasta 6 jugadores:
-4 titulares y 2 reservas.
-</p>
-
-<div class="form">
-
-<label>Nick del jugador</label>
-
-<input
-id="invitarUsuario"
-placeholder="Ej: Luque">
-
-</div>
-
-<button
-class="btn"
-onclick="invitarJugador()">
-ENVIAR INVITACIÓN
-</button>
-
-<div
-id="invitacionMensaje"
-class="message">
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>📩 Invitaciones recibidas</h2>
-
-<div id="misInvitaciones">
-Cargando...
-</div>
-
-</div>
-
-`;
-
-cargarInvitaciones();
-
-}catch(error){
-
-console.error(error);
-
-contenedor.innerHTML=`
-
-<div class="card">
-
-<p>
-❌ Error al cargar el equipo.
-</p>
-
-</div>
-
-`;
-
-}
-
+            <input
+              id="nombreClan"
+              maxlength="24"
+              placeholder="Ej: Virtual Gamers">
+
+            <button
+              class="btn"
+              onclick="crearClan()">
+              CREAR EQUIPO
+            </button>
+
+          </div>
+
+          <div
+            id="clanMensaje"
+            class="message">
+          </div>
+
+        </div>
+      `;
+
+      return;
+    }
+
+    clanActual =
+      result.datos.clan;
+
+    const members =
+      result.datos.members || [];
+
+    const score =
+      result.datos.score || {};
+
+    let miembrosHTML = "";
+
+    members.forEach(function(member){
+
+      const role =
+        member.role === "captain"
+          ? "CAPITÁN"
+          : "JUGADOR";
+
+      miembrosHTML += `
+        <div class="member">
+
+          <div>
+            <strong>
+              🎮 ${escapeHTML(member.username)}
+            </strong>
+          </div>
+
+          <span class="badge ${
+            member.role === "captain"
+              ? ""
+              : "badge-dark"
+          }">
+            ${role}
+          </span>
+
+        </div>
+      `;
+    });
+
+    const esCapitan =
+      clanActual.captain_id ===
+      usuarioActual.id;
+
+    contenedor.innerHTML = `
+      <div class="card">
+
+        <div class="row">
+
+          <div>
+            <h2>
+              👥 ${escapeHTML(clanActual.name)}
+            </h2>
+
+            <p>
+              Tu equipo
+            </p>
+          </div>
+
+          <span class="badge">
+            ${score.points || 0} XP
+          </span>
+
+        </div>
+
+        <div class="stats">
+
+          <div class="stat">
+            <strong>
+              ${score.played || 0}
+            </strong>
+            <span>
+              PARTIDOS
+            </span>
+          </div>
+
+          <div class="stat">
+            <strong>
+              ${score.wins || 0}
+            </strong>
+            <span>
+              VICTORIAS
+            </span>
+          </div>
+
+          <div class="stat">
+            <strong>
+              ${score.losses || 0}
+            </strong>
+            <span>
+              DERROTAS
+            </span>
+          </div>
+
+        </div>
+
+        <h3>
+          Jugadores (${members.length}/6)
+        </h3>
+
+        ${miembrosHTML}
+
+      </div>
+
+      ${
+        esCapitan
+        ? `
+          <div class="card">
+
+            <h2>
+              📩 Invitar jugador
+            </h2>
+
+            <p>
+              Puedes tener hasta 6 jugadores:
+              4 titulares y 2 reservas.
+            </p>
+
+            <div class="form">
+
+              <label>
+                Nombre del jugador
+              </label>
+
+              <input
+                id="invitarUsuario"
+                placeholder="Nick exacto">
+
+              <button
+                class="btn"
+                onclick="invitarJugador()">
+                ENVIAR INVITACIÓN
+              </button>
+
+            </div>
+
+            <div
+              id="invitacionMensaje"
+              class="message">
+            </div>
+
+          </div>
+        `
+        : ""
+      }
+    `;
+
+  }catch(error){
+
+    contenedor.innerHTML = `
+      <div class="card">
+        <p>
+          ❌ Error al cargar el equipo.
+        </p>
+      </div>
+    `;
+  }
 }
 
 
 async function crearClan(){
 
-const nombre =
-document
-.getElementById("nombreClan")
-.value
-.trim();
+  const input =
+    document.getElementById(
+      "nombreClan"
+    );
 
-const mensaje =
-document.getElementById(
-"clanMensaje"
-);
+  const mensaje =
+    document.getElementById(
+      "clanMensaje"
+    );
 
-if(nombre.length<2){
+  const nombre =
+    input.value.trim();
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ El nombre debe tener al menos 2 caracteres."
-);
+  if(nombre.length < 2){
 
-return;
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ El nombre debe tener al menos 2 caracteres."
+    );
 
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/clans",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            name:nombre
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.detail ||
+          result.datos.error ||
+          "No se pudo crear el equipo."
+        )
+      );
+
+      return;
+    }
+
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Equipo creado correctamente."
+    );
+
+    await cargarUsuario();
+
+    setTimeout(
+      cargarMiEquipo,
+      400
+    );
+
+  }catch(error){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
 }
 
-try{
 
-const respuesta =
-await fetch(
-API+"/clans",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-credentials:"include",
-body:JSON.stringify({
-name:nombre
-})
-}
-);
-
-const datos =
-await respuesta.json();
-
-if(!respuesta.ok){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo crear el equipo."
-)
-);
-
-return;
-
-}
-
-mostrarMensaje(
-mensaje,
-"ok",
-"✅ Equipo creado correctamente."
-);
-
-setTimeout(function(){
-cargarMiEquipo();
-cargarRanking();
-},500);
-
-}catch(error){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Error de conexión."
-);
-
-}
-
-}
-
+/* ==========================================
+   INVITAR
+========================================== */
 
 async function invitarJugador(){
 
-const input =
-document.getElementById(
-"invitarUsuario"
-);
+  const input =
+    document.getElementById(
+      "invitarUsuario"
+    );
 
-const mensaje =
-document.getElementById(
-"invitacionMensaje"
-);
+  const mensaje =
+    document.getElementById(
+      "invitacionMensaje"
+    );
 
-const username =
-input.value.trim();
+  const username =
+    input.value.trim();
 
-if(!username){
+  if(!username){
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Escribe el nick del jugador."
-);
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Escribe el nombre del jugador."
+    );
 
-return;
+    return;
+  }
 
-}
+  try{
 
-try{
+    const result =
+      await apiFetch(
+        "/clan/invite",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            username
+          })
+        }
+      );
 
-const respuesta =
-await fetch(
-API+"/clan/invite",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-credentials:"include",
-body:JSON.stringify({
-username:username
-})
-}
-);
+    if(!result.respuesta.ok){
 
-const datos =
-await respuesta.json();
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo enviar la invitación."
+        )
+      );
 
-if(!respuesta.ok){
+      return;
+    }
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo enviar la invitación."
-)
-);
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Invitación enviada."
+    );
 
-return;
+    input.value = "";
 
-}
+  }catch(error){
 
-mostrarMensaje(
-mensaje,
-"ok",
-"✅ Invitación enviada correctamente."
-);
-
-input.value="";
-
-}catch(error){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Error de conexión."
-);
-
-}
-
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
 }
 
 
-async function cargarInvitaciones(){
+/* ==========================================
+   NOTIFICACIONES
+========================================== */
 
-const contenedor =
-document.getElementById(
-"misInvitaciones"
-);
+async function cargarNotificaciones(){
 
-if(!contenedor)return;
+  const contenedor =
+    document.getElementById(
+      "notificacionesLista"
+    );
 
-try{
+  const count =
+    document.getElementById(
+      "notificationCount"
+    );
 
-const respuesta =
-await fetch(
-API+"/invites",
-{
-credentials:"include"
-}
-);
+  if(!usuarioActual){
 
-const datos =
-await respuesta.json();
+    contenedor.innerHTML = `
+      <div class="card">
+        <h2>🔐 Inicia sesión</h2>
+        <p>
+          Inicia sesión para consultar tus notificaciones.
+        </p>
+      </div>
+    `;
 
-if(!respuesta.ok){
+    count.classList.add(
+      "hidden"
+    );
 
-contenedor.innerHTML=
-"❌ "+(
-datos.error||
-"No se pudieron cargar."
-);
+    return;
+  }
 
-return;
+  try{
 
-}
+    const result =
+      await apiFetch(
+        "/notifications"
+      );
 
-if(!datos.length){
+    if(!result.respuesta.ok){
 
-contenedor.innerHTML=
-"<p class='empty'>No tienes invitaciones pendientes.</p>";
+      contenedor.innerHTML = `
+        <div class="card">
+          <p>
+            ❌ No se pudieron cargar las notificaciones.
+          </p>
+        </div>
+      `;
 
-return;
+      return;
+    }
 
-}
+    const notifications =
+      result.datos || [];
 
-contenedor.innerHTML="";
+    const unread =
+      notifications.filter(
+        n => !Number(n.is_read)
+      ).length;
 
-datos.forEach(function(inv){
+    if(unread > 0){
 
-const div =
-document.createElement("div");
+      count.textContent =
+        unread;
 
-div.className="info";
+      count.classList.remove(
+        "hidden"
+      );
 
-div.innerHTML=`
+    }else{
 
-<strong>
-⚔️ ${escapeHTML(inv.clan)}
-</strong>
+      count.classList.add(
+        "hidden"
+      );
+    }
 
-<p>
-Te ha invitado:
-${escapeHTML(inv.inviter||"Capitán")}
-</p>
+    if(!notifications.length){
 
-<button
-class="btn"
-onclick="aceptarInvitacion(${inv.id})">
-ACEPTAR INVITACIÓN
-</button>
+      contenedor.innerHTML = `
+        <div class="card">
+          <h2>🔔 Sin notificaciones</h2>
+          <p>
+            No tienes avisos nuevos.
+          </p>
+        </div>
+      `;
 
-`;
+      return;
+    }
 
-contenedor.appendChild(div);
+    contenedor.innerHTML = "";
 
-});
+    notifications.forEach(
+      function(notification){
 
-}catch(error){
+        const card =
+          document.createElement(
+            "div"
+          );
 
-contenedor.innerHTML=
-"❌ Error al cargar invitaciones.";
+        card.className =
+          "card notification " +
+          (
+            Number(notification.is_read)
+              ? ""
+              : "unread"
+          );
 
-}
+        card.innerHTML = `
+          <div class="row">
 
-}
+            <div>
 
+              <h3>
+                ${escapeHTML(
+                  notification.title
+                )}
+              </h3>
 
-async function aceptarInvitacion(id){
+              <p>
+                ${escapeHTML(
+                  notification.message || ""
+                )}
+              </p>
 
-try{
+              <small>
+                ${escapeHTML(
+                  notification.created_at || ""
+                )}
+              </small>
 
-const respuesta =
-await fetch(
-API+"/invites/"+id+"/accept",
-{
-method:"POST",
-credentials:"include"
-}
-);
+            </div>
 
-const datos =
-await respuesta.json();
+          </div>
+        `;
 
-if(!respuesta.ok){
+        contenedor.appendChild(card);
+      }
+    );
 
-alert(
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo aceptar."
-)
-);
+  }catch(error){
 
-return;
-
-}
-
-alert(
-"✅ Te has unido al equipo."
-);
-
-cargarUsuario();
-cargarMiEquipo();
-
-}catch(error){
-
-alert(
-"❌ Error de conexión."
-);
-
-}
-
-}
-
-
-async function publicarReto(){
-
-const mensaje =
-document.getElementById(
-"retoMensaje"
-);
-
-const fecha =
-document.getElementById(
-"fechaReto"
-).value;
-
-if(!fecha){
-
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Elige el día y la hora."
-);
-
-return;
-
+    contenedor.innerHTML = `
+      <div class="card">
+        <p>
+          ❌ Error al cargar las notificaciones.
+        </p>
+      </div>
+    `;
+  }
 }
 
-try{
 
-const respuesta =
-await fetch(
-API+"/challenges",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-credentials:"include",
-body:JSON.stringify({
-scheduled_at:fecha
-})
-}
-);
+/* ==========================================
+   LEER NOTIFICACIONES
+========================================== */
 
-const datos =
-await respuesta.json();
+async function marcarNotificacionesLeidas(){
 
-if(!respuesta.ok){
+  if(!usuarioActual){
+    return;
+  }
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo crear el reto."
-)
-);
+  try{
 
-return;
+    await apiFetch(
+      "/notifications/read",
+      {
+        method:"POST"
+      }
+    );
 
+    cargarNotificaciones();
+
+  }catch{}
 }
 
-mostrarMensaje(
-mensaje,
-"ok",
-"✅ Reto publicado correctamente."
-);
 
-document.getElementById(
-"fechaReto"
-).value="";
+/* ==========================================
+   RANKING
+========================================== */
 
-cargarRetos();
+async function cargarRanking(){
 
-}catch(error){
+  const tabla =
+    document.getElementById(
+      "tablaRanking"
+    );
 
-mostrarMensaje(
-mensaje,
-"error",
-"❌ Error de conexión."
-);
+  const top =
+    document.getElementById(
+      "topRanking"
+    );
 
+  try{
+
+    const result =
+      await apiFetch(
+        "/leaderboard"
+      );
+
+    if(!result.respuesta.ok){
+
+      tabla.innerHTML = `
+        <tr>
+          <td colspan="6">
+            No se pudo cargar el ranking.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    const datos =
+      result.datos || [];
+
+    if(datos.length === 0){
+
+      tabla.innerHTML = `
+        <tr>
+          <td colspan="6">
+            Todavía no hay equipos.
+          </td>
+        </tr>
+      `;
+
+      top.innerHTML = `
+        <div class="card">
+          <p>
+            Todavía no hay equipos en el ranking.
+          </p>
+        </div>
+      `;
+
+      return;
+    }
+
+    tabla.innerHTML = "";
+
+    datos.forEach(
+      function(equipo,index){
+
+        const fila =
+          document.createElement(
+            "tr"
+          );
+
+        fila.innerHTML = `
+          <td class="points">
+            ${String(
+              index + 1
+            ).padStart(2,"0")}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              equipo.name
+            )}
+          </td>
+
+          <td>
+            ${equipo.played || 0}
+          </td>
+
+          <td class="win">
+            ${equipo.wins || 0}
+          </td>
+
+          <td class="loss">
+            ${equipo.losses || 0}
+          </td>
+
+          <td class="points">
+            ${equipo.points || 0}
+          </td>
+        `;
+
+        tabla.appendChild(
+          fila
+        );
+      }
+    );
+
+    top.innerHTML = "";
+
+    datos
+      .slice(0,3)
+      .forEach(
+        function(equipo,index){
+
+          const medallas =
+            ["🥇","🥈","🥉"];
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "card";
+
+          card.innerHTML = `
+            <p>
+              ${medallas[index]}
+              ${escapeHTML(
+                equipo.name
+              )}
+              —
+              <b class="points">
+                ${equipo.points || 0} XP
+              </b>
+            </p>
+          `;
+
+          top.appendChild(
+            card
+          );
+        }
+      );
+
+  }catch(error){
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="6">
+          ❌ No se pudo cargar el ranking.
+        </td>
+      </tr>
+    `;
+  }
 }
 
+
+/* ==========================================
+   RETOS
+========================================== */
+
+function nombreModo(mode){
+
+  const nombres = {
+    snd:"Buscar y Destruir",
+    hardpoint:"Punto Caliente",
+    ctf:"Tomar la Bandera"
+  };
+
+  return nombres[mode] || mode;
+}
+
+function formatoReto(size){
+
+  return `${size} VS ${size}`;
+}
+
+function formatearFecha(fecha){
+
+  if(!fecha){
+    return "Sin fecha";
+  }
+
+  const d =
+    new Date(fecha);
+
+  if(Number.isNaN(d.getTime())){
+    return fecha;
+  }
+
+  return d.toLocaleString(
+    "es-ES",
+    {
+      dateStyle:"short",
+      timeStyle:"short"
+    }
+  );
 }
 
 
 async function cargarRetos(){
 
-const lista =
-document.getElementById(
-"listaRetos"
-);
+  const lista =
+    document.getElementById(
+      "listaRetos"
+    );
 
-try{
+  const miReto =
+    document.getElementById(
+      "miReto"
+    );
 
-const respuesta =
-await fetch(
-API+"/challenges",
-{
-credentials:"include"
-}
-);
+  if(!usuarioActual){
 
-const datos =
-await respuesta.json();
+    lista.innerHTML = `
+      <div class="card">
+        <h2>🔐 Inicia sesión</h2>
+        <p>
+          Necesitas iniciar sesión para participar en retos.
+        </p>
+      </div>
+    `;
 
-if(!respuesta.ok){
+    miReto.innerHTML = `
+      <div class="card">
+        <p>
+          Inicia sesión para consultar tus retos.
+        </p>
+      </div>
+    `;
 
-lista.innerHTML=`
+    return;
+  }
 
-<div class="card">
+  try{
 
-<h2>🔐 Inicia sesión</h2>
+    const result =
+      await apiFetch(
+        "/challenges"
+      );
 
-<p>
-Necesitas iniciar sesión para ver los retos.
-</p>
+    if(!result.respuesta.ok){
 
-</div>
+      lista.innerHTML = `
+        <div class="card">
+          <p>
+            ❌ ${escapeHTML(
+              result.datos.error ||
+              "No se pudieron cargar los retos."
+            )}
+          </p>
+        </div>
+      `;
 
-`;
+      return;
+    }
 
-return;
+    const retos =
+      result.datos || [];
 
-}
+    const propios =
+      retos.filter(
+        reto => reto.mine &&
+        (
+          reto.status === "open" ||
+          reto.status === "accepted"
+        )
+      );
 
-if(!datos.length){
+    if(propios.length){
 
-lista.innerHTML=`
+      miReto.innerHTML = "";
 
-<div class="card">
+      propios.forEach(
+        function(reto){
 
-<h2>
-No hay retos activos
-</h2>
+          miReto.appendChild(
+            crearRetoCard(
+              reto,
+              true
+            )
+          );
+        }
+      );
 
-<p>
-Sé el primero en publicar un reto.
-</p>
+    }else{
 
-</div>
+      miReto.innerHTML = `
+        <div class="card">
+          <p>
+            No tienes ningún reto activo.
+          </p>
+        </div>
+      `;
+    }
 
-`;
+    const abiertos =
+      retos.filter(
+        reto =>
+          reto.status === "open" &&
+          !reto.mine
+      );
 
-return;
+    if(!abiertos.length){
 
-}
+      lista.innerHTML = `
+        <div class="card">
+          <h2>
+            No hay retos abiertos
+          </h2>
+          <p>
+            Sé el primero en publicar uno.
+          </p>
+        </div>
+      `;
 
-lista.innerHTML="";
+      return;
+    }
 
-datos.forEach(function(reto){
+    lista.innerHTML = "";
 
-const card =
-document.createElement("div");
+    abiertos.forEach(
+      function(reto){
 
-card.className=
-"card challenge";
+        lista.appendChild(
+          crearRetoCard(
+            reto,
+            false
+          )
+        );
+      }
+    );
 
-const fecha =
-formatearFecha(
-reto.scheduled_at
-);
+  }catch(error){
 
-let mapas="";
-
-if(reto.maps&&reto.maps.length){
-
-reto.maps.forEach(function(mapa){
-
-mapas+=`
-<span class="challenge-map">
-${escapeHTML(mapa)}
-</span>
-`;
-
-});
-
-}
-
-let acciones="";
-
-if(reto.status==="open"&&!reto.mine){
-
-acciones+=`
-
-<button
-class="btn"
-onclick="aceptarReto(${reto.id})">
-ACEPTAR RETO
-</button>
-
-`;
-
-}
-
-if(reto.mine){
-
-acciones+=`
-
-<button
-class="btn btn-danger"
-onclick="cancelarReto(${reto.id})">
-CANCELAR RETO
-</button>
-
-`;
-
-}
-
-card.innerHTML=`
-
-<div class="row">
-
-<div>
-
-<h2>
-⚔️ RETO #${reto.id}
-</h2>
-
-<p>
-<strong>Buscar y Destruir · 4v4</strong>
-</p>
-
-</div>
-
-<span class="badge">
-${reto.status==="open"
-? "ABIERTO"
-: "ACEPTADO"}
-</span>
-
-</div>
-
-<div class="challenge-time">
-📅 ${fecha}
-</div>
-
-${
-reto.status==="accepted"
-? `
-<div class="info">
-
-<strong>Mapas:</strong>
-
-<div>
-${mapas}
-</div>
-
-</div>
-`
-: ""
+    lista.innerHTML = `
+      <div class="card">
+        <p>
+          ❌ Error al cargar los retos.
+        </p>
+      </div>
+    `;
+  }
 }
 
-${
-reto.status==="accepted"
-? `
-<div class="info">
-⚔️ Reto aceptado. Los dos equipos deben
-prepararse para la hora indicada.
-</div>
-`
-: ""
+
+function crearRetoCard(
+  reto,
+  esPropio
+){
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+  card.className =
+    "card challenge";
+
+  let modos = [];
+
+  try{
+
+    modos =
+      Array.isArray(
+        reto.game_modes
+      )
+      ? reto.game_modes
+      : JSON.parse(
+          reto.game_modes || '["snd"]'
+        );
+
+  }catch{
+
+    modos = ["snd"];
+  }
+
+  const modosHTML =
+    modos
+      .map(
+        mode =>
+          `<span class="badge badge-dark">
+            ${escapeHTML(
+              nombreModo(mode)
+            )}
+          </span>`
+      )
+      .join(" ");
+
+  let acciones = "";
+
+  if(
+    !esPropio &&
+    reto.status === "open"
+  ){
+
+    acciones += `
+      <button
+        class="btn"
+        onclick="aceptarReto(${reto.id})">
+        ⚔️ ACEPTAR RETO
+      </button>
+    `;
+  }
+
+  if(
+    esPropio &&
+    (
+      reto.status === "open" ||
+      reto.status === "accepted"
+    )
+  ){
+
+    acciones += `
+      <button
+        class="btn btn-dark"
+        onclick="abrirChat(${reto.id})">
+        💬 CHAT
+      </button>
+
+      <button
+        class="btn btn-danger"
+        onclick="cancelarReto(${reto.id})">
+        ❌ CANCELAR
+      </button>
+    `;
+  }
+
+  if(
+    reto.status === "accepted"
+  ){
+
+    acciones += `
+      <button
+        class="btn btn-dark"
+        onclick="abrirChat(${reto.id})">
+        💬 CHAT
+      </button>
+
+      <button
+        class="btn"
+        onclick="reportarResultado(${reto.id})">
+        🏆 REPORTAR RESULTADO
+      </button>
+    `;
+  }
+
+  card.innerHTML = `
+    <div class="row">
+
+      <div>
+
+        <h2>
+          ⚔️ Reto #${reto.id}
+        </h2>
+
+        <p>
+          ${
+            reto.status === "open"
+              ? "Reto abierto"
+              : reto.status === "accepted"
+                ? "Enfrentamiento aceptado"
+                : reto.status
+          }
+        </p>
+
+      </div>
+
+      <span class="badge ${
+        reto.status === "accepted"
+          ? "badge-green"
+          : ""
+      }">
+        ${escapeHTML(
+          String(
+            reto.status
+          ).toUpperCase()
+        )}
+      </span>
+
+    </div>
+
+    <div class="row-wrap" style="margin-top:14px">
+
+      <span class="badge">
+        ${formatoReto(
+          reto.team_size || 4
+        )}
+      </span>
+
+      ${modosHTML}
+
+    </div>
+
+    <div class="challenge-meta">
+
+      <div class="meta">
+        <small>FECHA</small>
+        <strong>
+          ${escapeHTML(
+            formatearFecha(
+              reto.scheduled_at
+            )
+          )}
+        </strong>
+      </div>
+
+      <div class="meta">
+        <small>EQUIPO</small>
+        <strong>
+          ${escapeHTML(
+            reto.creator_name ||
+            "Reto"
+          )}
+        </strong>
+      </div>
+
+      <div class="meta">
+        <small>MAPA 1</small>
+        <strong>
+          ${escapeHTML(
+            reto.map1 || "-"
+          )}
+        </strong>
+      </div>
+
+      <div class="meta">
+        <small>MAPA 2</small>
+        <strong>
+          ${escapeHTML(
+            reto.map2 || "-"
+          )}
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="row-wrap">
+
+      ${acciones}
+
+    </div>
+  `;
+
+  return card;
 }
 
-${acciones}
 
-`;
+/* ==========================================
+   PUBLICAR RETO
+========================================== */
 
-lista.appendChild(card);
+async function publicarReto(){
 
-});
+  const mensaje =
+    document.getElementById(
+      "retoMensaje"
+    );
 
-}catch(error){
+  if(!usuarioActual){
 
-console.error(error);
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Primero debes iniciar sesión."
+    );
 
-lista.innerHTML=`
+    abrirLogin();
 
-<div class="card">
+    return;
+  }
 
-<p>
-❌ Error al cargar los retos.
-</p>
+  const teamSize =
+    Number(
+      document.getElementById(
+        "retoTeamSize"
+      ).value
+    );
 
-</div>
+  const checkboxes =
+    document.querySelectorAll(
+      'input[name="gameMode"]:checked'
+    );
 
-`;
+  const modes =
+    Array.from(
+      checkboxes
+    ).map(
+      checkbox =>
+        checkbox.value
+    );
 
+  const scheduledAt =
+    document.getElementById(
+      "retoFecha"
+    ).value;
+
+  if(!modes.length){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Selecciona al menos un modo de juego."
+    );
+
+    return;
+  }
+
+  if(!scheduledAt){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Selecciona el día y la hora."
+    );
+
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/challenges",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            team_size:teamSize,
+            game_modes:modes,
+            scheduled_at:
+              new Date(
+                scheduledAt
+              ).toISOString()
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo publicar el reto."
+        )
+      );
+
+      return;
+    }
+
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Reto publicado correctamente."
+    );
+
+    document.getElementById(
+      "retoFecha"
+    ).value = "";
+
+    await cargarRetos();
+
+  }catch(error){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
 }
 
-}
 
+/* ==========================================
+   ACEPTAR RETO
+========================================== */
 
 async function aceptarReto(id){
 
-if(!confirm(
-"¿Quieres aceptar este reto?"
-)){
-return;
+  if(
+    !confirm(
+      "¿Quieres aceptar este reto?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        `/challenges/${id}/accept`,
+        {
+          method:"POST"
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      alert(
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo aceptar."
+        )
+      );
+
+      return;
+    }
+
+    alert(
+      "✅ Reto aceptado correctamente."
+    );
+
+    cargarRetos();
+
+  }catch(error){
+
+    alert(
+      "❌ Error de conexión."
+    );
+  }
 }
 
-try{
 
-const respuesta =
-await fetch(
-API+"/challenges/"+id+"/accept",
-{
-method:"POST",
-credentials:"include"
-}
-);
-
-const datos =
-await respuesta.json();
-
-if(!respuesta.ok){
-
-alert(
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo aceptar el reto."
-)
-);
-
-return;
-
-}
-
-alert(
-"✅ Reto aceptado correctamente."
-);
-
-cargarRetos();
-
-}catch(error){
-
-alert(
-"❌ Error de conexión."
-);
-
-}
-
-}
-
+/* ==========================================
+   CANCELAR RETO
+========================================== */
 
 async function cancelarReto(id){
 
-if(!confirm(
-"¿Seguro que quieres cancelar este reto?"
-)){
-return;
-}
-
-try{
-
-const respuesta =
-await fetch(
-API+"/challenges/"+id+"/cancel",
-{
-method:"POST",
-credentials:"include"
-}
-);
-
-const datos =
-await respuesta.json();
-
-if(!respuesta.ok){
-
-alert(
-"❌ "+(
-datos.detail||
-datos.error||
-"No se pudo cancelar el reto."
-)
-);
-
-return;
-
-}
-
-alert(
-"✅ Reto cancelado."
-);
-
-cargarRetos();
-
-}catch(error){
-
-alert(
-"❌ Error de conexión."
-);
-
-}
-
-}
-
-
-async function cargarRanking(){
-
-const tabla =
-document.getElementById(
-"tablaRanking"
-);
-
-const top =
-document.getElementById(
-"topRanking"
-);
-
-try{
-
-const respuesta =
-await fetch(
-API+"/leaderboard",
-{
-credentials:"include"
-}
-);
-
-const datos =
-await respuesta.json();
-
-if(!Array.isArray(datos)){
-
-tabla.innerHTML=`
-
-<tr>
-<td colspan="6">
-No hay equipos todavía.
-</td>
-</tr>
-
-`;
-
-return;
-
-}
-
-if(datos.length===0){
-
-tabla.innerHTML=`
-
-<tr>
-<td colspan="6">
-Todavía no hay equipos.
-</td>
-</tr>
-
-`;
-
-if(top){
-
-top.innerHTML=`
-
-<div class="card">
-<p>No hay equipos todavía.</p>
-</div>
-
-`;
-
-}
-
-return;
-
-}
-
-tabla.innerHTML="";
-
-datos.forEach(function(equipo,index){
-
-const fila =
-document.createElement("tr");
-
-fila.innerHTML=`
-
-<td class="points">
-${index+1}
-</td>
-
-<td>
-${escapeHTML(equipo.name)}
-</td>
-
-<td>
-${equipo.played||0}
-</td>
-
-<td class="win">
-${equipo.wins||0}
-</td>
-
-<td class="loss">
-${equipo.losses||0}
-</td>
-
-<td class="points">
-${equipo.points||0}
-</td>
-
-`;
-
-tabla.appendChild(fila);
-
-});
-
-if(top){
-
-top.innerHTML="";
-
-const medallas=[
-"🥇",
-"🥈",
-"🥉"
-];
-
-datos.slice(0,3)
-.forEach(function(equipo,index){
-
-const card =
-document.createElement("div");
-
-card.className="card";
-
-card.innerHTML=`
-
-<p>
-
-${medallas[index]}
-
-${escapeHTML(equipo.name)}
-
-—
-
-<b class="points">
-${equipo.points||0} XP
-</b>
-
-</p>
-
-`;
-
-top.appendChild(card);
-
-});
-
-}
-
-}catch(error){
-
-console.error(error);
-
-tabla.innerHTML=`
-
-<tr>
-<td colspan="6">
-❌ No se pudo cargar el ranking.
-</td>
-</tr>
-
-`;
-
-}
-
+  const motivo =
+    prompt(
+      "Motivo de la cancelación (opcional):"
+    );
+
+  if(motivo === null){
+    return;
+  }
+
+  if(
+    !confirm(
+      "¿Seguro que quieres cancelar este reto?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        `/challenges/${id}/cancel`,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            reason:
+              motivo ||
+              "Reto cancelado por el capitán."
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      alert(
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo cancelar."
+        )
+      );
+
+      return;
+    }
+
+    alert(
+      "✅ Reto cancelado."
+    );
+
+    cargarRetos();
+
+  }catch(error){
+
+    alert(
+      "❌ Error de conexión."
+    );
+  }
 }
 
 
-function formatearFecha(valor){
+/* ==========================================
+   REPORTAR RESULTADO
+========================================== */
 
-if(!valor)return"Fecha no indicada";
+async function reportarResultado(id){
 
-const fecha =
-new Date(valor);
+  if(!clanActual){
 
-if(Number.isNaN(
-fecha.getTime()
-)){
-return valor;
+    alert(
+      "❌ No tienes equipo."
+    );
+
+    return;
+  }
+
+  const ganador =
+    prompt(
+      `Escribe el ID del equipo ganador.\n\nTu equipo: ${clanActual.name}\nID: ${clanActual.id}`
+    );
+
+  if(!ganador){
+    return;
+  }
+
+  const winnerId =
+    Number(ganador);
+
+  if(!winnerId){
+
+    alert(
+      "❌ ID no válido."
+    );
+
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        `/challenges/${id}/report`,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            winner_clan_id:
+              winnerId
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      alert(
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo enviar el resultado."
+        )
+      );
+
+      return;
+    }
+
+    alert(
+      result.datos.completed
+        ? "🏆 Resultado confirmado. El reto ha terminado."
+        : "✅ Resultado enviado. Falta la confirmación del otro capitán."
+    );
+
+    cargarRetos();
+
+  }catch(error){
+
+    alert(
+      "❌ Error de conexión."
+    );
+  }
 }
 
-return fecha.toLocaleString(
-"es-ES",
-{
-dateStyle:"full",
-timeStyle:"short"
-}
-);
 
+/* ==========================================
+   CHAT
+========================================== */
+
+async function abrirChat(id){
+
+  chatChallengeId = id;
+
+  document
+    .getElementById(
+      "chatModal"
+    )
+    .classList.add("show");
+
+  await cargarChat();
+}
+
+
+async function cargarChat(){
+
+  const contenedor =
+    document.getElementById(
+      "chatContenido"
+    );
+
+  if(!chatChallengeId){
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        `/challenges/${chatChallengeId}/chat`
+      );
+
+    if(!result.respuesta.ok){
+
+      contenedor.innerHTML = `
+        <p class="empty">
+          ❌ ${escapeHTML(
+            result.datos.error ||
+            "No se pudo cargar el chat."
+          )}
+        </p>
+      `;
+
+      return;
+    }
+
+    const mensajes =
+      result.datos || [];
+
+    if(!mensajes.length){
+
+      contenedor.innerHTML = `
+        <p class="empty">
+          Todavía no hay mensajes.
+        </p>
+      `;
+
+      return;
+    }
+
+    contenedor.innerHTML = "";
+
+    mensajes.forEach(
+      function(mensaje){
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "chat-message";
+
+        item.innerHTML = `
+          <strong>
+            ${escapeHTML(
+              mensaje.username
+            )}
+          </strong>
+
+          <small>
+            ${escapeHTML(
+              mensaje.created_at || ""
+            )}
+          </small>
+
+          <div style="margin-top:6px">
+            ${escapeHTML(
+              mensaje.message
+            )}
+          </div>
+        `;
+
+        contenedor.appendChild(
+          item
+        );
+      }
+    );
+
+    contenedor.scrollTop =
+      contenedor.scrollHeight;
+
+  }catch(error){
+
+    contenedor.innerHTML = `
+      <p class="empty">
+        ❌ Error al cargar el chat.
+      </p>
+    `;
+  }
+}
+
+
+async function enviarMensaje(){
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+  const mensaje =
+    document.getElementById(
+      "chatMensaje"
+    );
+
+  const text =
+    input.value.trim();
+
+  if(!text){
+    return;
+  }
+
+  if(!chatChallengeId){
+    return;
+  }
+
+  try{
+
+    const result =
+      await apiFetch(
+        `/challenges/${chatChallengeId}/chat`,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            message:text
+          })
+        }
+      );
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo enviar."
+        )
+      );
+
+      return;
+    }
+
+    input.value = "";
+
+    mensaje.className =
+      "message";
+
+    await cargarChat();
+
+  }catch(error){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
+}
+
+
+/* ==========================================
+   PERFIL
+========================================== */
+
+async function cargarPerfil(){
+
+  const contenedor =
+    document.getElementById(
+      "perfilContenido"
+    );
+
+  if(!usuarioActual){
+
+    contenedor.innerHTML = `
+      <div class="card">
+        <h2>🔐 Inicia sesión</h2>
+        <button
+          class="btn"
+          onclick="abrirLogin()">
+          INICIAR SESIÓN
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  contenedor.innerHTML = `
+    <div class="card">
+
+      <h2>
+        👤 ${escapeHTML(
+          usuarioActual.username
+        )}
+      </h2>
+
+      <p>
+        Cuenta de jugador de BlackOps2Liga.
+      </p>
+
+      <div class="form">
+
+        <label>
+          ID de PSN
+        </label>
+
+        <input
+          id="psnInput"
+          placeholder="Próximamente">
+
+        <button
+          class="btn"
+          onclick="guardarPSN()">
+          GUARDAR ID DE PSN
+        </button>
+
+      </div>
+
+      <div
+        id="psnMensaje"
+        class="message">
+      </div>
+
+    </div>
+  `;
+}
+
+
+async function guardarPSN(){
+
+  const mensaje =
+    document.getElementById(
+      "psnMensaje"
+    );
+
+  mostrarMensaje(
+    mensaje,
+    "info",
+    "ℹ️ Esta función se conectará al campo PSN de tu base de datos en el siguiente paso."
+  );
+}
+
+
+/* ==========================================
+   HISTORIAL
+========================================== */
+
+async function cargarHistorial(){
+
+  const contenedor =
+    document.getElementById(
+      "historialLista"
+    );
+
+  if(!usuarioActual){
+
+    contenedor.innerHTML = `
+      <div class="card">
+        <p>
+          Inicia sesión para consultar tu historial.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  contenedor.innerHTML = `
+    <div class="card">
+      <p>
+        Los retos completados aparecerán aquí.
+      </p>
+    </div>
+  `;
+}
+
+
+/* ==========================================
+   UTILIDADES
+========================================== */
+
+function mostrarMensaje(
+  elemento,
+  tipo,
+  texto
+){
+
+  if(!elemento){
+    return;
+  }
+
+  elemento.className =
+    "message " + tipo;
+
+  elemento.textContent =
+    texto;
 }
 
 
 function escapeHTML(texto){
 
-const div =
-document.createElement("div");
+  const div =
+    document.createElement(
+      "div"
+    );
 
-div.textContent =
-texto==null
-? ""
-: String(texto);
+  div.textContent =
+    String(
+      texto ?? ""
+    );
 
-return div.innerHTML;
-
+  return div.innerHTML;
 }
 
 
-window.onclick=function(event){
+/* ==========================================
+   CERRAR MENÚ AL HACER CLICK FUERA
+========================================== */
 
-const registro =
-document.getElementById(
-"registroModal"
+document.addEventListener(
+  "click",
+  function(event){
+
+    const wrap =
+      document.getElementById(
+        "userMenuWrap"
+      );
+
+    const dropdown =
+      document.getElementById(
+        "userDropdown"
+      );
+
+    if(
+      wrap &&
+      dropdown &&
+      !wrap.contains(
+        event.target
+      )
+    ){
+      dropdown.classList.remove(
+        "show"
+      );
+    }
+  }
 );
 
-const loginModal =
-document.getElementById(
-"loginModal"
+
+/* ==========================================
+   CERRAR MODALES AL PULSAR FUERA
+========================================== */
+
+window.addEventListener(
+  "click",
+  function(event){
+
+    const registro =
+      document.getElementById(
+        "registroModal"
+      );
+
+    const loginModal =
+      document.getElementById(
+        "loginModal"
+      );
+
+    const chatModal =
+      document.getElementById(
+        "chatModal"
+      );
+
+    if(event.target === registro){
+      cerrarRegistro();
+    }
+
+    if(event.target === loginModal){
+      cerrarLogin();
+    }
+
+    if(event.target === chatModal){
+      cerrarChat();
+    }
+  }
 );
 
-if(event.target===registro){
-cerrarRegistro();
-}
 
-if(event.target===loginModal){
-cerrarLogin();
-}
+/* ==========================================
+   ENTER EN LOGIN
+========================================== */
 
-};
+document.addEventListener(
+  "keydown",
+  function(event){
 
+    if(
+      event.key === "Enter" &&
+      document
+        .getElementById(
+          "loginModal"
+        )
+        .classList.contains("show")
+    ){
+
+      login();
+    }
+  }
+);
+
+
+/* ==========================================
+   INICIO
+========================================== */
 
 cargarUsuario();
-cargarRanking();
 
 </script>
 
