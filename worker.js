@@ -83,7 +83,7 @@ async function passwordKey(password, salt) {
     {
       name: "PBKDF2",
       salt: encoder.encode(salt),
-      iterations: 120000,
+      iterations: 100000,
       hash: "SHA-256"
     },
     key,
@@ -170,9 +170,6 @@ async function api(request, env, path) {
 
   const currentUser = await getUser(request, env);
 
-  /*
-   * ME
-   */
   if (
     request.method === "GET" &&
     path === "/api/me"
@@ -189,9 +186,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * REGISTER
-   */
   if (
     request.method === "POST" &&
     path === "/api/register"
@@ -318,9 +312,6 @@ async function api(request, env, path) {
     }
   }
 
-  /*
-   * LOGIN
-   */
   if (
     request.method === "POST" &&
     path === "/api/login"
@@ -389,9 +380,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * LOGOUT
-   */
   if (
     request.method === "POST" &&
     path === "/api/logout"
@@ -410,9 +398,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * TODO LO DEMÁS REQUIERE LOGIN
-   */
   if (!currentUser) {
     return json(
       {
@@ -423,9 +408,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * INVITACIONES
-   */
   if (
     request.method === "GET" &&
     path === "/api/invites"
@@ -452,9 +434,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * CREAR CLAN
-   */
   if (
     request.method === "POST" &&
     path === "/api/clans"
@@ -562,9 +541,6 @@ async function api(request, env, path) {
     }
   }
 
-  /*
-   * MI CLAN
-   */
   if (
     request.method === "GET" &&
     path === "/api/clan"
@@ -626,9 +602,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * LEADERBOARD
-   */
   if (
     request.method === "GET" &&
     path === "/api/leaderboard"
@@ -660,9 +633,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * CREAR RETO
-   */
   if (
     request.method === "POST" &&
     path === "/api/challenges"
@@ -720,9 +690,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * LISTAR RETOS
-   */
   if (
     request.method === "GET" &&
     path === "/api/challenges"
@@ -786,9 +753,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * ACEPTAR RETO
-   */
   const acceptMatch =
     path.match(
       /^\/api\/challenges\/(\d+)\/accept$/
@@ -869,9 +833,6 @@ async function api(request, env, path) {
     );
   }
 
-  /*
-   * REPORTAR RESULTADO
-   */
   const reportMatch =
     path.match(
       /^\/api\/challenges\/(\d+)\/report$/
