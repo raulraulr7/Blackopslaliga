@@ -770,10 +770,6 @@ th{
 <div class="container">
 
 
-<!-- ==========================================
-     INICIO
-========================================== -->
-
 <section
   id="inicio"
   class="page active">
@@ -781,15 +777,16 @@ th{
   <div class="hero">
 
     <h1>
-      BLACKOPS2<br>
-      <span>LIGA COMPETITIVA</span>
+      BLACK<span>OPS</span>2
+      <br>
+      LIGA COMPETITIVA
     </h1>
 
     <p>
-      Liga competitiva de Call of Duty:
-      Black Ops II. Crea tu equipo,
-      publica retos, juega contra otros
-      equipos y sube en el ranking.
+      Organiza retos entre equipos,
+      juega 2v2, 3v3 o 4v4,
+      elige los modos de juego
+      y demuestra quién manda.
     </p>
 
     <div style="margin-top:25px">
@@ -816,39 +813,13 @@ th{
     <div class="card">
 
       <h3>
-        🏆 Ranking
-      </h3>
-
-      <p>
-        Compite por XP y sube posiciones
-        en la clasificación de equipos.
-      </p>
-
-      <button
-        class="btn"
-        onclick="mostrarPagina('ranking')">
-        VER RANKING
-      </button>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>
-        ⚔️ Retos
+        ⚔️ RETOS
       </h3>
 
       <p>
         Publica y acepta retos
-        en formato 2v2, 3v3 o 4v4.
+        entre equipos.
       </p>
-
-      <button
-        class="btn"
-        onclick="mostrarPagina('retos')">
-        VER RETOS
-      </button>
 
     </div>
 
@@ -856,19 +827,26 @@ th{
     <div class="card">
 
       <h3>
-        👥 Equipos
+        👥 FORMATOS
       </h3>
 
       <p>
-        Crea tu equipo y añade
-        hasta 6 jugadores.
+        Juega 2v2, 3v3 o 4v4.
       </p>
 
-      <button
-        class="btn"
-        onclick="mostrarPagina('equipo')">
-        MI EQUIPO
-      </button>
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        🏆 RANKING
+      </h3>
+
+      <p>
+        Gana puntos y sube
+        puestos en la clasificación.
+      </p>
 
     </div>
 
@@ -876,10 +854,6 @@ th{
 
 </section>
 
-
-<!-- ==========================================
-     RANKING
-========================================== -->
 
 <section
   id="ranking"
@@ -896,6 +870,7 @@ th{
     </p>
 
   </div>
+
 
   <div class="card">
 
@@ -914,10 +889,6 @@ th{
 </section>
 
 
-<!-- ==========================================
-     RETOS
-========================================== -->
-
 <section
   id="retos"
   class="page">
@@ -929,14 +900,14 @@ th{
     </h1>
 
     <p>
-      Publica o acepta un reto.
+      Publica o acepta retos.
     </p>
 
   </div>
 
 
   <div
-    id="crearRetoCard"
+    id="publicarRetoCard"
     class="card"
     style="margin-bottom:20px">
 
@@ -944,14 +915,14 @@ th{
       Publicar reto
     </h2>
 
-    <p style="margin-bottom:20px">
+    <p style="margin-bottom:18px">
       Elige el formato y los modos.
-      La hora se registrará
-      automáticamente al publicar.
+      La hora se asignará automáticamente.
     </p>
 
 
     <div class="form">
+
 
       <label>
         Formato
@@ -963,9 +934,10 @@ th{
 
           <input
             type="radio"
-            name="teamSize"
             id="size2"
-            value="2">
+            name="teamSize"
+            value="2"
+            checked>
 
           <label for="size2">
             2v2
@@ -978,8 +950,8 @@ th{
 
           <input
             type="radio"
-            name="teamSize"
             id="size3"
+            name="teamSize"
             value="3">
 
           <label for="size3">
@@ -993,10 +965,9 @@ th{
 
           <input
             type="radio"
-            name="teamSize"
             id="size4"
-            value="4"
-            checked>
+            name="teamSize"
+            value="4">
 
           <label for="size4">
             4v4
@@ -1010,7 +981,7 @@ th{
       <input
         type="hidden"
         id="retoTeamSize"
-        value="4">
+        value="2">
 
 
       <label style="margin-top:10px">
@@ -1023,13 +994,13 @@ th{
 
           <input
             type="checkbox"
-            name="gameMode"
             id="modeSnd"
+            name="gameMode"
             value="snd"
             checked>
 
           <label for="modeSnd">
-            💣 Buscar y Destruir
+            Buscar y destruir
           </label>
 
         </div>
@@ -1039,12 +1010,12 @@ th{
 
           <input
             type="checkbox"
-            name="gameMode"
             id="modeHardpoint"
+            name="gameMode"
             value="hardpoint">
 
           <label for="modeHardpoint">
-            🔥 Punto Caliente
+            Punto caliente
           </label>
 
         </div>
@@ -1054,35 +1025,15 @@ th{
 
           <input
             type="checkbox"
-            name="gameMode"
             id="modeCtf"
+            name="gameMode"
             value="ctf">
 
           <label for="modeCtf">
-            🚩 Tomar la Bandera
+            Tomar la bandera
           </label>
 
         </div>
-
-      </div>
-
-
-      <label style="margin-top:10px">
-        Hora del reto
-      </label>
-
-      <div
-        class="meta"
-        style="margin-top:6px">
-
-        <small>
-          HORA AUTOMÁTICA
-        </small>
-
-        <strong>
-          Se registrará automáticamente
-          al publicar el reto
-        </strong>
 
       </div>
 
@@ -1093,15 +1044,11 @@ th{
       </div>
 
 
-      <div style="margin-top:10px">
-
-        <button
-          class="btn"
-          onclick="publicarReto()">
-          ⚔️ PUBLICAR RETO
-        </button>
-
-      </div>
+      <button
+        class="btn"
+        onclick="publicarReto()">
+        ⚔️ PUBLICAR RETO
+      </button>
 
     </div>
 
@@ -1120,10 +1067,6 @@ th{
 </section>
 
 
-<!-- ==========================================
-     MI EQUIPO
-========================================== -->
-
 <section
   id="equipo"
   class="page">
@@ -1135,7 +1078,7 @@ th{
     </h1>
 
     <p>
-      Gestiona tu equipo y sus jugadores.
+      Gestiona tu equipo y jugadores.
     </p>
 
   </div>
@@ -1145,17 +1088,13 @@ th{
     id="equipoContenido">
 
     <div class="empty">
-      Cargando...
+      Cargando equipo...
     </div>
 
   </div>
 
 </section>
 
-
-<!-- ==========================================
-     HISTORIAL
-========================================== -->
 
 <section
   id="historial"
@@ -1164,11 +1103,11 @@ th{
   <div class="section-title">
 
     <h1>
-      📊 Historial
+      📜 Historial
     </h1>
 
     <p>
-      Historial de tus retos.
+      Tus retos anteriores.
     </p>
 
   </div>
@@ -1186,10 +1125,6 @@ th{
 </section>
 
 
-<!-- ==========================================
-     NOTIFICACIONES
-========================================== -->
-
 <section
   id="notificaciones"
   class="page">
@@ -1201,7 +1136,7 @@ th{
     </h1>
 
     <p>
-      Invitaciones, retos y mensajes.
+      Invitaciones, retos y resultados.
     </p>
 
   </div>
@@ -1229,18 +1164,10 @@ th{
 
 <footer class="footer">
 
-  <div class="container">
-
-    BlackOps2Liga · Liga competitiva
-
-  </div>
+  BLACKOPS2 LIGA
 
 </footer>
 
-
-<!-- ==========================================
-     LOGIN MODAL
-========================================== -->
 
 <div
   id="loginModal"
@@ -1312,10 +1239,6 @@ th{
 </div>
 
 
-<!-- ==========================================
-     REGISTRO MODAL
-========================================== -->
-
 <div
   id="registroModal"
   class="modal">
@@ -1385,10 +1308,6 @@ th{
 
 </div>
 
-
-<!-- ==========================================
-     CHAT MODAL
-========================================== -->
 
 <div
   id="chatModal"
@@ -1959,21 +1878,19 @@ async function cargarRanking(){
             </td>
 
             <td>
-              <span class="badge badge-yellow">
-                ${equipo.points}
-              </span>
+              ${Number(equipo.points || 0)}
             </td>
 
             <td>
-              ${equipo.wins}
+              ${Number(equipo.wins || 0)}
             </td>
 
             <td>
-              ${equipo.losses}
+              ${Number(equipo.losses || 0)}
             </td>
 
             <td>
-              ${equipo.played}
+              ${Number(equipo.played || 0)}
             </td>
 
           </tr>
@@ -1998,6 +1915,31 @@ async function cargarRanking(){
       </div>`;
   }
 }
+  <script>
+
+function mostrarMensaje(elemento, tipo, texto){
+
+  if(!elemento){
+    return;
+  }
+
+  elemento.className =
+    "message " + tipo;
+
+  elemento.textContent =
+    texto;
+}
+
+
+function escapeHTML(valor){
+
+  return String(valor ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
 
 /* ==========================================
@@ -2019,8 +1961,9 @@ async function cargarEquipo(){
 
     contenedor.innerHTML = `
       <div class="card">
-        <p>
-          Inicia sesión para gestionar
+        <h2>🔐 Inicia sesión</h2>
+        <p style="margin:12px 0 18px">
+          Necesitas iniciar sesión para ver
           tu equipo.
         </p>
 
@@ -2050,59 +1993,54 @@ async function cargarEquipo(){
     if(!result.respuesta.ok){
 
       contenedor.innerHTML =
-        `<div class="card">
-          <p style="color:#ff8d89">
-            ❌ ${
-              escapeHTML(
-                result.datos.error ||
-                "No se pudo cargar el equipo."
-              )
-            }
-          </p>
+        `<div class="empty">
+          ❌ ${escapeHTML(
+            result.datos.error ||
+            "No se pudo cargar el equipo."
+          )}
         </div>`;
 
       return;
     }
 
-    const data =
+    const datos =
       result.datos;
 
-    if(!data.clan){
+    if(!datos.clan){
 
       contenedor.innerHTML = `
         <div class="card">
 
           <h2>
-            No tienes equipo
+            🏴 Todavía no tienes equipo
           </h2>
 
-          <p>
-            Crea tu equipo para empezar
-            a competir.
+          <p style="margin:10px 0 20px">
+            Crea tu propio equipo para
+            poder publicar y aceptar retos.
           </p>
 
-          <div
-            class="form"
-            style="margin-top:15px">
+          <div class="form">
 
             <label>
               Nombre del equipo
             </label>
 
             <input
-              id="nuevoClanNombre"
-              placeholder="Ej: Virtual Gamers">
+              id="nuevoEquipoNombre"
+              maxlength="24"
+              placeholder="Nombre del equipo">
+
+            <div
+              id="crearEquipoMensaje"
+              class="message">
+            </div>
 
             <button
               class="btn"
               onclick="crearEquipo()">
               CREAR EQUIPO
             </button>
-
-            <div
-              id="crearClanMensaje"
-              class="message">
-            </div>
 
           </div>
 
@@ -2112,94 +2050,68 @@ async function cargarEquipo(){
       return;
     }
 
-    const clan =
-      data.clan;
-
-    const members =
-      data.members || [];
-
-    const score =
-      data.score || {
-        points:0,
-        wins:0,
-        losses:0,
-        played:0
-      };
-
     clanActual =
-      clan;
+      datos.clan;
 
-    let miembrosHTML =
-      "";
-
-    members.forEach(
-      member => {
-
-        miembrosHTML += `
-          <div class="team-member">
-
-            <div>
-
-              <div class="member-name">
-                ${escapeHTML(member.username)}
-              </div>
-
-              <div class="member-role">
-                ${
-                  member.role === "captain"
-                    ? "👑 Capitán"
-                    : "Jugador"
-                }
-              </div>
-
-            </div>
-
-          </div>
-        `;
-      }
-    );
-
-    contenedor.innerHTML = `
+    let html = `
 
       <div class="grid-2">
 
         <div class="card">
 
           <h2>
-            ${escapeHTML(clan.name)}
+            🏴 ${escapeHTML(
+              datos.clan.name
+            )}
           </h2>
 
           <p>
-            Equipo competitivo
+            Capitán:
+            <strong>
+              ${escapeHTML(
+                encontrarCapitan(
+                  datos.members,
+                  datos.clan.captain_id
+                )
+              )}
+            </strong>
           </p>
 
           <div class="stats">
 
             <div class="stat">
-              <small>XP</small>
+              <small>Puntos</small>
               <strong>
-                ${score.points}
+                ${Number(
+                  datos.score?.points || 0
+                )}
               </strong>
             </div>
 
             <div class="stat">
               <small>Victorias</small>
               <strong>
-                ${score.wins}
+                ${Number(
+                  datos.score?.wins || 0
+                )}
               </strong>
             </div>
 
             <div class="stat">
               <small>Derrotas</small>
               <strong>
-                ${score.losses}
+                ${Number(
+                  datos.score?.losses || 0
+                )}
               </strong>
             </div>
 
             <div class="stat">
-              <small>Partidos</small>
+              <small>Jugados</small>
               <strong>
-                ${score.played}
+                ${Number(
+                  datos.score?.played || 0
+                )}
               </strong>
             </div>
 
@@ -2210,110 +2122,184 @@ async function cargarEquipo(){
 
         <div class="card">
 
-          <h2>
-            Jugadores
-          </h2>
+          <h3>
+            👥 Jugadores
+          </h3>
 
-          <p>
-            ${members.length}/6 jugadores
-          </p>
-
-          <div style="margin-top:10px">
-            ${miembrosHTML}
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="card"
-        style="margin-top:18px">
-
-        <h2>
-          Invitar jugador
-        </h2>
-
-        <p>
-          Solo el capitán puede invitar jugadores.
-        </p>
-
-        <div
-          class="form"
-          style="margin-top:15px">
-
-          <input
-            id="invitarUsuario"
-            placeholder="Nombre de usuario">
-
-          <button
-            class="btn"
-            onclick="invitarJugador()">
-            INVITAR
-          </button>
-
-          <div
-            id="invitarMensaje"
-            class="message">
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="card"
-        style="margin-top:18px">
-
-        <h2>
-          Invitaciones recibidas
-        </h2>
-
-        <div
-          id="invitacionesEquipo">
-          Cargando...
-        </div>
-
-      </div>
-
+          <div>
     `;
 
-    cargarInvitacionesEquipo();
+    if(
+      !datos.members ||
+      !datos.members.length
+    ){
+
+      html += `
+        <div class="empty">
+          No hay jugadores.
+        </div>
+      `;
+
+    }else{
+
+      datos.members.forEach(
+        miembro => {
+
+          html += `
+
+            <div class="team-member">
+
+              <div>
+
+                <div class="member-name">
+                  ${escapeHTML(
+                    miembro.username
+                  )}
+                </div>
+
+                <div class="member-role">
+                  ${
+                    miembro.role === "captain"
+                    ? "👑 Capitán"
+                    : "Jugador"
+                  }
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+        }
+      );
+    }
+
+    html += `
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+
+    if(
+      Number(
+        datos.clan.captain_id
+      ) === Number(
+        usuarioActual.id
+      )
+    ){
+
+      html += `
+
+        <div
+          class="card"
+          style="margin-top:18px">
+
+          <h3>
+            ✉️ Invitar jugador
+          </h3>
+
+          <p style="margin-bottom:15px">
+            Puedes tener hasta 6 jugadores.
+          </p>
+
+          <div class="form">
+
+            <label>
+              Usuario del jugador
+            </label>
+
+            <input
+              id="invitarUsuario"
+              placeholder="Nombre de usuario">
+
+            <div
+              id="invitarMensaje"
+              class="message">
+            </div>
+
+            <button
+              class="btn"
+              onclick="invitarJugador()">
+              ENVIAR INVITACIÓN
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }else{
+
+      html += `
+
+        <div
+          class="card"
+          style="margin-top:18px">
+
+          <button
+            class="btn btn-danger"
+            onclick="abandonarEquipo()">
+            ABANDONAR EQUIPO
+          </button>
+
+        </div>
+
+      `;
+    }
+
+
+    contenedor.innerHTML =
+      html;
 
   }catch(error){
 
     console.error(error);
 
     contenedor.innerHTML =
-      `<div class="card">
-        <p style="color:#ff8d89">
-          ❌ Error interno del servidor.
-        </p>
+      `<div class="empty">
+        ❌ Error de conexión.
       </div>`;
   }
 }
 
 
-/* ==========================================
-   CREAR EQUIPO
-========================================== */
+function encontrarCapitan(
+  miembros,
+  captainId
+){
+
+  const capitan =
+    (miembros || [])
+      .find(
+        miembro =>
+          Number(miembro.id) ===
+          Number(captainId)
+      );
+
+  return capitan
+    ? capitan.username
+    : "Desconocido";
+}
+
 
 async function crearEquipo(){
 
-  const input =
-    document.getElementById(
-      "nuevoClanNombre"
-    );
+  const nombre =
+    document
+      .getElementById(
+        "nuevoEquipoNombre"
+      )
+      ?.value
+      .trim();
 
   const mensaje =
     document.getElementById(
-      "crearClanMensaje"
+      "crearEquipoMensaje"
     );
-
-  const nombre =
-    input?.value.trim();
 
   if(!nombre){
 
@@ -2358,10 +2344,18 @@ async function crearEquipo(){
       return;
     }
 
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Equipo creado."
+    );
+
     await cargarUsuario();
     await cargarEquipo();
 
   }catch(error){
+
+    console.error(error);
 
     mostrarMensaje(
       mensaje,
@@ -2372,31 +2366,27 @@ async function crearEquipo(){
 }
 
 
-/* ==========================================
-   INVITAR JUGADOR
-========================================== */
-
 async function invitarJugador(){
 
-  const input =
-    document.getElementById(
-      "invitarUsuario"
-    );
+  const username =
+    document
+      .getElementById(
+        "invitarUsuario"
+      )
+      ?.value
+      .trim();
 
   const mensaje =
     document.getElementById(
       "invitarMensaje"
     );
 
-  const username =
-    input?.value.trim();
-
   if(!username){
 
     mostrarMensaje(
       mensaje,
       "error",
-      "❌ Escribe el nombre del jugador."
+      "❌ Escribe el usuario."
     );
 
     return;
@@ -2427,7 +2417,7 @@ async function invitarJugador(){
         "❌ " +
         (
           result.datos.error ||
-          "No se pudo enviar la invitación."
+          "No se pudo enviar."
         )
       );
 
@@ -2440,9 +2430,14 @@ async function invitarJugador(){
       "✅ Invitación enviada."
     );
 
-    input.value = "";
+    document
+      .getElementById(
+        "invitarUsuario"
+      ).value = "";
 
   }catch(error){
+
+    console.error(error);
 
     mostrarMensaje(
       mensaje,
@@ -2453,18 +2448,13 @@ async function invitarJugador(){
 }
 
 
-/* ==========================================
-   INVITACIONES EQUIPO
-========================================== */
+async function abandonarEquipo(){
 
-async function cargarInvitacionesEquipo(){
-
-  const contenedor =
-    document.getElementById(
-      "invitacionesEquipo"
-    );
-
-  if(!contenedor){
+  if(
+    !confirm(
+      "¿Seguro que quieres abandonar el equipo?"
+    )
+  ){
     return;
   }
 
@@ -2472,100 +2462,7 @@ async function cargarInvitacionesEquipo(){
 
     const result =
       await apiFetch(
-        "/invites"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<p style="color:#ff8d89">
-          ❌ No se pudieron cargar.
-        </p>`;
-
-      return;
-    }
-
-    const invitaciones =
-      result.datos || [];
-
-    if(!invitaciones.length){
-
-      contenedor.innerHTML =
-        `<p class="meta">
-          No tienes invitaciones pendientes.
-        </p>`;
-
-      return;
-    }
-
-    let html = "";
-
-    invitaciones.forEach(
-      invite => {
-
-        html += `
-          <div class="team-member">
-
-            <div>
-
-              <div class="member-name">
-                ${escapeHTML(invite.clan)}
-              </div>
-
-              <div class="member-role">
-                Invitado por
-                ${escapeHTML(invite.inviter)}
-              </div>
-
-            </div>
-
-            <div>
-
-              <button
-                class="btn btn-success"
-                onclick="aceptarInvitacion(${invite.id})">
-                ACEPTAR
-              </button>
-
-              <button
-                class="btn btn-danger"
-                onclick="rechazarInvitacion(${invite.id})">
-                RECHAZAR
-              </button>
-
-            </div>
-
-          </div>
-        `;
-      }
-    );
-
-    contenedor.innerHTML =
-      html;
-
-  }catch(error){
-
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<p style="color:#ff8d89">
-        ❌ Error de conexión.
-      </p>`;
-  }
-}
-
-
-/* ==========================================
-   ACEPTAR INVITACIÓN
-========================================== */
-
-async function aceptarInvitacion(id){
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/invites/${id}/accept`,
+        "/clan/leave",
         {
           method:"POST"
         }
@@ -2574,11 +2471,8 @@ async function aceptarInvitacion(id){
     if(!result.respuesta.ok){
 
       alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo aceptar."
-        )
+        result.datos.error ||
+        "No se pudo abandonar el equipo."
       );
 
       return;
@@ -2590,47 +2484,7 @@ async function aceptarInvitacion(id){
   }catch(error){
 
     alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   RECHAZAR INVITACIÓN
-========================================== */
-
-async function rechazarInvitacion(id){
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/invites/${id}/reject`,
-        {
-          method:"POST"
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo rechazar."
-        )
-      );
-
-      return;
-    }
-
-    await cargarInvitacionesEquipo();
-
-  }catch(error){
-
-    alert(
-      "❌ Error de conexión."
+      "Error de conexión."
     );
   }
 }
@@ -2638,6 +2492,207 @@ async function rechazarInvitacion(id){
 
 /* ==========================================
    RETOS
+========================================== */
+
+function obtenerTamaño(){
+
+  const seleccionado =
+    document.querySelector(
+      'input[name="teamSize"]:checked'
+    );
+
+  return Number(
+    seleccionado?.value || 2
+  );
+}
+
+
+function obtenerModos(){
+
+  return Array
+    .from(
+      document.querySelectorAll(
+        'input[name="gameMode"]:checked'
+      )
+    )
+    .map(
+      input => input.value
+    );
+}
+
+
+function seleccionarHoraAutomatica(){
+
+  const ahora =
+    new Date();
+
+  /*
+   * La hora se genera automáticamente
+   * en formato YYYY-MM-DDTHH:mm.
+   */
+
+  const año =
+    ahora.getFullYear();
+
+  const mes =
+    String(
+      ahora.getMonth()+1
+    ).padStart(2,"0");
+
+  const dia =
+    String(
+      ahora.getDate()
+    ).padStart(2,"0");
+
+  const hora =
+    String(
+      ahora.getHours()
+    ).padStart(2,"0");
+
+  const minuto =
+    String(
+      ahora.getMinutes()
+    ).padStart(2,"0");
+
+  return (
+    año +
+    "-" +
+    mes +
+    "-" +
+    dia +
+    "T" +
+    hora +
+    ":" +
+    minuto
+  );
+}
+
+
+async function publicarReto(){
+
+  if(!usuarioActual){
+
+    abrirLogin();
+
+    return;
+  }
+
+  if(!clanActual){
+
+    alert(
+      "Primero tienes que pertenecer a un equipo."
+    );
+
+    mostrarPagina("equipo");
+
+    return;
+  }
+
+  const teamSize =
+    obtenerTamaño();
+
+  const gameModes =
+    obtenerModos();
+
+  const mensaje =
+    document.getElementById(
+      "retoMensaje"
+    );
+
+  if(!gameModes.length){
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Selecciona al menos un modo."
+    );
+
+    return;
+  }
+
+  mostrarMensaje(
+    mensaje,
+    "info",
+    "⏳ Publicando reto..."
+  );
+
+
+  /*
+   * La hora ya NO la tiene que introducir
+   * el usuario.
+   */
+
+  const scheduledAt =
+    seleccionarHoraAutomatica();
+
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/challenges",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+
+            team_size:
+              teamSize,
+
+            game_modes:
+              gameModes,
+
+            scheduled_at:
+              scheduledAt
+
+          })
+        }
+      );
+
+
+    if(!result.respuesta.ok){
+
+      mostrarMensaje(
+        mensaje,
+        "error",
+        "❌ " +
+        (
+          result.datos.error ||
+          "No se pudo publicar el reto."
+        )
+      );
+
+      return;
+    }
+
+
+    mostrarMensaje(
+      mensaje,
+      "ok",
+      "✅ Reto publicado."
+    );
+
+
+    await cargarRetos();
+
+  }catch(error){
+
+    console.error(error);
+
+    mostrarMensaje(
+      mensaje,
+      "error",
+      "❌ Error de conexión."
+    );
+  }
+}
+
+
+/* ==========================================
+   CARGAR RETOS
 ========================================== */
 
 async function cargarRetos(){
@@ -2656,6 +2711,7 @@ async function cargarRetos(){
       Cargando retos...
     </div>`;
 
+
   try{
 
     const result =
@@ -2667,36 +2723,236 @@ async function cargarRetos(){
 
       contenedor.innerHTML =
         `<div class="empty">
-          ❌ No se pudieron cargar los retos.
+          ❌ ${escapeHTML(
+            result.datos.error ||
+            "No se pudieron cargar los retos."
+          )}
         </div>`;
 
       return;
     }
 
+
     const retos =
       result.datos || [];
+
 
     if(!retos.length){
 
       contenedor.innerHTML =
         `<div class="card empty">
-          No hay retos publicados.
+          No hay retos disponibles.
         </div>`;
 
       return;
     }
 
+
     let html = "";
+
 
     retos.forEach(
       reto => {
 
-        html +=
-          crearRetoCard(
-            reto
-          );
+        const estado =
+          reto.status || "open";
+
+        const modos =
+          Array.isArray(
+            reto.game_modes
+          )
+          ? reto.game_modes
+          : ["snd"];
+
+
+        const modosTexto =
+          modos
+            .map(
+              modo =>
+                modo === "snd"
+                ? "Buscar y destruir"
+                : modo === "hardpoint"
+                ? "Punto caliente"
+                : modo === "ctf"
+                ? "Tomar la bandera"
+                : modo
+            )
+            .join(" · ");
+
+
+        const hora =
+          reto.scheduled_at
+          ? formatearFecha(
+              reto.scheduled_at
+            )
+          : "Hora automática";
+
+
+        html += `
+
+          <div
+            class="card reto-card">
+
+            <div class="reto-top">
+
+              <div>
+
+                <div class="reto-title">
+                  ⚔️
+                  ${escapeHTML(
+                    reto.creator_name ||
+                    "Equipo"
+                  )}
+                  ${
+                    reto.accepter_name
+                    ? " vs " +
+                      escapeHTML(
+                        reto.accepter_name
+                      )
+                    : ""
+                  }
+                </div>
+
+                <div class="reto-meta">
+
+                  <span class="badge">
+                    ${
+                      Number(
+                        reto.team_size || 2
+                      )
+                    }v${
+                      Number(
+                        reto.team_size || 2
+                      )
+                    }
+                  </span>
+
+                  <span class="badge">
+                    ${escapeHTML(
+                      modosTexto
+                    )}
+                  </span>
+
+                  <span class="badge">
+                    🕐
+                    ${escapeHTML(
+                      hora
+                    )}
+                  </span>
+
+                  <span class="badge ${
+                    estado === "open"
+                    ? "badge-green"
+                    : estado === "accepted"
+                    ? "badge-yellow"
+                    : estado === "completed"
+                    ? "badge-green"
+                    : estado === "cancelled"
+                    ? "badge-red"
+                    : ""
+                  }">
+                    ${escapeHTML(
+                      estadoTexto(
+                        estado
+                      )
+                    )}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div>
+
+                ${
+                  estado === "open" &&
+                  !reto.mine
+                  ? `
+                    <button
+                      class="btn"
+                      onclick="aceptarReto(${Number(reto.id)})">
+                      ACEPTAR
+                    </button>
+                  `
+                  : ""
+                }
+
+                ${
+                  reto.mine &&
+                  (
+                    estado === "open" ||
+                    estado === "accepted"
+                  )
+                  ? `
+                    <button
+                      class="btn btn-danger"
+                      onclick="cancelarReto(${Number(reto.id)})">
+                      CANCELAR
+                    </button>
+                  `
+                  : ""
+                }
+
+                ${
+                  estado === "accepted" &&
+                  reto.mine
+                  ? `
+                    <button
+                      class="btn btn-dark"
+                      onclick="abrirChat(${Number(reto.id)})">
+                      💬 CHAT
+                    </button>
+
+                    <button
+                      class="btn btn-success"
+                      onclick="reportarResultado(${Number(reto.id)}, ${Number(reto.creator_clan_id)})">
+                      REPORTAR
+                    </button>
+                  `
+                  : ""
+                }
+
+              </div>
+
+            </div>
+
+
+            <div class="map-grid">
+
+              ${(
+                reto.maps || [
+                  reto.map1,
+                  reto.map2,
+                  reto.map3
+                ]
+              )
+              .map(
+                mapa => `
+
+                  <div class="map-card">
+
+                    <div>
+                      <strong>
+                        ${escapeHTML(
+                          mapa || "Mapa"
+                        )}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                `
+              )
+              .join("")}
+
+            </div>
+
+          </div>
+
+        `;
       }
     );
+
 
     contenedor.innerHTML =
       html;
@@ -2706,406 +2962,66 @@ async function cargarRetos(){
     console.error(error);
 
     contenedor.innerHTML =
-      `<div class="card empty">
+      `<div class="empty">
         ❌ Error de conexión.
       </div>`;
   }
 }
 
 
-/* ==========================================
-   TARJETA RETO
-========================================== */
+function estadoTexto(estado){
 
-function crearRetoCard(reto){
+  const estados = {
 
-  const estado =
-    reto.status === "open"
-      ? `<span class="badge badge-green">
-          ABIERTO
-        </span>`
-      : reto.status === "accepted"
-        ? `<span class="badge badge-yellow">
-            ACEPTADO
-          </span>`
-        : reto.status === "completed"
-          ? `<span class="badge">
-              COMPLETADO
-            </span>`
-          : `<span class="badge">
-              ${escapeHTML(reto.status)}
-            </span>`;
+    open:"Disponible",
 
-  const modos =
-    Array.isArray(
-      reto.game_modes
-    )
-      ? reto.game_modes
-      : [];
+    accepted:"Aceptado",
 
-  const nombresModos = {
-    snd:"💣 Buscar y Destruir",
-    hardpoint:"🔥 Punto Caliente",
-    ctf:"🚩 Tomar la Bandera"
+    completed:"Completado",
+
+    cancelled:"Cancelado"
+
   };
 
-  let modosHTML = "";
-
-  modos.forEach(
-    modo => {
-
-      modosHTML += `
-        <span class="badge">
-          ${
-            escapeHTML(
-              nombresModos[modo] ||
-              modo
-            )
-          }
-        </span>
-      `;
-    }
+  return (
+    estados[estado] ||
+    estado
   );
-
-  let mapsHTML = "";
-
-  const maps =
-    reto.maps || [];
-
-  maps.forEach(
-    (mapa,index) => {
-
-      const imagenes = {
-        Raid:"https://placehold.co/600x300/17191d/e5ff00?text=Raid",
-        Standoff:"https://placehold.co/600x300/17191d/e5ff00?text=Standoff",
-        Slums:"https://placehold.co/600x300/17191d/e5ff00?text=Slums",
-        Yemen:"https://placehold.co/600x300/17191d/e5ff00?text=Yemen",
-        Meltdown:"https://placehold.co/600x300/17191d/e5ff00?text=Meltdown",
-        Express:"https://placehold.co/600x300/17191d/e5ff00?text=Express"
-      };
-
-      mapsHTML += `
-        <div class="map-card">
-
-          <img
-            src="${
-              imagenes[mapa] ||
-              "https://placehold.co/600x300/17191d/e5ff00?text=Mapa"
-            }"
-            alt="${escapeHTML(mapa)}">
-
-          <div>
-
-            <strong>
-              Mapa ${index + 1}
-            </strong>
-
-            <div class="meta">
-              ${escapeHTML(mapa || "Sin mapa")}
-            </div>
-
-          </div>
-
-        </div>
-      `;
-    }
-  );
-
-  let acciones = "";
-
-  if(
-    reto.status === "open" &&
-    !reto.mine
-  ){
-
-    acciones += `
-      <button
-        class="btn"
-        onclick="aceptarReto(${reto.id})">
-        ⚔️ ACEPTAR RETO
-      </button>
-    `;
-  }
-
-  if(
-    reto.status === "accepted"
-  ){
-
-    acciones += `
-      <button
-        class="btn btn-dark"
-        onclick="abrirChat(${reto.id})">
-        💬 CHAT
-      </button>
-
-      <button
-        class="btn btn-success"
-        onclick="reportarResultado(${reto.id}, 'win')">
-        🟢 VICTORIA
-      </button>
-
-      <button
-        class="btn btn-danger"
-        onclick="reportarResultado(${reto.id}, 'loss')">
-        🔴 DERROTA
-      </button>
-    `;
-  }
-
-  if(
-    reto.mine &&
-    (
-      reto.status === "open" ||
-      reto.status === "accepted"
-    )
-  ){
-
-    acciones += `
-      <button
-        class="btn btn-danger"
-        onclick="cancelarReto(${reto.id})">
-        CANCELAR RETO
-      </button>
-    `;
-  }
-
-  let horaHTML = "";
-
-  if(reto.scheduled_at){
-
-    const fecha =
-      new Date(
-        reto.scheduled_at
-      );
-
-    if(!isNaN(fecha.getTime())){
-
-      horaHTML = `
-        <div class="meta">
-
-          <small>
-            HORA
-          </small>
-
-          <strong>
-            ${fecha.toLocaleString(
-              "es-ES",
-              {
-                dateStyle:"short",
-                timeStyle:"short"
-              }
-            )}
-          </strong>
-
-        </div>
-      `;
-    }
-  }
-
-  return `
-    <div class="card reto-card">
-
-      <div class="reto-top">
-
-        <div>
-
-          <div class="reto-title">
-            ${
-              escapeHTML(
-                reto.creator_name ||
-                "Equipo"
-              )
-            }
-
-            ${
-              reto.accepter_name
-                ? " vs " +
-                  escapeHTML(
-                    reto.accepter_name
-                  )
-                : " busca rival"
-            }
-          </div>
-
-          <div class="reto-meta">
-
-            <span class="badge">
-              ${reto.team_size || 4}v${reto.team_size || 4}
-            </span>
-
-            ${estado}
-
-            ${modosHTML}
-
-          </div>
-
-        </div>
-
-        <div>
-          ${horaHTML}
-        </div>
-
-      </div>
-
-
-      <div class="map-grid">
-
-        ${mapsHTML}
-
-      </div>
-
-
-      <div style="margin-top:15px">
-
-        ${acciones}
-
-      </div>
-
-    </div>
-  `;
 }
 
 
-/* ==========================================
-   PUBLICAR RETO
-========================================== */
-
-async function publicarReto(){
-
-  const mensaje =
-    document.getElementById(
-      "retoMensaje"
-    );
-
-  if(!usuarioActual){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Primero debes iniciar sesión."
-    );
-
-    abrirLogin();
-
-    return;
-  }
-
-  const radios =
-    document.querySelectorAll(
-      'input[name="teamSize"]:checked'
-    );
-
-  const teamSize =
-    Number(
-      radios[0]?.value ||
-      document.getElementById(
-        "retoTeamSize"
-      )?.value ||
-      4
-    );
-
-  document.getElementById(
-    "retoTeamSize"
-  ).value =
-    teamSize;
-
-  const checkboxes =
-    document.querySelectorAll(
-      'input[name="gameMode"]:checked'
-    );
-
-  const modes =
-    Array.from(
-      checkboxes
-    ).map(
-      checkbox =>
-        checkbox.value
-    );
-
-  if(!modes.length){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Selecciona al menos un modo de juego."
-    );
-
-    return;
-  }
-
-  /*
-   * 🕐 HORA AUTOMÁTICA
-   *
-   * El usuario no tiene que introducir
-   * ninguna hora.
-   */
-
-  const scheduledAt =
-    new Date().toISOString();
+function formatearFecha(fecha){
 
   try{
 
-    const result =
-      await apiFetch(
-        "/challenges",
-        {
-          method:"POST",
+    const date =
+      new Date(fecha);
 
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            team_size:
-              teamSize,
-
-            game_modes:
-              modes,
-
-            scheduled_at:
-              scheduledAt
-
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo publicar el reto."
-        )
-      );
-
-      return;
+    if(
+      Number.isNaN(
+        date.getTime()
+      )
+    ){
+      return fecha;
     }
 
-    mostrarMensaje(
-      mensaje,
-      "ok",
-      "✅ Reto publicado correctamente."
+    return date.toLocaleString(
+      "es-ES",
+      {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+      }
     );
 
-    await cargarRetos();
+  }catch{
 
-  }catch(error){
-
-    console.error(error);
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
+    return fecha;
   }
 }
-  <script>
+
 
 /* ==========================================
    ACEPTAR RETO
@@ -3116,64 +3032,50 @@ async function aceptarReto(id){
   if(!usuarioActual){
 
     abrirLogin();
+
     return;
   }
 
-  if(!clanActual){
-
-    alert(
-      "❌ Necesitas pertenecer a un equipo."
-    );
-
-    mostrarPagina("equipo");
-    return;
-  }
 
   if(
     !confirm(
       "¿Quieres aceptar este reto?"
     )
   ){
-
     return;
   }
+
 
   try{
 
     const result =
       await apiFetch(
-        `/challenges/${id}/accept`,
+        "/challenges/" +
+        id +
+        "/accept",
         {
           method:"POST"
         }
       );
 
+
     if(!result.respuesta.ok){
 
       alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo aceptar el reto."
-        )
+        result.datos.error ||
+        "No se pudo aceptar."
       );
 
       return;
     }
 
-    alert(
-      "⚔️ Reto aceptado correctamente."
-    );
 
-    await cargarUsuario();
     await cargarRetos();
 
   }catch(error){
 
-    console.error(error);
-
     alert(
-      "❌ Error de conexión."
+      "Error de conexión."
     );
   }
 }
@@ -3187,168 +3089,57 @@ async function cancelarReto(id){
 
   const motivo =
     prompt(
-      "¿Por qué quieres cancelar el reto?"
+      "Motivo de la cancelación:",
+      "Reto cancelado."
     );
 
-  if(motivo === null){
+
+  if(
+    motivo === null
+  ){
     return;
   }
+
 
   try{
 
     const result =
       await apiFetch(
-        `/challenges/${id}/cancel`,
+        "/challenges/" +
+        id +
+        "/cancel",
         {
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
           body:JSON.stringify({
             reason:
-              motivo.trim() ||
+              motivo ||
               "Reto cancelado."
           })
         }
       );
 
+
     if(!result.respuesta.ok){
 
       alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo cancelar."
-        )
+        result.datos.error ||
+        "No se pudo cancelar."
       );
 
       return;
     }
 
-    alert(
-      "✅ Reto cancelado."
-    );
 
     await cargarRetos();
 
   }catch(error){
 
-    console.error(error);
-
     alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   REPORTAR RESULTADO
-========================================== */
-
-async function reportarResultado(
-  id,
-  resultado
-){
-
-  if(!clanActual){
-
-    alert(
-      "❌ No tienes equipo."
-    );
-
-    return;
-  }
-
-  const esVictoria =
-    resultado === "win";
-
-  const texto =
-    esVictoria
-      ? "🟢 VICTORIA"
-      : "🔴 DERROTA";
-
-  const confirmar =
-    confirm(
-      `¿Confirmas tu resultado como ${texto}?\n\n` +
-      "El otro capitán también tendrá que confirmar su resultado."
-    );
-
-  if(!confirmar){
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/challenges/${id}/report`,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            result:
-              resultado
-
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo enviar el resultado."
-        )
-      );
-
-      return;
-    }
-
-    if(result.datos.conflict){
-
-      alert(
-        "⚠️ Los resultados no coinciden.\n\n" +
-        "El reto queda pendiente de revisión."
-      );
-
-    }else if(result.datos.completed){
-
-      alert(
-        "🏆 RESULTADO CONFIRMADO\n\n" +
-        "El reto ha terminado.\n" +
-        "Los dos equipos ya pueden jugar otro reto."
-      );
-
-    }else{
-
-      alert(
-        "✅ Resultado enviado.\n\n" +
-        "Falta la confirmación del otro capitán."
-      );
-    }
-
-    await cargarUsuario();
-    await cargarRetos();
-    await cargarRanking();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "❌ Error de conexión."
+      "Error de conexión."
     );
   }
 }
@@ -3364,11 +3155,12 @@ async function abrirChat(id){
     Number(id);
 
   document
-    .getElementById("chatModal")
+    .getElementById(
+      "chatModal"
+    )
     .classList.add("show");
 
   await cargarChat();
-
 }
 
 
@@ -3378,126 +3170,109 @@ function cerrarChat(){
     null;
 
   document
-    .getElementById("chatModal")
+    .getElementById(
+      "chatModal"
+    )
     .classList.remove("show");
 }
 
 
 async function cargarChat(){
 
-  if(!retoChatActual){
-    return;
-  }
-
   const box =
     document.getElementById(
       "chatBox"
     );
 
-  if(!box){
+  if(!box || !retoChatActual){
     return;
   }
 
+
   box.innerHTML =
     `<div class="empty">
-      Cargando chat...
+      Cargando...
     </div>`;
+
 
   try{
 
     const result =
       await apiFetch(
-        `/challenges/${retoChatActual}/chat`
+        "/challenges/" +
+        retoChatActual +
+        "/chat"
       );
+
 
     if(!result.respuesta.ok){
 
       box.innerHTML =
         `<div class="empty">
-          ❌ ${
-            escapeHTML(
-              result.datos.error ||
-              "No se pudo cargar el chat."
-            )
-          }
+          ❌ ${escapeHTML(
+            result.datos.error ||
+            "No se pudo cargar el chat."
+          )}
         </div>`;
 
       return;
     }
 
+
     const mensajes =
       result.datos || [];
+
 
     if(!mensajes.length){
 
       box.innerHTML =
         `<div class="empty">
-          Todavía no hay mensajes.
+          No hay mensajes todavía.
         </div>`;
 
       return;
     }
 
-    let html = "";
-
-    mensajes.forEach(
-      mensaje => {
-
-        let hora = "";
-
-        if(mensaje.created_at){
-
-          const fecha =
-            new Date(
-              mensaje.created_at
-            );
-
-          if(!isNaN(fecha.getTime())){
-
-            hora =
-              fecha.toLocaleString(
-                "es-ES",
-                {
-                  dateStyle:"short",
-                  timeStyle:"short"
-                }
-              );
-          }
-        }
-
-        html += `
-          <div class="chat-message">
-
-            <div class="chat-user">
-              ${escapeHTML(
-                mensaje.username
-              )}
-            </div>
-
-            <div class="chat-text">
-              ${escapeHTML(
-                mensaje.message
-              )}
-            </div>
-
-            <div class="chat-time">
-              ${escapeHTML(hora)}
-            </div>
-
-          </div>
-        `;
-      }
-    );
 
     box.innerHTML =
-      html;
+      mensajes
+        .map(
+          mensaje => `
+
+            <div class="chat-message">
+
+              <div class="chat-user">
+                ${escapeHTML(
+                  mensaje.username
+                )}
+              </div>
+
+              <div class="chat-text">
+                ${escapeHTML(
+                  mensaje.message
+                )}
+              </div>
+
+              <div class="chat-time">
+                ${escapeHTML(
+                  formatearFecha(
+                    mensaje.created_at
+                  )
+                )}
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
 
     box.scrollTop =
       box.scrollHeight;
 
-  }catch(error){
 
-    console.error(error);
+  }catch(error){
 
     box.innerHTML =
       `<div class="empty">
@@ -3513,49 +3288,51 @@ async function enviarMensaje(){
     return;
   }
 
+
   const input =
     document.getElementById(
       "chatInput"
     );
 
-  const mensaje =
-    input?.value.trim();
+  const message =
+    input.value.trim();
 
-  if(!mensaje){
+
+  if(!message){
     return;
   }
+
 
   try{
 
     const result =
       await apiFetch(
-        `/challenges/${retoChatActual}/chat`,
+        "/challenges/" +
+        retoChatActual +
+        "/chat",
         {
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
           body:JSON.stringify({
             message
           })
         }
       );
 
+
     if(!result.respuesta.ok){
 
       alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo enviar el mensaje."
-        )
+        result.datos.error ||
+        "No se pudo enviar."
       );
 
       return;
     }
+
 
     input.value = "";
 
@@ -3563,166 +3340,134 @@ async function enviarMensaje(){
 
   }catch(error){
 
-    console.error(error);
-
     alert(
-      "❌ Error de conexión."
+      "Error de conexión."
     );
   }
 }
 
 
 /* ==========================================
-   NOTIFICACIONES
+   REPORTAR RESULTADO
 ========================================== */
 
-async function cargarNotificaciones(){
-
-  const contenedor =
-    document.getElementById(
-      "notificacionesLista"
-    );
-
-  if(!contenedor){
-    return;
-  }
+async function reportarResultado(
+  challengeId,
+  creatorClanId
+){
 
   if(!usuarioActual){
+    abrirLogin();
+    return;
+  }
 
-    contenedor.innerHTML =
-      `<div class="empty">
-        Inicia sesión para ver tus notificaciones.
-      </div>`;
+
+  const clan =
+    clanActual;
+
+
+  if(!clan){
+    return;
+  }
+
+
+  const ganador =
+    prompt(
+      "Escribe el ID del equipo ganador:\n\n" +
+      "Equipo creador: " +
+      creatorClanId +
+      "\n" +
+      "Tu equipo: " +
+      clan.id
+    );
+
+
+  if(
+    ganador === null ||
+    ganador.trim() === ""
+  ){
+    return;
+  }
+
+
+  const winnerClanId =
+    Number(
+      ganador
+    );
+
+
+  if(
+    winnerClanId !==
+      Number(creatorClanId) &&
+    winnerClanId !==
+      Number(clan.id)
+  ){
+
+    alert(
+      "ID de equipo no válido."
+    );
 
     return;
   }
 
-  contenedor.innerHTML =
-    `<div class="empty">
-      Cargando...
-    </div>`;
 
   try{
 
     const result =
       await apiFetch(
-        "/notifications"
+        "/challenges/" +
+        challengeId +
+        "/report",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            winner_clan_id:
+              winnerClanId
+          })
+        }
       );
+
 
     if(!result.respuesta.ok){
 
-      contenedor.innerHTML =
-        `<div class="empty">
-          ❌ No se pudieron cargar.
-        </div>`;
+      alert(
+        result.datos.error ||
+        "No se pudo reportar."
+      );
 
       return;
     }
 
-    const notificaciones =
-      result.datos || [];
 
-    if(!notificaciones.length){
+    if(
+      result.datos.completed
+    ){
 
-      contenedor.innerHTML =
-        `<div class="empty">
-          No tienes notificaciones.
-        </div>`;
+      alert(
+        "✅ Resultado confirmado. Victoria y derrota registradas."
+      );
 
-      return;
+    }else{
+
+      alert(
+        "Resultado enviado. Falta la confirmación del otro capitán."
+      );
     }
 
-    let html = "";
 
-    notificaciones.forEach(
-      notificacion => {
+    await cargarRetos();
 
-        let fecha = "";
-
-        if(
-          notificacion.created_at
-        ){
-
-          const date =
-            new Date(
-              notificacion.created_at
-            );
-
-          if(!isNaN(date.getTime())){
-
-            fecha =
-              date.toLocaleString(
-                "es-ES",
-                {
-                  dateStyle:"short",
-                  timeStyle:"short"
-                }
-              );
-          }
-        }
-
-        html += `
-          <div
-            class="notification ${
-              Number(
-                notificacion.is_read
-              ) === 0
-                ? "unread"
-                : ""
-            }">
-
-            <div class="notification-title">
-              ${escapeHTML(
-                notificacion.title
-              )}
-            </div>
-
-            <div class="notification-text">
-              ${escapeHTML(
-                notificacion.message
-              )}
-            </div>
-
-            <div class="notification-time">
-              ${escapeHTML(fecha)}
-            </div>
-
-          </div>
-        `;
-      }
-    );
-
-    contenedor.innerHTML =
-      html;
-
-    await marcarNotificacionesLeidas();
+    await cargarRanking();
 
   }catch(error){
 
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<div class="empty">
-        ❌ Error de conexión.
-      </div>`;
-  }
-}
-
-
-async function marcarNotificacionesLeidas(){
-
-  try{
-
-    await apiFetch(
-      "/notifications/read",
-      {
-        method:"POST"
-      }
+    alert(
+      "Error de conexión."
     );
-
-  }catch(error){
-
-    console.error(error);
   }
 }
 
@@ -3742,107 +3487,317 @@ async function cargarHistorial(){
     return;
   }
 
+
   if(!usuarioActual){
 
     contenedor.innerHTML =
       `<div class="card empty">
-        Inicia sesión para ver tu historial.
+        🔐 Inicia sesión para ver tu historial.
       </div>`;
 
     return;
   }
 
+
   contenedor.innerHTML =
     `<div class="card empty">
-      El historial se mostrará aquí.
+      Cargando historial...
     </div>`;
+
+
+  try{
+
+    const result =
+      await apiFetch(
+        "/challenges"
+      );
+
+
+    if(!result.respuesta.ok){
+
+      contenedor.innerHTML =
+        `<div class="card empty">
+          ❌ No se pudo cargar el historial.
+        </div>`;
+
+      return;
+    }
+
+
+    const retos =
+      (
+        result.datos || []
+      )
+      .filter(
+        reto =>
+          reto.status === "completed" ||
+          reto.status === "cancelled"
+      );
+
+
+    if(!retos.length){
+
+      contenedor.innerHTML =
+        `<div class="card empty">
+          No tienes retos terminados.
+        </div>`;
+
+      return;
+    }
+
+
+    contenedor.innerHTML =
+      retos
+        .map(
+          reto => `
+
+            <div
+              class="card reto-card">
+
+              <div class="reto-title">
+                ⚔️
+                ${escapeHTML(
+                  reto.creator_name ||
+                  "Equipo"
+                )}
+
+                ${
+                  reto.accepter_name
+                  ? " vs " +
+                    escapeHTML(
+                      reto.accepter_name
+                    )
+                  : ""
+                }
+              </div>
+
+              <div
+                class="reto-meta">
+
+                <span class="badge ${
+                  reto.status ===
+                  "completed"
+                  ? "badge-green"
+                  : "badge-red"
+                }">
+                  ${escapeHTML(
+                    estadoTexto(
+                      reto.status
+                    )
+                  )}
+                </span>
+
+                ${
+                  reto.winner_clan_id
+                  ? `
+                    <span class="badge">
+                      Ganador:
+                      #${Number(
+                        reto.winner_clan_id
+                      )}
+                    </span>
+                  `
+                  : ""
+                }
+
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+
+  }catch(error){
+
+    console.error(error);
+
+    contenedor.innerHTML =
+      `<div class="card empty">
+        ❌ Error de conexión.
+      </div>`;
+  }
 }
 
 
 /* ==========================================
-   UTILIDADES
+   NOTIFICACIONES
 ========================================== */
 
-function mostrarMensaje(
-  elemento,
-  tipo,
-  texto
-){
+async function cargarNotificaciones(){
 
-  if(!elemento){
+  const contenedor =
+    document.getElementById(
+      "notificacionesLista"
+    );
+
+  if(!contenedor){
     return;
   }
 
-  elemento.className =
-    "message " +
-    tipo;
 
-  elemento.textContent =
-    texto;
-}
+  if(!usuarioActual){
 
+    contenedor.innerHTML =
+      `<div class="empty">
+        🔐 Inicia sesión para ver
+        tus notificaciones.
+      </div>`;
 
-function escapeHTML(
-  valor
-){
-
-  return String(
-    valor ?? ""
-  )
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;")
-  .replaceAll("'","&#039;");
-}
+    return;
+  }
 
 
-/* ==========================================
-   SELECTOR DE FORMATO
-========================================== */
+  try{
 
-document
-  .querySelectorAll(
-    'input[name="teamSize"]'
-  )
-  .forEach(
-    radio => {
-
-      radio.addEventListener(
-        "change",
-        () => {
-
-          const hidden =
-            document.getElementById(
-              "retoTeamSize"
-            );
-
-          if(hidden){
-
-            hidden.value =
-              radio.value;
-          }
-        }
+    const result =
+      await apiFetch(
+        "/notifications"
       );
 
+
+    if(!result.respuesta.ok){
+
+      contenedor.innerHTML =
+        `<div class="empty">
+          ❌ No se pudieron cargar.
+        </div>`;
+
+      return;
     }
-  );
+
+
+    const notificaciones =
+      result.datos || [];
+
+
+    if(!notificaciones.length){
+
+      contenedor.innerHTML =
+        `<div class="empty">
+          No tienes notificaciones.
+        </div>`;
+
+      return;
+    }
+
+
+    contenedor.innerHTML =
+      notificaciones
+        .map(
+          notificacion => `
+
+            <div
+              class="notification ${
+                Number(
+                  notificacion.is_read
+                )
+                ? ""
+                : "unread"
+              }">
+
+              <div
+                class="notification-title">
+
+                ${escapeHTML(
+                  notificacion.title
+                )}
+
+              </div>
+
+              <div
+                class="notification-text">
+
+                ${escapeHTML(
+                  notificacion.message
+                )}
+
+              </div>
+
+              <div
+                class="notification-time">
+
+                ${escapeHTML(
+                  formatearFecha(
+                    notificacion.created_at
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+
+    await apiFetch(
+      "/notifications/read",
+      {
+        method:"POST"
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    contenedor.innerHTML =
+      `<div class="empty">
+        ❌ Error de conexión.
+      </div>`;
+  }
+}
 
 
 /* ==========================================
-   CERRAR MODALES AL PULSAR FUERA
+   CLICS FUERA
+========================================== */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const wrap =
+      document.getElementById(
+        "userMenuWrap"
+      );
+
+    const dropdown =
+      document.getElementById(
+        "userDropdown"
+      );
+
+    if(
+      wrap &&
+      dropdown &&
+      !wrap.contains(event.target)
+    ){
+
+      dropdown.classList.remove(
+        "show"
+      );
+    }
+
+  }
+);
+
+
+/* ==========================================
+   MODALES
 ========================================== */
 
 document
-  .querySelectorAll(
-    ".modal"
-  )
+  .querySelectorAll(".modal")
   .forEach(
     modal => {
 
       modal.addEventListener(
         "click",
-        event => {
+        function(event){
 
           if(
             event.target ===
@@ -3862,34 +3817,63 @@ document
 
 
 /* ==========================================
-   ENTER EN CHAT
+   TECLA ESC
 ========================================== */
 
 document.addEventListener(
   "keydown",
-  event => {
+  function(event){
 
     if(
-      event.key === "Enter" &&
-      event.ctrlKey
+      event.key === "Escape"
     ){
 
-      const input =
-        document.getElementById(
-          "chatInput"
+      document
+        .querySelectorAll(
+          ".modal.show"
+        )
+        .forEach(
+          modal =>
+            modal.classList.remove(
+              "show"
+            )
         );
-
-      if(
-        document.activeElement ===
-        input
-      ){
-
-        enviarMensaje();
-      }
     }
 
   }
 );
+
+
+/* ==========================================
+   FORMATO
+========================================== */
+
+document
+  .querySelectorAll(
+    'input[name="teamSize"]'
+  )
+  .forEach(
+    input => {
+
+      input.addEventListener(
+        "change",
+        function(){
+
+          const hidden =
+            document.getElementById(
+              "retoTeamSize"
+            );
+
+          if(hidden){
+            hidden.value =
+              this.value;
+          }
+
+        }
+      );
+
+    }
+  );
 
 
 /* ==========================================
@@ -3899,8 +3883,6 @@ document.addEventListener(
 (async function(){
 
   await cargarUsuario();
-
-  actualizarUsuarioUI();
 
   mostrarPagina(
     "inicio"
