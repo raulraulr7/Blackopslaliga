@@ -377,7 +377,6 @@ footer{
 
 </section>
 
-
 <div class="section-title">COMPETICIÓN</div>
 
 <div class="menu">
@@ -400,7 +399,6 @@ footer{
 
 </div>
 
-
 <div class="section-title">COMUNIDAD</div>
 
 <div class="menu">
@@ -414,9 +412,6 @@ footer{
   </button>
 
 </div>
-
-
-<!-- INICIO -->
 
 <section id="inicio" class="page active">
 
@@ -470,9 +465,6 @@ footer{
 
 </section>
 
-
-<!-- RETOS -->
-
 <section id="retos" class="page">
 
   <div class="section-title">RETOS</div>
@@ -513,9 +505,6 @@ footer{
 
 </section>
 
-
-<!-- RANKING -->
-
 <section id="ranking" class="page">
 
   <div class="section-title">
@@ -554,9 +543,6 @@ footer{
   </div>
 
 </section>
-
-
-<!-- EQUIPO -->
 
 <section id="equipo" class="page">
 
@@ -602,9 +588,6 @@ footer{
 
 </section>
 
-
-<!-- JUGADORES -->
-
 <section id="jugadores" class="page">
 
   <div class="section-title">
@@ -622,9 +605,6 @@ footer{
   </div>
 
 </section>
-
-
-<!-- REGLAS -->
 
 <section id="reglas" class="page">
 
@@ -676,7 +656,6 @@ footer{
 
 </section>
 
-
 <footer>
 
   BLACKOPS2LIGA © 2026
@@ -688,9 +667,6 @@ footer{
 </footer>
 
 </div>
-
-
-<!-- REGISTRO -->
 
 <div
   id="registroModal"
@@ -744,9 +720,6 @@ footer{
 
 </div>
 
-
-<!-- LOGIN -->
-
 <div
   id="loginModal"
   class="modal">
@@ -798,9 +771,9 @@ footer{
 
 </div>
 
-
 <script>
 
+/* IMPORTANTE: dirección correcta de la API */
 const API = "https://blackopslaliga.diazluqueraul.workers.dev/api";
 
 
@@ -925,6 +898,7 @@ async function registrar(){
           headers:{
             "Content-Type":"application/json"
           },
+          credentials:"include",
           body:JSON.stringify({
             username:username,
             password:password
@@ -969,6 +943,8 @@ async function registrar(){
     },1000);
 
   }catch(error){
+
+    console.error(error);
 
     mostrarMensaje(
       mensaje,
@@ -1020,6 +996,7 @@ async function login(){
           headers:{
             "Content-Type":"application/json"
           },
+          credentials:"include",
           body:JSON.stringify({
             username:username,
             password:password
@@ -1057,6 +1034,8 @@ async function login(){
 
   }catch(error){
 
+    console.error(error);
+
     mostrarMensaje(
       mensaje,
       "error",
@@ -1073,7 +1052,12 @@ async function cargarUsuario(){
   try{
 
     const respuesta =
-      await fetch(API + "/me");
+      await fetch(
+        API + "/me",
+        {
+          credentials:"include"
+        }
+      );
 
     const datos =
       await respuesta.json();
@@ -1140,6 +1124,7 @@ async function crearClan(){
           headers:{
             "Content-Type":"application/json"
           },
+          credentials:"include",
           body:JSON.stringify({
             name:nombre
           })
@@ -1171,6 +1156,8 @@ async function crearClan(){
 
   }catch(error){
 
+    console.error(error);
+
     mostrarMensaje(
       mensaje,
       "error",
@@ -1192,7 +1179,12 @@ async function cargarMiEquipo(){
   try{
 
     const respuesta =
-      await fetch(API + "/clan");
+      await fetch(
+        API + "/clan",
+        {
+          credentials:"include"
+        }
+      );
 
     const datos =
       await respuesta.json();
@@ -1294,6 +1286,8 @@ async function cargarMiEquipo(){
       </div>`;
 
   }catch(error){
+
+    console.error(error);
 
     contenedor.innerHTML =
       `<div class="card">
@@ -1420,6 +1414,8 @@ async function cargarRanking(){
 
   }catch(error){
 
+    console.error(error);
+
     tabla.innerHTML =
       `<tr>
         <td colspan="6">
@@ -1443,7 +1439,10 @@ async function cargarRetos(){
 
     const respuesta =
       await fetch(
-        API + "/challenges"
+        API + "/challenges",
+        {
+          credentials:"include"
+        }
       );
 
     const datos =
@@ -1519,6 +1518,8 @@ async function cargarRetos(){
 
   }catch(error){
 
+    console.error(error);
+
     lista.innerHTML =
       `<div class="card">
         <p>❌ Error al cargar los retos.</p>
@@ -1545,7 +1546,8 @@ async function publicarReto(){
           method:"POST",
           headers:{
             "Content-Type":"application/json"
-          }
+          },
+          credentials:"include"
         }
       );
 
@@ -1573,6 +1575,8 @@ async function publicarReto(){
 
   }catch(error){
 
+    console.error(error);
+
     mostrarMensaje(
       mensaje,
       "error",
@@ -1596,7 +1600,8 @@ async function aceptarReto(id){
       await fetch(
         API + "/challenges/" + id + "/accept",
         {
-          method:"POST"
+          method:"POST",
+          credentials:"include"
         }
       );
 
@@ -1617,6 +1622,8 @@ async function aceptarReto(id){
     cargarRetos();
 
   }catch(error){
+
+    console.error(error);
 
     alert(
       "❌ Error de conexión."
