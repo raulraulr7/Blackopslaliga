@@ -914,7 +914,7 @@ async function registrar(){
       mostrarMensaje(
         mensaje,
         "error",
-        "❌ " + (datos.error || "No se pudo registrar.")
+        "❌ " + (datos.detail || datos.error || "No se pudo registrar.")
       );
 
       return;
