@@ -1,5 +1,8 @@
-const MAPS = ["Slums", "Standoff", "Yemen", "Express", "Raid", "Plaza"];
+const MAPS = ["Raid", "Standoff", "Meltdown", "Express"];
 const COOKIE = "bol_session";
+const MAX_PLAYERS = 6;
+const MAX_STARTERS = 4;
+const MAX_RESERVES = 2;
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -15,7 +18,7 @@ function corsHeaders(request) {
   const origin = request.headers.get("Origin");
 
   const headers = {
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Credentials": "true"
   };
@@ -68,6 +71,11 @@ function deleteSessionCookie() {
   ].join("; ");
 }
 
+
+/* =========================
+   CONTRASEÑAS
+   ========================= */
+
 async function passwordKey(password, salt) {
   const encoder = new TextEncoder();
 
@@ -83,7 +91,10 @@ async function passwordKey(password, salt) {
     {
       name: "PBKDF2",
       salt: encoder.encode(salt),
+
+      // Cloudflare Workers permite hasta 100000
       iterations: 100000,
+
       hash: "SHA-256"
     },
     key,
@@ -118,6 +129,11 @@ async function verifyPassword(password, stored) {
   return await passwordKey(password, salt) === hash;
 }
 
+
+/* =========================
+   USUARIO
+   ========================= */
+
 async function getUser(request, env) {
   const token = getCookie(request, COOKIE);
 
@@ -127,9 +143,13 @@ async function getUser(request, env) {
 
   const result = await env.DB
     .prepare(`
-      SELECT u.id, u.username
+      SELECT
+        u.id,
+        u.username,
+        u.psn_id
       FROM sessions s
-      JOIN users u ON u.id = s.user_id
+      JOIN users u
+        ON u.id = s.user_id
       WHERE s.token = ?
       AND s.expires > ?
     `)
@@ -139,23 +159,90 @@ async function getUser(request, env) {
   return result || null;
 }
 
+
+/* =========================
+   CLAN
+   ========================= */
+
 async function getClan(env, userId) {
   return await env.DB
     .prepare(`
       SELECT c.*
       FROM clans c
-      JOIN members m ON m.clan_id = c.id
+      JOIN members m
+        ON m.clan_id = c.id
       WHERE m.user_id = ?
     `)
     .bind(userId)
     .first();
 }
 
+async function getClanMembers(env, clanId) {
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        u.id,
+        u.username,
+        u.psn_id,
+        COALESCE(m.role, 'titular') AS role,
+        m.joined_at
+      FROM members m
+      JOIN users u
+        ON u.id = m.user_id
+      WHERE m.clan_id = ?
+      ORDER BY
+        CASE
+          WHEN COALESCE(m.role, 'titular') = 'titular'
+          THEN 0
+          ELSE 1
+        END,
+        m.joined_at ASC
+    `)
+    .bind(clanId)
+    .all();
+
+  return result.results;
+}
+
+
+/* =========================
+   MAPAS
+   ========================= */
+
 function randomMaps() {
   return [...MAPS]
     .sort(() => Math.random() - 0.5)
     .slice(0, 3);
 }
+
+
+/* =========================
+   RETOS ACTIVOS
+   ========================= */
+
+async function hasActiveChallenge(env, clanId) {
+  const result = await env.DB
+    .prepare(`
+      SELECT id
+      FROM challenges
+      WHERE
+        status IN ('open', 'accepted')
+        AND (
+          creator_clan_id = ?
+          OR accepter_clan_id = ?
+        )
+      LIMIT 1
+    `)
+    .bind(clanId, clanId)
+    .first();
+
+  return !!result;
+}
+
+
+/* =========================
+   API
+   ========================= */
 
 async function api(request, env, path) {
 
@@ -168,7 +255,18 @@ async function api(request, env, path) {
     });
   }
 
-  const currentUser = await getUser(request, env);
+  let currentUser = null;
+
+  try {
+    currentUser = await getUser(request, env);
+  } catch (error) {
+    console.error("SESSION ERROR:", error);
+  }
+
+
+  /* =========================
+     ME
+     ========================= */
 
   if (
     request.method === "GET" &&
@@ -185,6 +283,11 @@ async function api(request, env, path) {
       headers
     );
   }
+
+
+  /* =========================
+     REGISTRO
+     ========================= */
 
   if (
     request.method === "POST" &&
@@ -254,7 +357,10 @@ async function api(request, env, path) {
           (username, password_hash)
           VALUES (?, ?)
         `)
-        .bind(username, passwordHash)
+        .bind(
+          username,
+          passwordHash
+        )
         .run();
 
       const userId =
@@ -312,6 +418,11 @@ async function api(request, env, path) {
     }
   }
 
+
+  /* =========================
+     LOGIN
+     ========================= */
+
   if (
     request.method === "POST" &&
     path === "/api/login"
@@ -334,19 +445,51 @@ async function api(request, env, path) {
       .bind(username)
       .first();
 
-    if (
-      !user ||
-      !(await verifyPassword(
-        password,
-        user.password_hash
-      ))
-    ) {
+    if (!user) {
       return json(
         {
           error:
             "Usuario o contraseña incorrectos."
         },
         401,
+        headers
+      );
+    }
+
+    try {
+
+      const valid =
+        await verifyPassword(
+          password,
+          user.password_hash
+        );
+
+      if (!valid) {
+        return json(
+          {
+            error:
+              "Usuario o contraseña incorrectos."
+          },
+          401,
+          headers
+        );
+      }
+
+    } catch (error) {
+
+      console.error(
+        "LOGIN PASSWORD ERROR:",
+        error
+      );
+
+      return json(
+        {
+          error:
+            "No se pudo verificar la contraseña.",
+          detail:
+            error?.message || String(error)
+        },
+        500,
         headers
       );
     }
@@ -380,6 +523,11 @@ async function api(request, env, path) {
     );
   }
 
+
+  /* =========================
+     LOGOUT
+     ========================= */
+
   if (
     request.method === "POST" &&
     path === "/api/logout"
@@ -398,15 +546,102 @@ async function api(request, env, path) {
     );
   }
 
+
+  /* =========================
+     TODO LO DEMÁS REQUIERE LOGIN
+     ========================= */
+
   if (!currentUser) {
     return json(
       {
-        error: "Debes iniciar sesión."
+        error:
+          "Debes iniciar sesión."
       },
       401,
       headers
     );
   }
+
+
+  /* =========================
+     GUARDAR ID PSN
+     ========================= */
+
+  if (
+    request.method === "POST" &&
+    path === "/api/profile/psn"
+  ) {
+
+    const data = await body(request);
+
+    const psn = String(
+      data.psn_id || ""
+    ).trim();
+
+    if (
+      psn.length < 3 ||
+      psn.length > 32
+    ) {
+      return json(
+        {
+          error:
+            "El ID de PSN debe tener entre 3 y 32 caracteres."
+        },
+        400,
+        headers
+      );
+    }
+
+    const existing = await env.DB
+      .prepare(`
+        SELECT id
+        FROM users
+        WHERE LOWER(psn_id) = LOWER(?)
+        AND id != ?
+      `)
+      .bind(
+        psn,
+        currentUser.id
+      )
+      .first();
+
+    if (existing) {
+      return json(
+        {
+          error:
+            "Ese ID de PSN ya está registrado."
+        },
+        400,
+        headers
+      );
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET psn_id = ?
+        WHERE id = ?
+      `)
+      .bind(
+        psn,
+        currentUser.id
+      )
+      .run();
+
+    return json(
+      {
+        ok: true,
+        psn_id: psn
+      },
+      200,
+      headers
+    );
+  }
+
+
+  /* =========================
+     INVITACIONES
+     ========================= */
 
   if (
     request.method === "GET" &&
@@ -417,12 +652,17 @@ async function api(request, env, path) {
       .prepare(`
         SELECT
           i.id,
-          c.name AS clan
+          i.clan_id,
+          c.name AS clan,
+          u.username AS inviter
         FROM invites i
         JOIN clans c
           ON c.id = i.clan_id
+        JOIN users u
+          ON u.id = i.inviter_id
         WHERE i.invitee_id = ?
         AND i.status = 'pending'
+        ORDER BY i.id DESC
       `)
       .bind(currentUser.id)
       .all();
@@ -433,6 +673,289 @@ async function api(request, env, path) {
       headers
     );
   }
+
+
+  /* =========================
+     INVITAR JUGADOR
+     ========================= */
+
+  if (
+    request.method === "POST" &&
+    path === "/api/clan/invite"
+  ) {
+
+    const clan =
+      await getClan(
+        env,
+        currentUser.id
+      );
+
+    if (
+      !clan ||
+      clan.captain_id !== currentUser.id
+    ) {
+      return json(
+        {
+          error:
+            "Solo el capitán puede invitar jugadores."
+        },
+        403,
+        headers
+      );
+    }
+
+    const members =
+      await getClanMembers(
+        env,
+        clan.id
+      );
+
+    if (members.length >= MAX_PLAYERS) {
+      return json(
+        {
+          error:
+            "El equipo ya tiene 6 jugadores."
+        },
+        400,
+        headers
+      );
+    }
+
+    const data =
+      await body(request);
+
+    const username =
+      String(
+        data.username || ""
+      ).trim();
+
+    if (!username) {
+      return json(
+        {
+          error:
+            "Introduce el nombre del jugador."
+        },
+        400,
+        headers
+      );
+    }
+
+    const player =
+      await env.DB
+        .prepare(`
+          SELECT id, username
+          FROM users
+          WHERE username = ?
+        `)
+        .bind(username)
+        .first();
+
+    if (!player) {
+      return json(
+        {
+          error:
+            "Jugador no encontrado."
+        },
+        404,
+        headers
+      );
+    }
+
+    if (player.id === currentUser.id) {
+      return json(
+        {
+          error:
+            "No puedes invitarte a ti mismo."
+        },
+        400,
+        headers
+      );
+    }
+
+    const playerClan =
+      await getClan(
+        env,
+        player.id
+      );
+
+    if (playerClan) {
+      return json(
+        {
+          error:
+            "Ese jugador ya pertenece a un equipo."
+        },
+        400,
+        headers
+      );
+    }
+
+    const pending =
+      await env.DB
+        .prepare(`
+          SELECT id
+          FROM invites
+          WHERE clan_id = ?
+          AND invitee_id = ?
+          AND status = 'pending'
+        `)
+        .bind(
+          clan.id,
+          player.id
+        )
+        .first();
+
+    if (pending) {
+      return json(
+        {
+          error:
+            "Ya existe una invitación pendiente."
+        },
+        400,
+        headers
+      );
+    }
+
+    await env.DB
+      .prepare(`
+        INSERT INTO invites
+        (clan_id, inviter_id, invitee_id, status)
+        VALUES (?, ?, ?, 'pending')
+      `)
+      .bind(
+        clan.id,
+        currentUser.id,
+        player.id
+      )
+      .run();
+
+    return json(
+      {
+        ok: true,
+        message:
+          "Invitación enviada."
+      },
+      200,
+      headers
+    );
+  }
+
+
+  /* =========================
+     ACEPTAR INVITACIÓN
+     ========================= */
+
+  const acceptInvite =
+    path.match(
+      /^\/api\/invites\/(\d+)\/accept$/
+    );
+
+  if (
+    request.method === "POST" &&
+    acceptInvite
+  ) {
+
+    const invite =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM invites
+          WHERE id = ?
+          AND invitee_id = ?
+          AND status = 'pending'
+        `)
+        .bind(
+          acceptInvite[1],
+          currentUser.id
+        )
+        .first();
+
+    if (!invite) {
+      return json(
+        {
+          error:
+            "Invitación no encontrada."
+        },
+        404,
+        headers
+      );
+    }
+
+    if (
+      await getClan(
+        env,
+        currentUser.id
+      )
+    ) {
+      return json(
+        {
+          error:
+            "Ya perteneces a un equipo."
+        },
+        400,
+        headers
+      );
+    }
+
+    const members =
+      await getClanMembers(
+        env,
+        invite.clan_id
+      );
+
+    if (members.length >= MAX_PLAYERS) {
+      return json(
+        {
+          error:
+            "El equipo ya tiene 6 jugadores."
+        },
+        400,
+        headers
+      );
+    }
+
+    const role =
+      members.length < MAX_STARTERS
+        ? "titular"
+        : "reserva";
+
+    await env.DB.batch([
+
+      env.DB
+        .prepare(`
+          INSERT INTO members
+          (clan_id, user_id, joined_at, role)
+          VALUES (?, ?, CURRENT_TIMESTAMP, ?)
+        `)
+        .bind(
+          invite.clan_id,
+          currentUser.id,
+          role
+        ),
+
+      env.DB
+        .prepare(`
+          UPDATE invites
+          SET status = 'accepted'
+          WHERE id = ?
+        `)
+        .bind(invite.id)
+
+    ]);
+
+    return json(
+      {
+        ok: true,
+        role
+      },
+      200,
+      headers
+    );
+  }
+
+
+  /* =========================
+     CREAR CLAN
+     ========================= */
 
   if (
     request.method === "POST" &&
@@ -448,18 +971,20 @@ async function api(request, env, path) {
       return json(
         {
           error:
-            "Ya perteneces a un clan."
+            "Ya perteneces a un equipo."
         },
         400,
         headers
       );
     }
 
-    const data = await body(request);
+    const data =
+      await body(request);
 
-    const name = String(
-      data.name || ""
-    ).trim();
+    const name =
+      String(
+        data.name || ""
+      ).trim();
 
     if (
       name.length < 2 ||
@@ -477,27 +1002,29 @@ async function api(request, env, path) {
 
     try {
 
-      const created = await env.DB
-        .prepare(`
-          INSERT INTO clans
-          (name, captain_id)
-          VALUES (?, ?)
-        `)
-        .bind(
-          name,
-          currentUser.id
-        )
-        .run();
+      const created =
+        await env.DB
+          .prepare(`
+            INSERT INTO clans
+            (name, captain_id)
+            VALUES (?, ?)
+          `)
+          .bind(
+            name,
+            currentUser.id
+          )
+          .run();
 
       const clanId =
         created.meta.last_row_id;
 
       await env.DB.batch([
+
         env.DB
           .prepare(`
             INSERT INTO members
-            (clan_id, user_id, joined_at)
-            VALUES (?, ?, CURRENT_TIMESTAMP)
+            (clan_id, user_id, joined_at, role)
+            VALUES (?, ?, CURRENT_TIMESTAMP, 'titular')
           `)
           .bind(
             clanId,
@@ -507,15 +1034,17 @@ async function api(request, env, path) {
         env.DB
           .prepare(`
             INSERT INTO scores
-            (clan_id)
-            VALUES (?)
+            (clan_id, points, wins, losses, played)
+            VALUES (?, 0, 0, 0, 0)
           `)
           .bind(clanId)
+
       ]);
 
       return json(
         {
-          ok: true
+          ok: true,
+          clan_id: clanId
         },
         200,
         headers
@@ -541,6 +1070,11 @@ async function api(request, env, path) {
     }
   }
 
+
+  /* =========================
+     MI CLAN
+     ========================= */
+
   if (
     request.method === "GET" &&
     path === "/api/clan"
@@ -555,7 +1089,9 @@ async function api(request, env, path) {
     if (!clan) {
       return json(
         {
-          clan: null
+          clan: null,
+          members: [],
+          score: null
         },
         200,
         headers
@@ -563,25 +1099,10 @@ async function api(request, env, path) {
     }
 
     const members =
-      await env.DB
-        .prepare(`
-          SELECT
-            u.id,
-            u.username,
-            CASE
-              WHEN u.id = ? THEN 1
-              ELSE 0
-            END AS captain
-          FROM users u
-          JOIN members m
-            ON m.user_id = u.id
-          WHERE m.clan_id = ?
-        `)
-        .bind(
-          clan.captain_id,
-          clan.id
-        )
-        .all();
+      await getClanMembers(
+        env,
+        clan.id
+      );
 
     const score =
       await env.DB
@@ -594,13 +1115,135 @@ async function api(request, env, path) {
     return json(
       {
         clan,
-        members: members.results,
+        members,
         score
       },
       200,
       headers
     );
   }
+
+
+  /* =========================
+     CAMBIAR ROL
+     ========================= */
+
+  const roleMatch =
+    path.match(
+      /^\/api\/clan\/members\/(\d+)\/role$/
+    );
+
+  if (
+    request.method === "POST" &&
+    roleMatch
+  ) {
+
+    const clan =
+      await getClan(
+        env,
+        currentUser.id
+      );
+
+    if (
+      !clan ||
+      clan.captain_id !== currentUser.id
+    ) {
+      return json(
+        {
+          error:
+            "Solo el capitán puede cambiar roles."
+        },
+        403,
+        headers
+      );
+    }
+
+    const data =
+      await body(request);
+
+    const role =
+      data.role === "reserva"
+        ? "reserva"
+        : "titular";
+
+    const member =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM members
+          WHERE clan_id = ?
+          AND user_id = ?
+        `)
+        .bind(
+          clan.id,
+          roleMatch[1]
+        )
+        .first();
+
+    if (!member) {
+      return json(
+        {
+          error:
+            "Jugador no encontrado en el equipo."
+        },
+        404,
+        headers
+      );
+    }
+
+    if (role === "titular") {
+
+      const count =
+        await env.DB
+          .prepare(`
+            SELECT COUNT(*) AS total
+            FROM members
+            WHERE clan_id = ?
+            AND role = 'titular'
+          `)
+          .bind(clan.id)
+          .first();
+
+      if (Number(count.total) >= MAX_STARTERS) {
+        return json(
+          {
+            error:
+              "Ya hay 4 titulares."
+          },
+          400,
+          headers
+        );
+      }
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE members
+        SET role = ?
+        WHERE clan_id = ?
+        AND user_id = ?
+      `)
+      .bind(
+        role,
+        clan.id,
+        roleMatch[1]
+      )
+      .run();
+
+    return json(
+      {
+        ok: true,
+        role
+      },
+      200,
+      headers
+    );
+  }
+
+
+  /* =========================
+     LEADERBOARD
+     ========================= */
 
   if (
     request.method === "GET" &&
@@ -633,6 +1276,11 @@ async function api(request, env, path) {
     );
   }
 
+
+  /* =========================
+     CREAR RETO
+     ========================= */
+
   if (
     request.method === "POST" &&
     path === "/api/challenges"
@@ -658,37 +1306,155 @@ async function api(request, env, path) {
       );
     }
 
+    if (
+      await hasActiveChallenge(
+        env,
+        clan.id
+      )
+    ) {
+      return json(
+        {
+          error:
+            "Tu equipo ya tiene un reto activo. Cancélalo o termínalo antes de crear otro."
+        },
+        400,
+        headers
+      );
+    }
+
+    const members =
+      await getClanMembers(
+        env,
+        clan.id
+      );
+
+    const starters =
+      members.filter(
+        m => m.role === "titular"
+      );
+
+    if (starters.length < MAX_STARTERS) {
+      return json(
+        {
+          error:
+            "Necesitas tener 4 titulares para publicar un reto."
+        },
+        400,
+        headers
+      );
+    }
+
+    const data =
+      await body(request);
+
+    const scheduledAt =
+      String(
+        data.scheduled_at || ""
+      ).trim();
+
+    if (!scheduledAt) {
+      return json(
+        {
+          error:
+            "Debes indicar el día y la hora del reto."
+        },
+        400,
+        headers
+      );
+    }
+
+    const date =
+      new Date(scheduledAt);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return json(
+        {
+          error:
+            "La fecha y hora no son válidas."
+        },
+        400,
+        headers
+      );
+    }
+
+    if (
+      date.getTime() <= Date.now()
+    ) {
+      return json(
+        {
+          error:
+            "El reto debe programarse para una fecha futura."
+        },
+        400,
+        headers
+      );
+    }
+
     const selectedMaps =
       randomMaps();
 
-    const created =
-      await env.DB
-        .prepare(`
-          INSERT INTO challenges
-          (
-            creator_clan_id,
-            accepter_clan_id,
-            map1,
-            map2,
-            map3
-          )
-          VALUES (?, NULL, ?, ?, ?)
-        `)
-        .bind(
-          clan.id,
-          ...selectedMaps
-        )
-        .run();
+    try {
 
-    return json(
-      {
-        ok: true,
-        id: created.meta.last_row_id
-      },
-      200,
-      headers
-    );
+      const created =
+        await env.DB
+          .prepare(`
+            INSERT INTO challenges
+            (
+              creator_clan_id,
+              accepter_clan_id,
+              map1,
+              map2,
+              map3,
+              scheduled_at,
+              status
+            )
+            VALUES (?, NULL, ?, ?, ?, ?, 'open')
+          `)
+          .bind(
+            clan.id,
+            ...selectedMaps,
+            scheduledAt
+          )
+          .run();
+
+      return json(
+        {
+          ok: true,
+          id: created.meta.last_row_id,
+          scheduled_at: scheduledAt
+        },
+        200,
+        headers
+      );
+
+    } catch (error) {
+
+      console.error(
+        "CHALLENGE CREATE ERROR:",
+        error
+      );
+
+      return json(
+        {
+          error:
+            "No se pudo crear el reto.",
+          detail:
+            error?.message || String(error)
+        },
+        500,
+        headers
+      );
+    }
   }
+
+
+  /* =========================
+     LISTAR RETOS
+     ========================= */
 
   if (
     request.method === "GET" &&
@@ -717,10 +1483,11 @@ async function api(request, env, path) {
           LEFT JOIN clans b
             ON b.id = ch.accepter_clan_id
           WHERE
-            ch.status = 'open'
+            ch.status IN ('open', 'accepted')
             OR ch.creator_clan_id = ?
             OR ch.accepter_clan_id = ?
-          ORDER BY ch.id DESC
+          ORDER BY
+            ch.id DESC
         `)
         .bind(
           clanId,
@@ -731,15 +1498,33 @@ async function api(request, env, path) {
     const challenges =
       result.results.map(
         challenge => ({
-          ...challenge,
+
+          id: challenge.id,
+
+          status: challenge.status,
+
+          scheduled_at:
+            challenge.scheduled_at,
+
+          creator_name:
+            challenge.creator_clan_id === clanId
+              ? challenge.creator_name
+              : null,
+
+          accepter_name:
+            challenge.accepter_clan_id === clanId
+              ? challenge.accepter_name
+              : null,
+
           maps:
-            challenge.status === "open"
-              ? []
-              : [
+            challenge.status === "accepted"
+              ? [
                   challenge.map1,
                   challenge.map2,
                   challenge.map3
-                ],
+                ]
+              : [],
+
           mine:
             challenge.creator_clan_id === clanId ||
             challenge.accepter_clan_id === clanId
@@ -752,6 +1537,11 @@ async function api(request, env, path) {
       headers
     );
   }
+
+
+  /* =========================
+     ACEPTAR RETO
+     ========================= */
 
   const acceptMatch =
     path.match(
@@ -783,6 +1573,22 @@ async function api(request, env, path) {
       );
     }
 
+    if (
+      await hasActiveChallenge(
+        env,
+        clan.id
+      )
+    ) {
+      return json(
+        {
+          error:
+            "Tu equipo ya tiene un reto activo."
+        },
+        400,
+        headers
+      );
+    }
+
     const challenge =
       await env.DB
         .prepare(`
@@ -810,6 +1616,23 @@ async function api(request, env, path) {
       );
     }
 
+    const creatorActive =
+      await hasActiveChallenge(
+        env,
+        challenge.creator_clan_id
+      );
+
+    if (!creatorActive) {
+      return json(
+        {
+          error:
+            "El reto ya no está disponible."
+        },
+        400,
+        headers
+      );
+    }
+
     await env.DB
       .prepare(`
         UPDATE challenges
@@ -817,6 +1640,7 @@ async function api(request, env, path) {
           accepter_clan_id = ?,
           status = 'accepted'
         WHERE id = ?
+        AND status = 'open'
       `)
       .bind(
         clan.id,
@@ -826,12 +1650,113 @@ async function api(request, env, path) {
 
     return json(
       {
-        ok: true
+        ok: true,
+        scheduled_at:
+          challenge.scheduled_at,
+        maps: [
+          challenge.map1,
+          challenge.map2,
+          challenge.map3
+        ]
       },
       200,
       headers
     );
   }
+
+
+  /* =========================
+     CANCELAR RETO
+     ========================= */
+
+  const cancelMatch =
+    path.match(
+      /^\/api\/challenges\/(\d+)\/cancel$/
+    );
+
+  if (
+    request.method === "POST" &&
+    cancelMatch
+  ) {
+
+    const clan =
+      await getClan(
+        env,
+        currentUser.id
+      );
+
+    if (
+      !clan ||
+      clan.captain_id !== currentUser.id
+    ) {
+      return json(
+        {
+          error:
+            "Solo el capitán puede cancelar un reto."
+        },
+        403,
+        headers
+      );
+    }
+
+    const challenge =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM challenges
+          WHERE id = ?
+          AND status IN ('open', 'accepted')
+          AND (
+            creator_clan_id = ?
+            OR accepter_clan_id = ?
+          )
+        `)
+        .bind(
+          cancelMatch[1],
+          clan.id,
+          clan.id
+        )
+        .first();
+
+    if (!challenge) {
+      return json(
+        {
+          error:
+            "No puedes cancelar este reto."
+        },
+        404,
+        headers
+      );
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE challenges
+        SET
+          status = 'cancelled',
+          cancelled_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(
+        challenge.id
+      )
+      .run();
+
+    return json(
+      {
+        ok: true,
+        message:
+          "Reto cancelado correctamente."
+      },
+      200,
+      headers
+    );
+  }
+
+
+  /* =========================
+     REPORTAR RESULTADO
+     ========================= */
 
   const reportMatch =
     path.match(
@@ -897,7 +1822,9 @@ async function api(request, env, path) {
     }
 
     const winner =
-      Number(data.winner_clan_id);
+      Number(
+        data.winner_clan_id
+      );
 
     if (
       winner !== challenge.creator_clan_id &&
@@ -937,7 +1864,9 @@ async function api(request, env, path) {
           FROM reports
           WHERE challenge_id = ?
         `)
-        .bind(challenge.id)
+        .bind(
+          challenge.id
+        )
         .all();
 
     const results =
@@ -974,7 +1903,12 @@ async function api(request, env, path) {
           .prepare(`
             UPDATE scores
             SET
-              points = points + 20,
+              points =
+                CASE
+                  WHEN points + 10 < 0
+                  THEN 0
+                  ELSE points + 10
+                END,
               wins = wins + 1,
               played = played + 1
             WHERE clan_id = ?
@@ -985,18 +1919,25 @@ async function api(request, env, path) {
           .prepare(`
             UPDATE scores
             SET
-              points = points + 5,
+              points =
+                CASE
+                  WHEN points - 5 < 0
+                  THEN 0
+                  ELSE points - 5
+                END,
               losses = losses + 1,
               played = played + 1
             WHERE clan_id = ?
           `)
           .bind(loser)
+
       ]);
 
       return json(
         {
           ok: true,
-          completed: true
+          completed: true,
+          winner_clan_id: winner
         },
         200,
         headers
@@ -1014,14 +1955,25 @@ async function api(request, env, path) {
     );
   }
 
+
+  /* =========================
+     NO ENCONTRADO
+     ========================= */
+
   return json(
     {
-      error: "No encontrado."
+      error:
+        "No encontrado."
     },
     404,
     headers
   );
 }
+
+
+/* =========================
+   WORKER
+   ========================= */
 
 export default {
 
@@ -1071,7 +2023,8 @@ export default {
           error:
             "Error interno del servidor.",
           detail:
-            error?.message || String(error)
+            error?.message ||
+            String(error)
         },
         500,
         corsHeaders(request)
