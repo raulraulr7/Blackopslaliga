@@ -1,674 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>BlackOpsLALIGA.es</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BlackOpsLALIGA</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+:root{
+  --bg:#080a0d;
+  --panel:#11151a;
+  --panel2:#171c22;
+  --line:#2a3139;
+  --txt:#f4f6f8;
+  --muted:#9da6b1;
+  --accent:#ffb400;
+  --ok:#35d07f;
+  --bad:#ff5b5b;
 }
+
+*{box-sizing:border-box}
 
 body{
+  margin:0;
+  background:linear-gradient(180deg,#07090c,#0d1116);
+  color:var(--txt);
   font-family:Arial,Helvetica,sans-serif;
-  background:#090a0c;
-  color:#fff;
-  min-height:100vh;
 }
 
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
+button,input,select{font:inherit}
 
-button{
-  cursor:pointer;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.hidden{
-  display:none !important;
-}
-
-.container{
-  width:min(1180px,94%);
-  margin:auto;
-}
+button{cursor:pointer}
 
 header{
   position:sticky;
   top:0;
-  z-index:100;
-  background:#0d0f12;
-  border-bottom:1px solid #24282d;
+  z-index:20;
+  background:#090b0eef;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(10px);
 }
 
-.navbar{
-  min-height:70px;
+.nav{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:20px;
+  gap:12px;
 }
 
-.logo{
-  font-size:24px;
+.brand{
   font-weight:900;
   letter-spacing:1px;
+  font-size:20px;
+  margin-right:auto;
 }
 
-.logo span{
-  color:#e5ff00;
-}
+.brand span{color:var(--accent)}
 
-.nav-links{
+nav{
   display:flex;
-  gap:8px;
-  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
 }
 
-.nav-links button{
+nav button,
+.back{
   background:transparent;
-  color:#bbb;
-  border:0;
-  padding:10px 12px;
+  color:#ddd;
+  border:1px solid transparent;
+  padding:9px 11px;
   border-radius:8px;
 }
 
-.nav-links button:hover,
-.nav-links button.active{
-  color:#fff;
-  background:#191d21;
-}
-
-.user-area{
-  position:relative;
-}
-
-.user-button{
-  border:1px solid #30353b;
-  background:#15181c;
-  color:#fff;
-  padding:9px 12px;
-  border-radius:8px;
-}
-
-.dropdown{
-  display:none;
-  position:absolute;
-  right:0;
-  top:48px;
-  min-width:190px;
-  background:#15181c;
-  border:1px solid #30353b;
-  border-radius:10px;
-  overflow:hidden;
-  box-shadow:0 15px 40px rgba(0,0,0,.45);
-}
-
-.dropdown.show{
-  display:block;
-}
-
-.dropdown button{
-  width:100%;
-  padding:12px 14px;
-  text-align:left;
-  background:transparent;
-  border:0;
-  color:#fff;
-}
-
-.dropdown button:hover{
-  background:#22272d;
+nav button:hover,
+.back:hover{
+  border-color:var(--line);
+  background:#151a20;
 }
 
 main{
-  padding:35px 0 70px;
-}
-
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
+  max-width:1200px;
+  margin:0 auto;
+  padding:28px 18px 60px;
 }
 
 .hero{
-  padding:45px 0;
+  padding:55px 0 35px;
 }
 
 .hero h1{
-  font-size:clamp(34px,6vw,64px);
-  line-height:1;
-  margin-bottom:18px;
+  font-size:clamp(42px,8vw,86px);
+  line-height:.9;
+  margin:0 0 18px;
+  font-weight:1000;
 }
 
-.hero h1 span{
-  color:#e5ff00;
-}
+.hero h1 span{color:var(--accent)}
 
 .hero p{
-  color:#aaa;
-  max-width:700px;
+  max-width:720px;
+  color:var(--muted);
+  font-size:18px;
   line-height:1.6;
 }
 
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:18px;
+  gap:14px;
 }
 
 .card{
-  background:#111419;
-  border:1px solid #272c32;
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
   border-radius:14px;
-  padding:20px;
+  padding:18px;
+  margin:12px 0;
 }
 
 .card h2,
-.card h3{
-  margin-bottom:12px;
-}
+.card h3{margin-top:0}
 
-.card p{
-  color:#aaa;
-  line-height:1.5;
-}
+.muted{color:var(--muted)}
+.accent{color:var(--accent)}
+
+.page{display:none}
+.page.active{display:block}
 
 .section-title{
-  margin-bottom:20px;
+  font-size:13px;
+  color:var(--accent);
+  font-weight:900;
+  letter-spacing:2px;
+  margin:25px 0 10px;
 }
 
-.section-title h1{
-  font-size:32px;
-  margin-bottom:7px;
+.row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
 }
 
-.section-title p{
-  color:#888;
+.spacer{flex:1}
+
+.pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#242b33;
+  color:#ddd;
+  font-size:12px;
 }
 
 .btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  border:1px solid #e5ff00;
-  background:#e5ff00;
-  color:#080900;
-  padding:10px 15px;
-  border-radius:8px;
-  font-weight:800;
-  margin:4px 3px;
-}
-
-.btn:hover{
-  filter:brightness(.92);
-}
-
-.btn-dark{
-  border-color:#3a4148;
-  background:#1a1e23;
-  color:#fff;
-}
-
-.btn-danger{
-  border-color:#e53935;
-  background:#e53935;
-  color:#fff;
-}
-
-.btn-success{
-  border-color:#25c56f;
-  background:#25c56f;
-  color:#07140d;
-}
-
-.form{
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-
-.form label{
-  font-size:13px;
-  color:#aaa;
-}
-
-.form input,
-.form select,
-.form textarea{
-  width:100%;
-  background:#0b0d10;
-  color:#fff;
-  border:1px solid #30363d;
-  border-radius:8px;
-  padding:11px 12px;
-  outline:none;
-}
-
-.form input:focus,
-.form select:focus,
-.form textarea:focus{
-  border-color:#e5ff00;
-}
-
-.form textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
-.message{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:8px;
-  display:none;
-}
-
-.message.ok,
-.message.error,
-.message.info{
-  display:block;
-}
-
-.message.ok{
-  background:#10251a;
-  border:1px solid #25c56f;
-  color:#8ff0b8;
-}
-
-.message.error{
-  background:#2a1111;
-  border:1px solid #e53935;
-  color:#ff9b98;
-}
-
-.message.info{
-  background:#151c28;
-  border:1px solid #4778b8;
-  color:#a8caff;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:500;
-  background:rgba(0,0,0,.75);
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-content{
-  width:min(520px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#111419;
-  border:1px solid #30363d;
-  border-radius:14px;
-  padding:22px;
-}
-
-.modal-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.close{
-  width:34px;
-  height:34px;
+  background:var(--accent);
+  color:#111;
   border:0;
   border-radius:8px;
-  background:#22272d;
+  padding:10px 14px;
+  font-weight:900;
+}
+
+.btn.dark{
+  background:#222a32;
   color:#fff;
-  font-size:20px;
 }
 
-.close:hover{
-  background:#333941;
+.btn.danger{
+  background:var(--bad);
+  color:#111;
 }
 
-.table-wrap{
-  overflow-x:auto;
+.btn.ok{
+  background:var(--ok);
+  color:#111;
 }
 
-table{
+input,
+select{
+  width:100%;
+  background:#0b0f13;
+  border:1px solid var(--line);
+  color:#fff;
+  border-radius:8px;
+  padding:11px;
+  margin:6px 0 12px;
+}
+
+.form{max-width:480px}
+
+.table-wrap{overflow:auto}
+
+.ranking{
   width:100%;
   border-collapse:collapse;
 }
 
-th,
-td{
-  padding:13px 10px;
-  border-bottom:1px solid #252a30;
+.ranking th,
+.ranking td{
   text-align:left;
-}
-
-th{
-  color:#8e969f;
-  font-size:12px;
-  text-transform:uppercase;
-}
-
-.badge{
-  display:inline-flex;
-  padding:5px 8px;
-  border-radius:6px;
-  background:#20252a;
-  color:#ddd;
-  font-size:12px;
-  font-weight:700;
-}
-
-.badge-green{
-  background:#12301f;
-  color:#72e7a4;
-}
-
-.badge-red{
-  background:#351515;
-  color:#ff8d89;
-}
-
-.badge-yellow{
-  background:#343612;
-  color:#eff36e;
-}
-
-.reto-card{
-  margin-bottom:15px;
-}
-
-.reto-top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:15px;
-}
-
-.reto-title{
-  font-size:19px;
-  font-weight:900;
-}
-
-.reto-meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-top:8px;
-}
-
-.meta{
-  color:#999;
-  font-size:13px;
-}
-
-.meta strong{
-  display:block;
-  color:#fff;
-  margin-top:3px;
-}
-
-.map-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:15px;
-}
-
-.map-card{
-  background:#0b0d10;
-  border:1px solid #292f35;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.map-card img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-  display:block;
-}
-
-.map-card div{
-  padding:9px;
-}
-
-.mode-list{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.mode-option{
-  position:relative;
-}
-
-.mode-option input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.mode-option label{
-  display:block;
-  padding:9px 12px;
-  border:1px solid #343a40;
-  background:#15191d;
-  color:#aaa;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.mode-option input:checked + label{
-  border-color:#e5ff00;
-  background:#282c0c;
-  color:#fff;
-}
-
-.size-list{
-  display:flex;
-  gap:8px;
-}
-
-.size-option{
-  position:relative;
-}
-
-.size-option input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.size-option label{
-  display:block;
-  padding:10px 15px;
-  border:1px solid #343a40;
-  background:#15191d;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.size-option input:checked + label{
-  border-color:#e5ff00;
-  background:#282c0c;
-}
-
-.chat-box{
-  height:350px;
-  overflow-y:auto;
-  background:#0a0c0f;
-  border:1px solid #292f35;
-  border-radius:10px;
   padding:12px;
-  margin-bottom:12px;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
 }
 
-.chat-message{
-  margin-bottom:12px;
-}
-
-.chat-user{
-  font-weight:800;
-  color:#e5ff00;
-  font-size:13px;
-}
-
-.chat-text{
-  color:#ddd;
-  margin-top:3px;
-  line-height:1.4;
-}
-
-.chat-time{
-  color:#666;
+.ranking th{
   font-size:11px;
-  margin-top:3px;
+  color:var(--muted);
 }
 
-.notification{
-  padding:13px;
-  border-bottom:1px solid #272c32;
-}
+.ranklink{cursor:pointer}
 
-.notification.unread{
-  background:#171b20;
-}
+.ranklink:hover{color:var(--accent)}
 
-.notification-title{
-  font-weight:800;
-  margin-bottom:4px;
-}
-
-.notification-text{
-  color:#aaa;
-  font-size:13px;
-}
-
-.notification-time{
-  color:#666;
-  font-size:11px;
-  margin-top:5px;
-}
-
-.team-member{
-  display:flex;
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
   align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid #272c32;
+  justify-content:center;
+  padding:20px;
+  z-index:50;
 }
 
-.team-member:last-child{
-  border-bottom:0;
+.modal.open{display:flex}
+
+.modalbox{
+  background:#11161c;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px;
+  width:min(460px,100%);
 }
 
-.member-name{
-  font-weight:700;
-}
-
-.member-role{
-  font-size:12px;
-  color:#999;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:15px;
-}
-
-.stat{
-  background:#0c0f12;
-  border:1px solid #282e34;
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:#161c22;
+  border:1px solid var(--line);
+  padding:12px 15px;
   border-radius:10px;
-  padding:14px;
+  display:none;
+  z-index:80;
 }
 
-.stat small{
-  display:block;
-  color:#777;
-  margin-bottom:5px;
-}
+.toast.show{display:block}
 
-.stat strong{
-  font-size:22px;
-}
-
-.empty{
-  padding:30px;
-  text-align:center;
-  color:#777;
-}
-
-.footer{
-  border-top:1px solid #22272c;
-  padding:30px 0;
-  color:#666;
-  text-align:center;
-}
-
-@media(max-width:900px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .grid-2{
-    grid-template-columns:1fr;
-  }
-
-  .nav-links{
-    display:none;
-  }
-
-  .map-grid{
-    grid-template-columns:1fr;
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:600px){
-  .reto-top{
-    flex-direction:column;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr}
+  nav{display:none}
+  .nav{flex-wrap:wrap}
+  .hero{padding-top:30px}
 }
 </style>
 </head>
@@ -676,107 +262,33 @@ th{
 <body>
 
 <header>
+  <div class="nav">
 
-  <div class="container navbar">
-
-    <a
-      href="#inicio"
-      class="logo"
-      onclick="mostrarPagina('inicio')">
-      BLACK<span>OPS</span>2 LIGA
-    </a>
-
-    <nav class="nav-links">
-
-      <button
-        id="navInicio"
-        onclick="mostrarPagina('inicio')">
-        Inicio
-      </button>
-
-      <button
-        id="navRanking"
-        onclick="mostrarPagina('ranking')">
-        Ranking
-      </button>
-
-      <button
-        id="navRetos"
-        onclick="mostrarPagina('retos')">
-        Retos
-      </button>
-
-      <button
-        id="navEquipo"
-        onclick="mostrarPagina('equipo')">
-        Mi equipo
-      </button>
-
-      <button
-        id="navHistorial"
-        onclick="mostrarPagina('historial')">
-        Historial
-      </button>
-
-      <button
-        id="navNotificaciones"
-        onclick="mostrarPagina('notificaciones')">
-        🔔
-      </button>
-
-    </nav>
-
-    <div
-      class="user-area"
-      id="userMenuWrap">
-
-      <button
-        class="user-button"
-        id="userButton"
-        onclick="toggleUserMenu()">
-        Iniciar sesión
-      </button>
-
-      <div
-        class="dropdown"
-        id="userDropdown">
-
-        <button
-          onclick="mostrarPagina('equipo')">
-          Mi equipo
-        </button>
-
-        <button
-          onclick="mostrarPagina('notificaciones')">
-          Notificaciones
-        </button>
-
-        <button
-          onclick="logout()">
-          Cerrar sesión
-        </button>
-
-      </div>
-
+    <div class="brand">
+      BLACKOPS<span>LALIGA</span>
     </div>
 
+    <nav id="nav"></nav>
+
+    <button
+      class="btn dark"
+      onclick="goBack()">
+      ← Atrás
+    </button>
+
+    <button
+      class="btn"
+      id="authBtn"
+      onclick="openAuth()">
+      Iniciar sesión
+    </button>
+
   </div>
-
 </header>
-
 
 <main>
 
-<div class="container">
-
-
-<!-- ==========================================
-     INICIO
-========================================== -->
-
-<section
-  id="inicio"
-  class="page active">
+<section id="home" class="page active">
 
   <div class="hero">
 
@@ -786,3128 +298,2012 @@ th{
     </h1>
 
     <p>
-      Liga competitiva de Call of Duty:
-      Black Ops II. Crea tu equipo,
-      publica retos, juega contra otros
-      equipos y sube en el ranking.
+      La competición de Call of Duty:
+      Black Ops II. Tres formatos,
+      clanes, ranking, retos y perfiles.
     </p>
 
-    <div style="margin-top:25px">
-
-      <button
-        class="btn"
-        onclick="mostrarPagina('retos')">
-        ⚔️ VER RETOS
-      </button>
-
-      <button
-        class="btn btn-dark"
-        onclick="mostrarPagina('ranking')">
-        🏆 RANKING
-      </button>
-
-    </div>
-
   </div>
-
 
   <div class="grid">
 
     <div class="card">
-
-      <h3>
-        🏆 Ranking
-      </h3>
-
-      <p>
-        Compite por XP y sube posiciones
-        en la clasificación de equipos.
+      <h2>2 VS 2</h2>
+      <p class="muted">
+        Liga independiente.
       </p>
-
       <button
         class="btn"
-        onclick="mostrarPagina('ranking')">
-        VER RANKING
+        onclick="show('ranking',2)">
+        Ver liga
       </button>
-
     </div>
 
-
     <div class="card">
-
-      <h3>
-        ⚔️ Retos
-      </h3>
-
-      <p>
-        Publica y acepta retos
-        en formato 2v2, 3v3 o 4v4.
+      <h2>3 VS 3</h2>
+      <p class="muted">
+        Liga independiente.
       </p>
-
       <button
         class="btn"
-        onclick="mostrarPagina('retos')">
-        VER RETOS
+        onclick="show('ranking',3)">
+        Ver liga
       </button>
-
     </div>
 
-
     <div class="card">
-
-      <h3>
-        👥 Equipos
-      </h3>
-
-      <p>
-        Crea tu equipo y añade
-        hasta 6 jugadores.
+      <h2>4 VS 4</h2>
+      <p class="muted">
+        Liga independiente.
       </p>
-
       <button
         class="btn"
-        onclick="mostrarPagina('equipo')">
-        MI EQUIPO
+        onclick="show('ranking',4)">
+        Ver liga
       </button>
-
     </div>
 
   </div>
 
 </section>
 
-
-<!-- ==========================================
-     RANKING
-========================================== -->
-
-<section
-  id="ranking"
-  class="page">
+<section id="ranking" class="page">
 
   <div class="section-title">
+    RANKING
+  </div>
 
-    <h1>
-      🏆 Ranking
-    </h1>
+  <div class="row">
 
-    <p>
-      Clasificación de equipos.
-    </p>
+    <button
+      class="btn dark"
+      onclick="loadRanking(2)">
+      2v2
+    </button>
+
+    <button
+      class="btn dark"
+      onclick="loadRanking(3)">
+      3v3
+    </button>
+
+    <button
+      class="btn dark"
+      onclick="loadRanking(4)">
+      4v4
+    </button>
 
   </div>
 
   <div class="card">
 
-    <div
-      id="rankingLista"
-      class="table-wrap">
+    <div class="table-wrap">
 
-      <div class="empty">
-        Cargando ranking...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ==========================================
-     RETOS
-========================================== -->
-
-<section
-  id="retos"
-  class="page">
-
-  <div class="section-title">
-
-    <h1>
-      ⚔️ Retos
-    </h1>
-
-    <p>
-      Publica o acepta un reto.
-    </p>
-
-  </div>
-
-
-  <div
-    id="crearRetoCard"
-    class="card"
-    style="margin-bottom:20px">
-
-    <h2>
-      Publicar reto
-    </h2>
-
-    <p style="margin-bottom:20px">
-      Elige el formato y los modos.
-      La hora se registrará
-      automáticamente al publicar.
-    </p>
-
-
-    <div class="form">
-
-      <label>
-        Formato
-      </label>
-
-      <div class="size-list">
-
-        <div class="size-option">
-
-          <input
-            type="radio"
-            name="teamSize"
-            id="size2"
-            value="2">
-
-          <label for="size2">
-            2v2
-          </label>
-
-        </div>
-
-
-        <div class="size-option">
-
-          <input
-            type="radio"
-            name="teamSize"
-            id="size3"
-            value="3">
-
-          <label for="size3">
-            3v3
-          </label>
-
-        </div>
-
-
-        <div class="size-option">
-
-          <input
-            type="radio"
-            name="teamSize"
-            id="size4"
-            value="4"
-            checked>
-
-          <label for="size4">
-            4v4
-          </label>
-
-        </div>
-
-      </div>
-
-
-      <input
-        type="hidden"
-        id="retoTeamSize"
-        value="4">
-
-
-      <label style="margin-top:10px">
-        Modos de juego
-      </label>
-
-      <div class="mode-list">
-
-        <div class="mode-option">
-
-          <input
-            type="checkbox"
-            name="gameMode"
-            id="modeSnd"
-            value="snd"
-            checked>
-
-          <label for="modeSnd">
-            💣 Buscar y Destruir
-          </label>
-
-        </div>
-
-
-        <div class="mode-option">
-
-          <input
-            type="checkbox"
-            name="gameMode"
-            id="modeHardpoint"
-            value="hardpoint">
-
-          <label for="modeHardpoint">
-            🔥 Punto Caliente
-          </label>
-
-        </div>
-
-
-        <div class="mode-option">
-
-          <input
-            type="checkbox"
-            name="gameMode"
-            id="modeCtf"
-            value="ctf">
-
-          <label for="modeCtf">
-            🚩 Tomar la Bandera
-          </label>
-
-        </div>
-
-      </div>
-
-
-      <label style="margin-top:10px">
-        Hora del reto
-      </label>
-
-      <div
-        class="meta"
-        style="margin-top:6px">
-
-        <small>
-          HORA AUTOMÁTICA
-        </small>
-
-        <strong>
-          Se registrará automáticamente
-          al publicar el reto
-        </strong>
-
-      </div>
-
-
-      <div
-        id="retoMensaje"
-        class="message">
-      </div>
-
-
-      <div style="margin-top:10px">
-
-        <button
-          class="btn"
-          onclick="publicarReto()">
-          ⚔️ PUBLICAR RETO
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div
-    id="retosLista">
-
-    <div class="empty">
-      Cargando retos...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ==========================================
-     MI EQUIPO
-========================================== -->
-
-<section
-  id="equipo"
-  class="page">
-
-  <div class="section-title">
-
-    <h1>
-      👥 Mi equipo
-    </h1>
-
-    <p>
-      Gestiona tu equipo y sus jugadores.
-    </p>
-
-  </div>
-
-
-  <div
-    id="equipoContenido">
-
-    <div class="empty">
-      Cargando...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ==========================================
-     HISTORIAL
-========================================== -->
-
-<section
-  id="historial"
-  class="page">
-
-  <div class="section-title">
-
-    <h1>
-      📊 Historial
-    </h1>
-
-    <p>
-      Historial de tus retos.
-    </p>
-
-  </div>
-
-
-  <div
-    id="historialLista">
-
-    <div class="empty">
-      Cargando historial...
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ==========================================
-     NOTIFICACIONES
-========================================== -->
-
-<section
-  id="notificaciones"
-  class="page">
-
-  <div class="section-title">
-
-    <h1>
-      🔔 Notificaciones
-    </h1>
-
-    <p>
-      Invitaciones, retos y mensajes.
-    </p>
-
-  </div>
-
-
-  <div class="card">
-
-    <div
-      id="notificacionesLista">
-
-      <div class="empty">
-        Cargando notificaciones...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-</div>
-
-</main>
-
-
-<footer class="footer">
-
-  <div class="container">
-
-    BlackOpsLALIGA.es<br>
-
-  </div>
-
-</footer>
-
-
-<!-- ==========================================
-     LOGIN MODAL
-========================================== -->
-
-<div
-  id="loginModal"
-  class="modal">
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h2>
-        Iniciar sesión
-      </h2>
-
-      <button
-        class="close"
-        onclick="cerrarLogin()">
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="form">
-
-      <label>
-        Usuario
-      </label>
-
-      <input
-        id="loginUsuario"
-        autocomplete="username"
-        placeholder="Tu usuario">
-
-
-      <label>
-        Contraseña
-      </label>
-
-      <input
-        id="loginPassword"
-        type="password"
-        autocomplete="current-password"
-        placeholder="Tu contraseña">
-
-
-      <div
-        id="loginMensaje"
-        class="message">
-      </div>
-
-
-      <button
-        class="btn"
-        onclick="login()">
-        INICIAR SESIÓN
-      </button>
-
-
-      <button
-        class="btn btn-dark"
-        onclick="cerrarLogin(); abrirRegistro()">
-        CREAR CUENTA
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- ==========================================
-     REGISTRO MODAL
-========================================== -->
-
-<div
-  id="registroModal"
-  class="modal">
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h2>
-        Crear cuenta
-      </h2>
-
-      <button
-        class="close"
-        onclick="cerrarRegistro()">
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="form">
-
-      <label>
-        Usuario
-      </label>
-
-      <input
-        id="registroUsuario"
-        autocomplete="username"
-        placeholder="Tu usuario">
-
-
-      <label>
-        Contraseña
-      </label>
-
-      <input
-        id="registroPassword"
-        type="password"
-        autocomplete="new-password"
-        placeholder="Mínimo 6 caracteres">
-
-
-      <div
-        id="registroMensaje"
-        class="message">
-      </div>
-
-
-      <button
-        class="btn"
-        onclick="registrar()">
-        CREAR CUENTA
-      </button>
-
-
-      <button
-        class="btn btn-dark"
-        onclick="cerrarRegistro(); abrirLogin()">
-        YA TENGO CUENTA
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- ==========================================
-     CHAT MODAL
-========================================== -->
-
-<div
-  id="chatModal"
-  class="modal">
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h2>
-        💬 Chat del reto
-      </h2>
-
-      <button
-        class="close"
-        onclick="cerrarChat()">
-        ×
-      </button>
-
-    </div>
-
-
-    <div
-      id="chatBox"
-      class="chat-box">
-    </div>
-
-
-    <div
-      class="form">
-
-      <textarea
-        id="chatInput"
-        placeholder="Escribe un mensaje..."></textarea>
-
-      <button
-        class="btn"
-        onclick="enviarMensaje()">
-        ENVIAR
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<script>
-
-let usuarioActual = null;
-let clanActual = null;
-let retoChatActual = null;
-
-
-/* ==========================================
-   API
-========================================== */
-
-async function apiFetch(
-  path,
-  options = {}
-){
-
-  const respuesta =
-    await fetch(
-      "/api" + path,
-      {
-        credentials:"include",
-        ...options
-      }
-    );
-
-  let datos = {};
-
-  try{
-    datos =
-      await respuesta.json();
-  }catch{
-    datos = {};
-  }
-
-  return {
-    respuesta,
-    datos
-  };
-}
-
-
-/* ==========================================
-   NAVEGACIÓN
-========================================== */
-
-function mostrarPagina(id){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      page =>
-        page.classList.remove(
-          "active"
-        )
-    );
-
-  const pagina =
-    document.getElementById(id);
-
-  if(pagina){
-    pagina.classList.add("active");
-  }
-
-  document
-    .querySelectorAll(
-      ".nav-links button"
-    )
-    .forEach(
-      button =>
-        button.classList.remove(
-          "active"
-        )
-    );
-
-  const nav =
-    document.getElementById(
-      "nav" +
-      id.charAt(0).toUpperCase() +
-      id.slice(1)
-    );
-
-  if(nav){
-    nav.classList.add("active");
-  }
-
-  if(id === "ranking"){
-    cargarRanking();
-  }
-
-  if(id === "retos"){
-    cargarRetos();
-  }
-
-  if(id === "equipo"){
-    cargarEquipo();
-  }
-
-  if(id === "historial"){
-    cargarHistorial();
-  }
-
-  if(id === "notificaciones"){
-    cargarNotificaciones();
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-
-/* ==========================================
-   MENÚ USUARIO
-========================================== */
-
-function toggleUserMenu(){
-
-  const dropdown =
-    document.getElementById(
-      "userDropdown"
-    );
-
-  if(dropdown){
-    dropdown.classList.toggle(
-      "show"
-    );
-  }
-}
-
-
-/* ==========================================
-   LOGIN
-========================================== */
-
-function abrirLogin(){
-
-  document
-    .getElementById(
-      "loginModal"
-    )
-    .classList.add("show");
-
-  setTimeout(
-    () =>
-      document
-        .getElementById(
-          "loginUsuario"
-        )
-        ?.focus(),
-    100
-  );
-}
-
-
-function cerrarLogin(){
-
-  document
-    .getElementById(
-      "loginModal"
-    )
-    .classList.remove("show");
-}
-
-
-async function login(){
-
-  const usuario =
-    document.getElementById(
-      "loginUsuario"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "loginPassword"
-    ).value;
-
-  const mensaje =
-    document.getElementById(
-      "loginMensaje"
-    );
-
-  if(!usuario || !password){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Completa todos los campos."
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/login",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            username:usuario,
-            password:password
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo iniciar sesión."
-        )
-      );
-
-      return;
-    }
-
-    cerrarLogin();
-
-    await cargarUsuario();
-
-    mostrarPagina("inicio");
-
-  }catch(error){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   REGISTRO
-========================================== */
-
-function abrirRegistro(){
-
-  document
-    .getElementById(
-      "registroModal"
-    )
-    .classList.add("show");
-}
-
-
-function cerrarRegistro(){
-
-  document
-    .getElementById(
-      "registroModal"
-    )
-    .classList.remove("show");
-}
-
-
-async function registrar(){
-
-  const usuario =
-    document.getElementById(
-      "registroUsuario"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "registroPassword"
-    ).value;
-
-  const mensaje =
-    document.getElementById(
-      "registroMensaje"
-    );
-
-  if(!usuario || !password){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Completa todos los campos."
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/register",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            username:usuario,
-            password:password
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo crear la cuenta."
-        )
-      );
-
-      return;
-    }
-
-    cerrarRegistro();
-
-    await cargarUsuario();
-
-    mostrarPagina("inicio");
-
-  }catch(error){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   LOGOUT
-========================================== */
-
-async function logout(){
-
-  try{
-
-    await apiFetch(
-      "/logout",
-      {
-        method:"POST"
-      }
-    );
-
-  }catch(error){
-
-    console.error(error);
-  }
-
-  usuarioActual = null;
-  clanActual = null;
-
-  actualizarUsuarioUI();
-
-  mostrarPagina("inicio");
-}
-
-
-/* ==========================================
-   CARGAR USUARIO
-========================================== */
-
-async function cargarUsuario(){
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/me"
-      );
-
-    if(result.respuesta.ok){
-
-      usuarioActual =
-        result.datos.user;
-
-      clanActual =
-        result.datos.clan;
-
-    }else{
-
-      usuarioActual = null;
-      clanActual = null;
-    }
-
-  }catch(error){
-
-    usuarioActual = null;
-    clanActual = null;
-  }
-
-  actualizarUsuarioUI();
-}
-
-
-function actualizarUsuarioUI(){
-
-  const button =
-    document.getElementById(
-      "userButton"
-    );
-
-  if(!button){
-    return;
-  }
-
-  if(usuarioActual){
-
-    button.textContent =
-      "👤 " +
-      usuarioActual.username;
-
-  }else{
-
-    button.textContent =
-      "Iniciar sesión";
-
-  }
-}
-
-
-/* ==========================================
-   RANKING
-========================================== */
-
-async function cargarRanking(){
-
-  const contenedor =
-    document.getElementById(
-      "rankingLista"
-    );
-
-  if(!contenedor){
-    return;
-  }
-
-  contenedor.innerHTML =
-    `<div class="empty">
-      Cargando ranking...
-    </div>`;
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/leaderboard"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<div class="empty">
-          ❌ No se pudo cargar el ranking.
-        </div>`;
-
-      return;
-    }
-
-    const ranking =
-      result.datos || [];
-
-    if(!ranking.length){
-
-      contenedor.innerHTML =
-        `<div class="empty">
-          Todavía no hay equipos.
-        </div>`;
-
-      return;
-    }
-
-    let html =
-      `<table>
+      <table class="ranking">
 
         <thead>
           <tr>
             <th>#</th>
-            <th>Equipo</th>
+            <th>CLAN</th>
+            <th>ID</th>
+            <th>PJ</th>
+            <th>V</th>
+            <th>D</th>
             <th>XP</th>
-            <th>Victorias</th>
-            <th>Derrotas</th>
-            <th>Jugados</th>
           </tr>
         </thead>
 
-        <tbody>`;
+        <tbody id="rankingBody"></tbody>
 
-    ranking.forEach(
-      (equipo,index) => {
-
-        html += `
-          <tr>
-
-            <td>
-              <strong>
-                ${index + 1}
-              </strong>
-            </td>
-
-            <td>
-              <strong>
-                ${escapeHTML(equipo.name)}
-              </strong>
-            </td>
-
-            <td>
-              <span class="badge badge-yellow">
-                ${equipo.points}
-              </span>
-            </td>
-
-            <td>
-              ${equipo.wins}
-            </td>
-
-            <td>
-              ${equipo.losses}
-            </td>
-
-            <td>
-              ${equipo.played}
-            </td>
-
-          </tr>
-        `;
-      }
-    );
-
-    html += `
-        </tbody>
-      </table>`;
-
-    contenedor.innerHTML =
-      html;
-
-  }catch(error){
-
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<div class="empty">
-        ❌ Error de conexión.
-      </div>`;
-  }
-}
-
-
-/* ==========================================
-   EQUIPO
-========================================== */
-
-async function cargarEquipo(){
-
-  const contenedor =
-    document.getElementById(
-      "equipoContenido"
-    );
-
-  if(!contenedor){
-    return;
-  }
-
-  if(!usuarioActual){
-
-    contenedor.innerHTML = `
-      <div class="card">
-        <p>
-          Inicia sesión para gestionar
-          tu equipo.
-        </p>
-
-        <button
-          class="btn"
-          onclick="abrirLogin()">
-          INICIAR SESIÓN
-        </button>
-      </div>
-    `;
-
-    return;
-  }
-
-  contenedor.innerHTML =
-    `<div class="empty">
-      Cargando equipo...
-    </div>`;
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/clan"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<div class="card">
-          <p style="color:#ff8d89">
-            ❌ ${
-              escapeHTML(
-                result.datos.error ||
-                "No se pudo cargar el equipo."
-              )
-            }
-          </p>
-        </div>`;
-
-      return;
-    }
-
-    const data =
-      result.datos;
-
-    if(!data.clan){
-
-      contenedor.innerHTML = `
-        <div class="card">
-
-          <h2>
-            No tienes equipo
-          </h2>
-
-          <p>
-            Crea tu equipo para empezar
-            a competir.
-          </p>
-
-          <div
-            class="form"
-            style="margin-top:15px">
-
-            <label>
-              Nombre del equipo
-            </label>
-
-            <input
-              id="nuevoClanNombre"
-              placeholder="Ej: Virtual Gamers">
-
-            <button
-              class="btn"
-              onclick="crearEquipo()">
-              CREAR EQUIPO
-            </button>
-
-            <div
-              id="crearClanMensaje"
-              class="message">
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-      return;
-    }
-
-    const clan =
-      data.clan;
-
-    const members =
-      data.members || [];
-
-    const score =
-      data.score || {
-        points:0,
-        wins:0,
-        losses:0,
-        played:0
-      };
-
-    clanActual =
-      clan;
-
-    let miembrosHTML =
-      "";
-
-    members.forEach(
-      member => {
-
-        miembrosHTML += `
-          <div class="team-member">
-
-            <div>
-
-              <div class="member-name">
-                ${escapeHTML(member.username)}
-              </div>
-
-              <div class="member-role">
-                ${
-                  member.role === "captain"
-                    ? "👑 Capitán"
-                    : "Jugador"
-                }
-              </div>
-
-            </div>
-
-          </div>
-        `;
-      }
-    );
-
-    contenedor.innerHTML = `
-
-      <div class="grid-2">
-
-        <div class="card">
-
-          <h2>
-            ${escapeHTML(clan.name)}
-          </h2>
-
-          <p>
-            Equipo competitivo
-          </p>
-
-          <div class="stats">
-
-            <div class="stat">
-              <small>XP</small>
-              <strong>
-                ${score.points}
-              </strong>
-            </div>
-
-            <div class="stat">
-              <small>Victorias</small>
-              <strong>
-                ${score.wins}
-              </strong>
-            </div>
-
-            <div class="stat">
-              <small>Derrotas</small>
-              <strong>
-                ${score.losses}
-              </strong>
-            </div>
-
-            <div class="stat">
-              <small>Partidos</small>
-              <strong>
-                ${score.played}
-              </strong>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <h2>
-            Jugadores
-          </h2>
-
-          <p>
-            ${members.length}/6 jugadores
-          </p>
-
-          <div style="margin-top:10px">
-            ${miembrosHTML}
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="card"
-        style="margin-top:18px">
-
-        <h2>
-          Invitar jugador
-        </h2>
-
-        <p>
-          Solo el capitán puede invitar jugadores.
-        </p>
-
-        <div
-          class="form"
-          style="margin-top:15px">
-
-          <input
-            id="invitarUsuario"
-            placeholder="Nombre de usuario">
-
-          <button
-            class="btn"
-            onclick="invitarJugador()">
-            INVITAR
-          </button>
-
-          <div
-            id="invitarMensaje"
-            class="message">
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="card"
-        style="margin-top:18px">
-
-        <h2>
-          Invitaciones recibidas
-        </h2>
-
-        <div
-          id="invitacionesEquipo">
-          Cargando...
-        </div>
-
-      </div>
-
-    `;
-
-    cargarInvitacionesEquipo();
-
-  }catch(error){
-
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<div class="card">
-        <p style="color:#ff8d89">
-          ❌ Error interno del servidor.
-        </p>
-      </div>`;
-  }
-}
-
-
-/* ==========================================
-   CREAR EQUIPO
-========================================== */
-
-async function crearEquipo(){
-
-  const input =
-    document.getElementById(
-      "nuevoClanNombre"
-    );
-
-  const mensaje =
-    document.getElementById(
-      "crearClanMensaje"
-    );
-
-  const nombre =
-    input?.value.trim();
-
-  if(!nombre){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Escribe un nombre."
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/clans",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            name:nombre
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo crear el equipo."
-        )
-      );
-
-      return;
-    }
-
-    await cargarUsuario();
-    await cargarEquipo();
-
-  }catch(error){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   INVITAR JUGADOR
-========================================== */
-
-async function invitarJugador(){
-
-  const input =
-    document.getElementById(
-      "invitarUsuario"
-    );
-
-  const mensaje =
-    document.getElementById(
-      "invitarMensaje"
-    );
-
-  const username =
-    input?.value.trim();
-
-  if(!username){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Escribe el nombre del jugador."
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/clan/invite",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            username
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo enviar la invitación."
-        )
-      );
-
-      return;
-    }
-
-    mostrarMensaje(
-      mensaje,
-      "ok",
-      "✅ Invitación enviada."
-    );
-
-    input.value = "";
-
-  }catch(error){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   INVITACIONES EQUIPO
-========================================== */
-
-async function cargarInvitacionesEquipo(){
-
-  const contenedor =
-    document.getElementById(
-      "invitacionesEquipo"
-    );
-
-  if(!contenedor){
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/invites"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<p style="color:#ff8d89">
-          ❌ No se pudieron cargar.
-        </p>`;
-
-      return;
-    }
-
-    const invitaciones =
-      result.datos || [];
-
-    if(!invitaciones.length){
-
-      contenedor.innerHTML =
-        `<p class="meta">
-          No tienes invitaciones pendientes.
-        </p>`;
-
-      return;
-    }
-
-    let html = "";
-
-    invitaciones.forEach(
-      invite => {
-
-        html += `
-          <div class="team-member">
-
-            <div>
-
-              <div class="member-name">
-                ${escapeHTML(invite.clan)}
-              </div>
-
-              <div class="member-role">
-                Invitado por
-                ${escapeHTML(invite.inviter)}
-              </div>
-
-            </div>
-
-            <div>
-
-              <button
-                class="btn btn-success"
-                onclick="aceptarInvitacion(${invite.id})">
-                ACEPTAR
-              </button>
-
-              <button
-                class="btn btn-danger"
-                onclick="rechazarInvitacion(${invite.id})">
-                RECHAZAR
-              </button>
-
-            </div>
-
-          </div>
-        `;
-      }
-    );
-
-    contenedor.innerHTML =
-      html;
-
-  }catch(error){
-
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<p style="color:#ff8d89">
-        ❌ Error de conexión.
-      </p>`;
-  }
-}
-
-
-/* ==========================================
-   ACEPTAR INVITACIÓN
-========================================== */
-
-async function aceptarInvitacion(id){
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/invites/${id}/accept`,
-        {
-          method:"POST"
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo aceptar."
-        )
-      );
-
-      return;
-    }
-
-    await cargarUsuario();
-    await cargarEquipo();
-
-  }catch(error){
-
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   RECHAZAR INVITACIÓN
-========================================== */
-
-async function rechazarInvitacion(id){
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/invites/${id}/reject`,
-        {
-          method:"POST"
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo rechazar."
-        )
-      );
-
-      return;
-    }
-
-    await cargarInvitacionesEquipo();
-
-  }catch(error){
-
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   RETOS
-========================================== */
-
-async function cargarRetos(){
-
-  const contenedor =
-    document.getElementById(
-      "retosLista"
-    );
-
-  if(!contenedor){
-    return;
-  }
-
-  contenedor.innerHTML =
-    `<div class="empty">
-      Cargando retos...
-    </div>`;
-
-  try{
-
-    const result =
-      await apiFetch(
-        "/challenges"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<div class="empty">
-          ❌ No se pudieron cargar los retos.
-        </div>`;
-
-      return;
-    }
-
-    const retos =
-      result.datos || [];
-
-    if(!retos.length){
-
-      contenedor.innerHTML =
-        `<div class="card empty">
-          No hay retos publicados.
-        </div>`;
-
-      return;
-    }
-
-    let html = "";
-
-    retos.forEach(
-      reto => {
-
-        html +=
-          crearRetoCard(
-            reto
-          );
-      }
-    );
-
-    contenedor.innerHTML =
-      html;
-
-  }catch(error){
-
-    console.error(error);
-
-    contenedor.innerHTML =
-      `<div class="card empty">
-        ❌ Error de conexión.
-      </div>`;
-  }
-}
-
-
-/* ==========================================
-   TARJETA RETO
-========================================== */
-
-function crearRetoCard(reto){
-
-  const estado =
-    reto.status === "open"
-      ? `<span class="badge badge-green">
-          ABIERTO
-        </span>`
-      : reto.status === "accepted"
-        ? `<span class="badge badge-yellow">
-            ACEPTADO
-          </span>`
-        : reto.status === "completed"
-          ? `<span class="badge">
-              COMPLETADO
-            </span>`
-          : `<span class="badge">
-              ${escapeHTML(reto.status)}
-            </span>`;
-
-  const modos =
-    Array.isArray(
-      reto.game_modes
-    )
-      ? reto.game_modes
-      : [];
-
-  const nombresModos = {
-    snd:"💣 Buscar y Destruir",
-    hardpoint:"🔥 Punto Caliente",
-    ctf:"🚩 Tomar la Bandera"
-  };
-
-  let modosHTML = "";
-
-  modos.forEach(
-    modo => {
-
-      modosHTML += `
-        <span class="badge">
-          ${
-            escapeHTML(
-              nombresModos[modo] ||
-              modo
-            )
-          }
-        </span>
-      `;
-    }
-  );
-
-  let mapsHTML = "";
-
-  const maps =
-    reto.maps || [];
-
-  maps.forEach(
-    (mapa,index) => {
-
-      const imagenes = {
-        Raid:"https://placehold.co/600x300/17191d/e5ff00?text=Raid",
-        Standoff:"https://placehold.co/600x300/17191d/e5ff00?text=Standoff",
-        Slums:"https://placehold.co/600x300/17191d/e5ff00?text=Slums",
-        Yemen:"https://placehold.co/600x300/17191d/e5ff00?text=Yemen",
-        Meltdown:"https://placehold.co/600x300/17191d/e5ff00?text=Meltdown",
-        Express:"https://placehold.co/600x300/17191d/e5ff00?text=Express"
-      };
-
-      mapsHTML += `
-        <div class="map-card">
-
-          <img
-            src="${
-              imagenes[mapa] ||
-              "https://placehold.co/600x300/17191d/e5ff00?text=Mapa"
-            }"
-            alt="${escapeHTML(mapa)}">
-
-          <div>
-
-            <strong>
-              Mapa ${index + 1}
-            </strong>
-
-            <div class="meta">
-              ${escapeHTML(mapa || "Sin mapa")}
-            </div>
-
-          </div>
-
-        </div>
-      `;
-    }
-  );
-
-  let acciones = "";
-
-  if(
-    reto.status === "open" &&
-    !reto.mine
-  ){
-
-    acciones += `
-      <button
-        class="btn"
-        onclick="aceptarReto(${reto.id})">
-        ⚔️ ACEPTAR RETO
-      </button>
-    `;
-  }
-
-  if(
-    reto.status === "accepted"
-  ){
-
-    acciones += `
-      <button
-        class="btn btn-dark"
-        onclick="abrirChat(${reto.id})">
-        💬 CHAT
-      </button>
-
-      <button
-        class="btn btn-success"
-        onclick="reportarResultado(${reto.id}, 'win')">
-        🟢 VICTORIA
-      </button>
-
-      <button
-        class="btn btn-danger"
-        onclick="reportarResultado(${reto.id}, 'loss')">
-        🔴 DERROTA
-      </button>
-    `;
-  }
-
-  if(
-    reto.mine &&
-    (
-      reto.status === "open" ||
-      reto.status === "accepted"
-    )
-  ){
-
-    acciones += `
-      <button
-        class="btn btn-danger"
-        onclick="cancelarReto(${reto.id})">
-        CANCELAR RETO
-      </button>
-    `;
-  }
-
-  let horaHTML = "";
-
-  if(reto.scheduled_at){
-
-    const fecha =
-      new Date(
-        reto.scheduled_at
-      );
-
-    if(!isNaN(fecha.getTime())){
-
-      horaHTML = `
-        <div class="meta">
-
-          <small>
-            HORA
-          </small>
-
-          <strong>
-            ${fecha.toLocaleString(
-              "es-ES",
-              {
-                dateStyle:"short",
-                timeStyle:"short"
-              }
-            )}
-          </strong>
-
-        </div>
-      `;
-    }
-  }
-
-  return `
-    <div class="card reto-card">
-
-      <div class="reto-top">
-
-        <div>
-
-          <div class="reto-title">
-            ${
-              escapeHTML(
-                reto.creator_name ||
-                "Equipo"
-              )
-            }
-
-            ${
-              reto.accepter_name
-                ? " vs " +
-                  escapeHTML(
-                    reto.accepter_name
-                  )
-                : " busca rival"
-            }
-          </div>
-
-          <div class="reto-meta">
-
-            <span class="badge">
-              ${reto.team_size || 4}v${reto.team_size || 4}
-            </span>
-
-            ${estado}
-
-            ${modosHTML}
-
-          </div>
-
-        </div>
-
-        <div>
-          ${horaHTML}
-        </div>
-
-      </div>
-
-
-      <div class="map-grid">
-
-        ${mapsHTML}
-
-      </div>
-
-
-      <div style="margin-top:15px">
-
-        ${acciones}
-
-      </div>
+      </table>
 
     </div>
+
+  </div>
+
+</section>
+
+<section id="clans" class="page">
+
+  <div class="section-title">
+    CLANES
+  </div>
+
+  <div class="row">
+
+    <input
+      id="clanSearch"
+      placeholder="Buscar clan..."
+      oninput="loadClans()">
+
+    <select
+      id="clanLeague"
+      onchange="loadClans()">
+
+      <option value="2">2v2</option>
+      <option value="3">3v3</option>
+      <option value="4" selected>4v4</option>
+
+    </select>
+
+  </div>
+
+  <div id="clansList"></div>
+
+  <div class="card" id="createClanBox">
+
+    <h3>Crear clan</h3>
+
+    <div class="form">
+
+      <input
+        id="newClan"
+        placeholder="Nombre del clan">
+
+      <select id="newLeague">
+        <option value="2">2v2</option>
+        <option value="3">3v3</option>
+        <option value="4">4v4</option>
+      </select>
+
+      <button
+        class="btn"
+        onclick="createClan()">
+        Crear clan
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="retos" class="page">
+
+  <div class="section-title">
+    TABLÓN DE RETOS
+  </div>
+
+  <div class="card">
+
+    <h3>Publicar reto</h3>
+
+    <div class="form">
+
+      <select id="challengeLeague">
+        <option value="2">2v2</option>
+        <option value="3">3v3</option>
+        <option value="4" selected>4v4</option>
+      </select>
+
+      <select id="challengeMode">
+        <option value="snd">
+          Buscar y Destruir
+        </option>
+
+        <option value="hardpoint">
+          Punto Caliente
+        </option>
+
+        <option value="ctf">
+          Tomar la Bandera
+        </option>
+      </select>
+
+      <button
+        class="btn"
+        onclick="createChallenge()">
+        Publicar
+      </button>
+
+    </div>
+
+    <p class="muted">
+      El reto abierto caduca automáticamente
+      a los 30 minutos si no lo aceptan.
+    </p>
+
+  </div>
+
+  <div id="challengeList"></div>
+
+</section>
+
+<section id="jugadores" class="page">
+
+  <div class="section-title">
+    JUGADORES
+  </div>
+
+  <div class="card">
+
+    <input
+      id="userSearch"
+      placeholder="Buscar jugador..."
+      oninput="loadUsers()">
+
+    <div id="usersList"></div>
+
+  </div>
+
+</section>
+
+<section id="perfil" class="page">
+
+  <div class="section-title">
+    MI PERFIL
+  </div>
+
+  <div id="profileBox"></div>
+
+</section>
+
+<section id="historial" class="page">
+
+  <div class="section-title">
+    HISTORIAL
+  </div>
+
+  <div id="historyList"></div>
+
+</section>
+
+<section id="reglas" class="page">
+
+  <div class="section-title">
+    REGLAS
+  </div>
+
+  <div class="card">
+
+    <h2>
+      Reglamento BlackOpsLALIGA
+    </h2>
+
+    <ol>
+
+      <li>
+        Los retos deben jugarse en el
+        formato de su liga.
+      </li>
+
+      <li>
+        El tablón solo muestra retos
+        abiertos o aceptados.
+      </li>
+
+      <li>
+        Un reto abierto dispone de
+        30 minutos para ser aceptado.
+      </li>
+
+      <li>
+        Los dos capitanes deben
+        confirmar el resultado.
+      </li>
+
+      <li>
+        Los resultados confirmados
+        pasan al historial y actualizan
+        el ranking.
+      </li>
+
+      <li>
+        Los usuarios deben respetar
+        al rival y las decisiones de
+        administración.
+      </li>
+
+      <li>
+        La administración puede
+        sancionar cuentas y corregir
+        resultados cuando sea necesario.
+      </li>
+
+    </ol>
+
+  </div>
+
+</section>
+
+<section id="admin" class="page">
+
+  <div class="section-title">
+    ADMINISTRACIÓN
+  </div>
+
+  <div id="adminBox"></div>
+
+</section>
+
+</main>
+
+<div
+  class="modal"
+  id="authModal">
+
+  <div class="modalbox">
+
+    <div class="row">
+
+      <h2 id="authTitle">
+        Iniciar sesión
+      </h2>
+
+      <div class="spacer"></div>
+
+      <button
+        class="btn dark"
+        onclick="closeAuth()">
+        ✕
+      </button>
+
+    </div>
+
+    <div class="form">
+
+      <input
+        id="authUser"
+        placeholder="Usuario">
+
+      <input
+        id="authPass"
+        type="password"
+        placeholder="Contraseña">
+
+      <button
+        class="btn"
+        onclick="submitAuth()">
+        Continuar
+      </button>
+
+      <button
+        class="btn dark"
+        onclick="toggleAuth()"
+        id="toggleAuth">
+        Crear cuenta
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div
+  class="toast"
+  id="toast">
+</div>
+<script>
+let me=null;
+let isAdmin=false;
+let currentLeague=4;
+
+const $=id=>document.getElementById(id);
+
+async function api(path,opt={}){
+  const r=await fetch(path,{
+    credentials:"include",
+    ...opt,
+    headers:{
+      "Content-Type":"application/json",
+      ...(opt.headers||{})
+    }
+  });
+
+  let data={};
+
+  try{
+    data=await r.json();
+  }catch{}
+
+  if(!r.ok){
+    throw new Error(data.error||"Error");
+  }
+
+  return data;
+}
+
+function toast(message){
+  const el=$("toast");
+
+  el.textContent=message;
+  el.classList.add("show");
+
+  setTimeout(()=>{
+    el.classList.remove("show");
+  },2800);
+}
+
+function show(id,league){
+  document
+    .querySelectorAll(".page")
+    .forEach(x=>x.classList.remove("active"));
+
+  const page=$(id);
+
+  if(!page)return;
+
+  page.classList.add("active");
+
+  if(league){
+    currentLeague=league;
+  }
+
+  history.pushState(
+    {id,league},
+    "",
+    "#"+id
+  );
+
+  if(id==="ranking"){
+    loadRanking(currentLeague);
+  }
+
+  if(id==="clans"){
+    loadClans();
+  }
+
+  if(id==="retos"){
+    loadChallenges();
+  }
+
+  if(id==="jugadores"){
+    loadUsers();
+  }
+
+  if(id==="perfil"){
+    loadProfile();
+  }
+
+  if(id==="historial"){
+    loadHistory();
+  }
+
+  if(id==="admin"){
+    loadAdmin();
+  }
+}
+
+function goBack(){
+
+  if(window.history.length>1){
+    history.back();
+  }else{
+    show("home");
+  }
+}
+
+window.addEventListener(
+  "popstate",
+  ()=>{
+    const id=
+      location.hash.replace("#","")||"home";
+
+    document
+      .querySelectorAll(".page")
+      .forEach(x=>x.classList.remove("active"));
+
+    const page=$(id);
+
+    if(page){
+      page.classList.add("active");
+    }
+  }
+);
+
+function openAuth(){
+
+  if(me){
+    show("perfil");
+    return;
+  }
+
+  $("authModal")
+    .classList
+    .add("open");
+}
+
+function closeAuth(){
+
+  $("authModal")
+    .classList
+    .remove("open");
+}
+
+let registerMode=false;
+
+function toggleAuth(){
+
+  registerMode=!registerMode;
+
+  $("authTitle").textContent=
+    registerMode
+      ?"Crear cuenta"
+      :"Iniciar sesión";
+
+  $("toggleAuth").textContent=
+    registerMode
+      ?"Ya tengo cuenta"
+      :"Crear cuenta";
+}
+
+async function submitAuth(){
+
+  const username=
+    $("authUser").value.trim();
+
+  const password=
+    $("authPass").value;
+
+  if(!username||!password){
+    toast("Completa todos los campos");
+    return;
+  }
+
+  try{
+
+    const data=
+      await api(
+        registerMode
+          ?"/api/register"
+          :"/api/login",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+    me=data.user;
+
+    closeAuth();
+
+    await refresh();
+
+    toast(
+      registerMode
+        ?"Cuenta creada"
+        :"Sesión iniciada"
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+async function logout(){
+
+  try{
+    await api(
+      "/api/logout",
+      {method:"POST"}
+    );
+  }catch{}
+
+  me=null;
+  isAdmin=false;
+
+  renderNav();
+
+  show("home");
+
+  toast("Sesión cerrada");
+}
+
+async function refresh(){
+
+  try{
+
+    const data=
+      await api("/api/me");
+
+    me=data.user||null;
+    isAdmin=!!data.admin;
+
+  }catch{
+
+    me=null;
+    isAdmin=false;
+
+  }
+
+  renderNav();
+
+  if(me){
+    loadProfile();
+  }
+}
+
+function renderNav(){
+
+  let html=`
+    <button onclick="show('home')">
+      Inicio
+    </button>
+
+    <button onclick="show('ranking',4)">
+      Ranking
+    </button>
+
+    <button onclick="show('clans')">
+      Clanes
+    </button>
+
+    <button onclick="show('retos')">
+      Retos
+    </button>
+
+    <button onclick="show('jugadores')">
+      Jugadores
+    </button>
+
+    <button onclick="show('reglas')">
+      Reglas
+    </button>
   `;
+
+  if(me){
+
+    html+=`
+      <button onclick="show('perfil')">
+        Mi perfil
+      </button>
+
+      <button onclick="show('historial')">
+        Historial
+      </button>
+    `;
+
+    if(isAdmin){
+
+      html+=`
+        <button onclick="show('admin')">
+          ADMIN
+        </button>
+      `;
+    }
+  }
+
+  $("nav").innerHTML=html;
+
+  $("authBtn").textContent=
+    me
+      ?"Cerrar sesión"
+      :"Iniciar sesión";
+
+  $("authBtn").onclick=
+    me
+      ?logout
+      :openAuth;
 }
 
 
-/* ==========================================
-   PUBLICAR RETO
-========================================== */
+/* =========================
+   RANKING
+========================= */
 
-async function publicarReto(){
+async function loadRanking(league=4){
 
-  const mensaje =
-    document.getElementById(
-      "retoMensaje"
+  currentLeague=league;
+
+  $("rankingBody").innerHTML=`
+    <tr>
+      <td colspan="7">
+        Cargando ranking...
+      </td>
+    </tr>
+  `;
+
+  try{
+
+    const data=
+      await api(
+        "/api/leaderboard?league="+league
+      );
+
+    if(!data.length){
+
+      $("rankingBody").innerHTML=`
+        <tr>
+          <td colspan="7">
+            No hay clanes todavía.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    $("rankingBody").innerHTML=
+      data.map((clan,index)=>`
+
+        <tr>
+
+          <td>
+            <b>${index+1}</b>
+          </td>
+
+          <td
+            class="ranklink"
+            onclick="openClan(${clan.id})">
+
+            ${esc(clan.name)}
+
+          </td>
+
+          <td>
+            ${esc(clan.clan_code||"")}
+          </td>
+
+          <td>
+            ${clan.played||0}
+          </td>
+
+          <td>
+            ${clan.wins||0}
+          </td>
+
+          <td>
+            ${clan.losses||0}
+          </td>
+
+          <td class="accent">
+            ${clan.points||0}
+          </td>
+
+        </tr>
+
+      `).join("");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================
+   CLANES
+========================= */
+
+async function loadClans(){
+
+  const q=
+    encodeURIComponent(
+      $("clanSearch").value.trim()
     );
 
-  if(!usuarioActual){
+  const league=
+    $("clanLeague").value;
 
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Primero debes iniciar sesión."
-    );
+  try{
 
-    abrirLogin();
+    const data=
+      await api(
+        `/api/clans?q=${q}&league=${league}`
+      );
 
+    if(!data.length){
+
+      $("clansList").innerHTML=`
+        <div class="card">
+          No hay clanes en esta liga.
+        </div>
+      `;
+
+      return;
+    }
+
+    $("clansList").innerHTML=
+      data.map(clan=>`
+
+        <div class="card">
+
+          <div class="row">
+
+            <div>
+
+              <h3>
+                ${esc(clan.name)}
+              </h3>
+
+              <span class="pill">
+                ${clan.league}v${clan.league}
+              </span>
+
+              <span class="pill">
+                ${esc(clan.clan_code||"")}
+              </span>
+
+            </div>
+
+            <div class="spacer"></div>
+
+            <button
+              class="btn dark"
+              onclick="openClan(${clan.id})">
+
+              Ver clan
+
+            </button>
+
+          </div>
+
+          <p class="muted">
+
+            ${clan.points||0} XP ·
+            ${clan.wins||0} V ·
+            ${clan.losses||0} D ·
+            ${clan.played||0} PJ
+
+          </p>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+async function openClan(id){
+
+  try{
+
+    const data=
+      await api(
+        "/api/clans/"+id
+      );
+
+    $("clansList").innerHTML=`
+
+      <div class="card">
+
+        <div class="row">
+
+          <h2>
+            ${esc(data.clan.name)}
+          </h2>
+
+          <div class="spacer"></div>
+
+          <button
+            class="btn dark"
+            onclick="loadClans()">
+
+            ← Volver
+
+          </button>
+
+        </div>
+
+        <p>
+
+          <b>ID del clan:</b>
+          ${esc(data.clan.clan_code||"")}
+
+        </p>
+
+        <p>
+
+          <b>Liga:</b>
+          ${data.clan.league}v${data.clan.league}
+
+        </p>
+
+        <p>
+
+          <b>XP:</b>
+          ${data.clan.points||0}
+
+          ·
+
+          <b>Victorias:</b>
+          ${data.clan.wins||0}
+
+          ·
+
+          <b>Derrotas:</b>
+          ${data.clan.losses||0}
+
+        </p>
+
+        <h3>
+          Jugadores
+        </h3>
+
+        ${
+          data.members.length
+          ?
+          data.members.map(player=>`
+
+            <div
+              class="card"
+              style="margin:8px 0">
+
+              <b>
+                ${esc(player.username)}
+              </b>
+
+              ${
+                player.role==="captain"
+                ?
+                `<span class="pill">
+                  CAPITÁN
+                </span>`
+                :""
+              }
+
+              <p class="muted">
+
+                PSN:
+                ${
+                  player.psn_id
+                  ?
+                  esc(player.psn_id)
+                  :
+                  "No indicado"
+                }
+
+              </p>
+
+            </div>
+
+          `).join("")
+          :
+          "<p class='muted'>Sin jugadores.</p>"
+        }
+
+      </div>
+    `;
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+async function createClan(){
+
+  const name=
+    $("newClan").value.trim();
+
+  const league=
+    Number($("newLeague").value);
+
+  if(!name){
+
+    toast("Escribe un nombre");
     return;
+
   }
 
-  const radios =
-    document.querySelectorAll(
-      'input[name="teamSize"]:checked'
+  try{
+
+    const data=
+      await api(
+        "/api/clans",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            name,
+            league
+          })
+        }
+      );
+
+    $("newClan").value="";
+
+    toast(
+      "Clan creado · ID "+data.clanCode
     );
 
-  const teamSize =
+    loadClans();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================
+   RETOS
+========================= */
+
+async function createChallenge(){
+
+  const league=
     Number(
-      radios[0]?.value ||
-      document.getElementById(
-        "retoTeamSize"
-      )?.value ||
-      4
+      $("challengeLeague").value
     );
 
-  document.getElementById(
-    "retoTeamSize"
-  ).value =
-    teamSize;
-
-  const checkboxes =
-    document.querySelectorAll(
-      'input[name="gameMode"]:checked'
-    );
-
-  const modes =
-    Array.from(
-      checkboxes
-    ).map(
-      checkbox =>
-        checkbox.value
-    );
-
-  if(!modes.length){
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Selecciona al menos un modo de juego."
-    );
-
-    return;
-  }
-
-  /*
-   * 🕐 HORA AUTOMÁTICA
-   *
-   * El usuario no tiene que introducir
-   * ninguna hora.
-   */
-
-  const scheduledAt =
-    new Date().toISOString();
+  const mode=
+    $("challengeMode").value;
 
   try{
 
-    const result =
-      await apiFetch(
-        "/challenges",
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            team_size:
-              teamSize,
-
-            game_modes:
-              modes,
-
-            scheduled_at:
-              scheduledAt
-
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      mostrarMensaje(
-        mensaje,
-        "error",
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo publicar el reto."
-        )
-      );
-
-      return;
-    }
-
-    mostrarMensaje(
-      mensaje,
-      "ok",
-      "✅ Reto publicado correctamente."
-    );
-
-    await cargarRetos();
-
-  }catch(error){
-
-    console.error(error);
-
-    mostrarMensaje(
-      mensaje,
-      "error",
-      "❌ Error de conexión."
-    );
-  }
-}
-  
-
-/* ==========================================
-   ACEPTAR RETO
-========================================== */
-
-async function aceptarReto(id){
-
-  if(!usuarioActual){
-
-    abrirLogin();
-    return;
-  }
-
-  if(!clanActual){
-
-    alert(
-      "❌ Necesitas pertenecer a un equipo."
-    );
-
-    mostrarPagina("equipo");
-    return;
-  }
-
-  if(
-    !confirm(
-      "¿Quieres aceptar este reto?"
-    )
-  ){
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/challenges/${id}/accept`,
-        {
-          method:"POST"
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo aceptar el reto."
-        )
-      );
-
-      return;
-    }
-
-    alert(
-      "⚔️ Reto aceptado correctamente."
-    );
-
-    await cargarUsuario();
-    await cargarRetos();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   CANCELAR RETO
-========================================== */
-
-async function cancelarReto(id){
-
-  const motivo =
-    prompt(
-      "¿Por qué quieres cancelar el reto?"
-    );
-
-  if(motivo === null){
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/challenges/${id}/cancel`,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-            reason:
-              motivo.trim() ||
-              "Reto cancelado."
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo cancelar."
-        )
-      );
-
-      return;
-    }
-
-    alert(
-      "✅ Reto cancelado."
-    );
-
-    await cargarRetos();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   REPORTAR RESULTADO
-========================================== */
-
-async function reportarResultado(
-  id,
-  resultado
-){
-
-  if(!clanActual){
-
-    alert(
-      "❌ No tienes equipo."
-    );
-
-    return;
-  }
-
-  const esVictoria =
-    resultado === "win";
-
-  const texto =
-    esVictoria
-      ? "🟢 VICTORIA"
-      : "🔴 DERROTA";
-
-  const confirmar =
-    confirm(
-      `¿Confirmas tu resultado como ${texto}?\n\n` +
-      "El otro capitán también tendrá que confirmar su resultado."
-    );
-
-  if(!confirmar){
-    return;
-  }
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/challenges/${id}/report`,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            result:
-              resultado
-
-          })
-        }
-      );
-
-    if(!result.respuesta.ok){
-
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo enviar el resultado."
-        )
-      );
-
-      return;
-    }
-
-    if(result.datos.conflict){
-
-      alert(
-        "⚠️ Los resultados no coinciden.\n\n" +
-        "El reto queda pendiente de revisión."
-      );
-
-    }else if(result.datos.completed){
-
-      alert(
-        "🏆 RESULTADO CONFIRMADO\n\n" +
-        "El reto ha terminado.\n" +
-        "Los dos equipos ya pueden jugar otro reto."
-      );
-
-    }else{
-
-      alert(
-        "✅ Resultado enviado.\n\n" +
-        "Falta la confirmación del otro capitán."
-      );
-    }
-
-    await cargarUsuario();
-    await cargarRetos();
-    await cargarRanking();
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
-
-
-/* ==========================================
-   CHAT
-========================================== */
-
-async function abrirChat(id){
-
-  retoChatActual =
-    Number(id);
-
-  document
-    .getElementById("chatModal")
-    .classList.add("show");
-
-  await cargarChat();
-
-}
-
-
-function cerrarChat(){
-
-  retoChatActual =
-    null;
-
-  document
-    .getElementById("chatModal")
-    .classList.remove("show");
-}
-
-
-async function cargarChat(){
-
-  if(!retoChatActual){
-    return;
-  }
-
-  const box =
-    document.getElementById(
-      "chatBox"
-    );
-
-  if(!box){
-    return;
-  }
-
-  box.innerHTML =
-    `<div class="empty">
-      Cargando chat...
-    </div>`;
-
-  try{
-
-    const result =
-      await apiFetch(
-        `/challenges/${retoChatActual}/chat`
-      );
-
-    if(!result.respuesta.ok){
-
-      box.innerHTML =
-        `<div class="empty">
-          ❌ ${
-            escapeHTML(
-              result.datos.error ||
-              "No se pudo cargar el chat."
-            )
-          }
-        </div>`;
-
-      return;
-    }
-
-    const mensajes =
-      result.datos || [];
-
-    if(!mensajes.length){
-
-      box.innerHTML =
-        `<div class="empty">
-          Todavía no hay mensajes.
-        </div>`;
-
-      return;
-    }
-
-    let html = "";
-
-    mensajes.forEach(
-      mensaje => {
-
-        let hora = "";
-
-        if(mensaje.created_at){
-
-          const fecha =
-            new Date(
-              mensaje.created_at
-            );
-
-          if(!isNaN(fecha.getTime())){
-
-            hora =
-              fecha.toLocaleString(
-                "es-ES",
-                {
-                  dateStyle:"short",
-                  timeStyle:"short"
-                }
-              );
-          }
-        }
-
-        html += `
-          <div class="chat-message">
-
-            <div class="chat-user">
-              ${escapeHTML(
-                mensaje.username
-              )}
-            </div>
-
-            <div class="chat-text">
-              ${escapeHTML(
-                mensaje.message
-              )}
-            </div>
-
-            <div class="chat-time">
-              ${escapeHTML(hora)}
-            </div>
-
-          </div>
-        `;
+    await api(
+      "/api/challenges",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          league,
+          team_size:league,
+          game_modes:[mode]
+        })
       }
     );
 
-    box.innerHTML =
-      html;
+    toast("Reto publicado");
 
-    box.scrollTop =
-      box.scrollHeight;
+    loadChallenges();
 
   }catch(error){
 
-    console.error(error);
+    toast(error.message);
 
-    box.innerHTML =
-      `<div class="empty">
-        ❌ Error de conexión.
-      </div>`;
   }
 }
 
+async function loadChallenges(){
 
-async function enviarMensaje(){
-
-  if(!retoChatActual){
-    return;
-  }
-
-  const input =
-    document.getElementById(
-      "chatInput"
+  const league=
+    Number(
+      $("challengeLeague").value
     );
-
-  const mensaje =
-    input?.value.trim();
-
-  if(!mensaje){
-    return;
-  }
 
   try{
 
-    const result =
-      await apiFetch(
-        `/challenges/${retoChatActual}/chat`,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-            message
-          })
-        }
+    const data=
+      await api(
+        "/api/challenges?league="+league
       );
 
-    if(!result.respuesta.ok){
+    if(!data.length){
 
-      alert(
-        "❌ " +
-        (
-          result.datos.error ||
-          "No se pudo enviar el mensaje."
-        )
-      );
+      $("challengeList").innerHTML=`
+        <div class="card">
+          No hay retos activos.
+        </div>
+      `;
 
       return;
     }
 
-    input.value = "";
+    $("challengeList").innerHTML=
+      data.map(challenge=>{
 
-    await cargarChat();
+        const expires=
+          challenge.expires_at
+          ?
+          new Date(
+            challenge.expires_at
+          )
+          :
+          null;
 
-  }catch(error){
+        return `
 
-    console.error(error);
+          <div class="card">
 
-    alert(
-      "❌ Error de conexión."
-    );
-  }
-}
+            <div class="row">
 
+              <div>
 
-/* ==========================================
-   NOTIFICACIONES
-========================================== */
+                <h3>
+                  ${esc(
+                    challenge.creator_name
+                  )}
+                </h3>
 
-async function cargarNotificaciones(){
+                <span class="pill">
+                  ${challenge.team_size}v${challenge.team_size}
+                </span>
 
-  const contenedor =
-    document.getElementById(
-      "notificacionesLista"
-    );
+                <span class="pill">
+                  ${
+                    challenge.status==="open"
+                    ?
+                    "POR ACEPTAR"
+                    :
+                    "ACEPTADO"
+                  }
+                </span>
 
-  if(!contenedor){
-    return;
-  }
+              </div>
 
-  if(!usuarioActual){
+              <div class="spacer"></div>
 
-    contenedor.innerHTML =
-      `<div class="empty">
-        Inicia sesión para ver tus notificaciones.
-      </div>`;
+              ${
+                challenge.status==="open"
+                ?
+                `
+                <button
+                  class="btn"
+                  onclick="acceptChallenge(${challenge.id})">
 
-    return;
-  }
+                  Aceptar
 
-  contenedor.innerHTML =
-    `<div class="empty">
-      Cargando...
-    </div>`;
+                </button>
+                `
+                :
+                ""
+              }
 
-  try{
-
-    const result =
-      await apiFetch(
-        "/notifications"
-      );
-
-    if(!result.respuesta.ok){
-
-      contenedor.innerHTML =
-        `<div class="empty">
-          ❌ No se pudieron cargar.
-        </div>`;
-
-      return;
-    }
-
-    const notificaciones =
-      result.datos || [];
-
-    if(!notificaciones.length){
-
-      contenedor.innerHTML =
-        `<div class="empty">
-          No tienes notificaciones.
-        </div>`;
-
-      return;
-    }
-
-    let html = "";
-
-    notificaciones.forEach(
-      notificacion => {
-
-        let fecha = "";
-
-        if(
-          notificacion.created_at
-        ){
-
-          const date =
-            new Date(
-              notificacion.created_at
-            );
-
-          if(!isNaN(date.getTime())){
-
-            fecha =
-              date.toLocaleString(
-                "es-ES",
-                {
-                  dateStyle:"short",
-                  timeStyle:"short"
-                }
-              );
-          }
-        }
-
-        html += `
-          <div
-            class="notification ${
-              Number(
-                notificacion.is_read
-              ) === 0
-                ? "unread"
-                : ""
-            }">
-
-            <div class="notification-title">
-              ${escapeHTML(
-                notificacion.title
-              )}
             </div>
 
-            <div class="notification-text">
-              ${escapeHTML(
-                notificacion.message
-              )}
-            </div>
+            <p class="muted">
 
-            <div class="notification-time">
-              ${escapeHTML(fecha)}
-            </div>
+              ${esc(challenge.map1)}
+              ·
+              ${esc(challenge.map2)}
+              ·
+              ${esc(challenge.map3)}
+
+            </p>
+
+            ${
+              expires &&
+              challenge.status==="open"
+              ?
+              `
+              <p class="accent">
+                ⏱️ Caduca:
+                ${expires.toLocaleTimeString(
+                  "es-ES",
+                  {
+                    hour:"2-digit",
+                    minute:"2-digit"
+                  }
+                )}
+              </p>
+              `
+              :
+              ""
+            }
+
+            ${
+              challenge.status==="accepted"
+              ?
+              `
+              <div class="row">
+
+                <button
+                  class="btn ok"
+                  onclick="reportResult(
+                    ${challenge.id},
+                    'win'
+                  )">
+
+                  Confirmar victoria
+
+                </button>
+
+                <button
+                  class="btn dark"
+                  onclick="reportResult(
+                    ${challenge.id},
+                    'loss'
+                  )">
+
+                  Confirmar derrota
+
+                </button>
+
+              </div>
+              `
+              :
+              ""
+            }
 
           </div>
+
         `;
-      }
-    );
 
-    contenedor.innerHTML =
-      html;
-
-    await marcarNotificacionesLeidas();
+      }).join("");
 
   }catch(error){
 
-    console.error(error);
+    toast(error.message);
 
-    contenedor.innerHTML =
-      `<div class="empty">
-        ❌ Error de conexión.
-      </div>`;
   }
 }
 
-
-async function marcarNotificacionesLeidas(){
+async function acceptChallenge(id){
 
   try{
 
-    await apiFetch(
-      "/notifications/read",
+    await api(
+      "/api/challenges/"+id+"/accept",
       {
         method:"POST"
       }
     );
 
+    toast("Reto aceptado");
+
+    loadChallenges();
+
   }catch(error){
 
-    console.error(error);
+    toast(error.message);
+
   }
 }
 
+async function reportResult(id,result){
 
-/* ==========================================
-   HISTORIAL
-========================================== */
+  try{
 
-async function cargarHistorial(){
+    const data=
+      await api(
+        "/api/challenges/"+id+"/report",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            result
+          })
+        }
+      );
 
-  const contenedor =
-    document.getElementById(
-      "historialLista"
+    toast(
+      data.completed
+      ?
+      "Resultado confirmado"
+      :
+      "Resultado enviado. Falta el otro capitán."
     );
 
-  if(!contenedor){
+    loadChallenges();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+  <script>
+async function loadUsers(){
+
+  const q=
+    encodeURIComponent(
+      $("userSearch").value.trim()
+    );
+
+  try{
+
+    const data=
+      await api("/api/users?q="+q);
+
+    if(!data.length){
+
+      $("usersList").innerHTML=`
+        <p class="muted">
+          No se encontraron jugadores.
+        </p>
+      `;
+
+      return;
+    }
+
+    $("usersList").innerHTML=
+      data.map(user=>`
+
+        <div class="card">
+
+          <div class="row">
+
+            <div>
+
+              <h3>
+                ${esc(user.username)}
+              </h3>
+
+              <p class="muted">
+
+                PSN ID:
+                ${
+                  user.psn_id
+                  ?
+                  esc(user.psn_id)
+                  :
+                  "No indicado"
+                }
+
+              </p>
+
+            </div>
+
+            <div class="spacer"></div>
+
+            <button
+              class="btn dark"
+              onclick="viewUser(${user.id})">
+
+              Ver perfil
+
+            </button>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+async function viewUser(id){
+
+  try{
+
+    const data=
+      await api(
+        "/api/users/"+id
+      );
+
+    $("usersList").innerHTML=`
+
+      <div class="card">
+
+        <div class="row">
+
+          <h2>
+            ${esc(data.user.username)}
+          </h2>
+
+          <div class="spacer"></div>
+
+          <button
+            class="btn dark"
+            onclick="loadUsers()">
+
+            ← Volver
+
+          </button>
+
+        </div>
+
+        <p>
+
+          <b>ID de jugador:</b>
+          ${data.user.id}
+
+        </p>
+
+        <p>
+
+          <b>PSN ID:</b>
+
+          ${
+            data.user.psn_id
+            ?
+            esc(data.user.psn_id)
+            :
+            "No indicado"
+          }
+
+        </p>
+
+        <h3>
+          Clanes
+        </h3>
+
+        ${
+          data.clans.length
+          ?
+          data.clans.map(clan=>`
+
+            <div class="card">
+
+              <b>
+                ${esc(clan.name)}
+              </b>
+
+              <p class="muted">
+
+                Liga:
+                ${clan.league}v${clan.league}
+
+                ·
+
+                ID:
+                ${esc(clan.clan_code||"")}
+
+              </p>
+
+            </div>
+
+          `).join("")
+          :
+          `
+          <p class="muted">
+            Este jugador todavía no pertenece
+            a ningún clan.
+          </p>
+          `
+        }
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================
+   PERFIL
+========================= */
+
+async function loadProfile(){
+
+  if(!me){
+
+    $("profileBox").innerHTML=`
+
+      <div class="card">
+
+        <h2>
+          Inicia sesión
+        </h2>
+
+        <button
+          class="btn"
+          onclick="openAuth()">
+
+          Iniciar sesión
+
+        </button>
+
+      </div>
+
+    `;
+
     return;
   }
 
-  if(!usuarioActual){
+  $("profileBox").innerHTML=`
 
-    contenedor.innerHTML =
-      `<div class="card empty">
+    <div class="card">
+
+      <h2>
+        ${esc(me.username)}
+      </h2>
+
+      <p class="muted">
+        Configura aquí tu perfil de jugador.
+      </p>
+
+      <div class="form">
+
+        <label>
+          ID de PlayStation
+        </label>
+
+        <input
+          id="psn"
+          maxlength="32"
+          placeholder="Tu ID de PlayStation"
+          value="${
+            esc(me.psn_id||"")
+          }">
+
+        <button
+          class="btn"
+          onclick="saveProfile()">
+
+          Guardar perfil
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+async function saveProfile(){
+
+  const psn=
+    $("psn").value.trim();
+
+  try{
+
+    await api(
+      "/api/profile",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          psn_id:psn
+        })
+      }
+    );
+
+    const data=
+      await api("/api/me");
+
+    me=data.user;
+
+    toast(
+      "Perfil actualizado"
+    );
+
+    loadProfile();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================
+   HISTORIAL
+========================= */
+
+async function loadHistory(){
+
+  if(!me){
+
+    $("historyList").innerHTML=`
+
+      <div class="card">
         Inicia sesión para ver tu historial.
-      </div>`;
+      </div>
+
+    `;
 
     return;
   }
 
-  contenedor.innerHTML =
-    `<div class="card empty">
-      El historial se mostrará aquí.
-    </div>`;
+  try{
+
+    const data=
+      await api("/api/history");
+
+    if(!data.length){
+
+      $("historyList").innerHTML=`
+
+        <div class="card">
+
+          <h3>
+            Sin partidas todavía
+          </h3>
+
+          <p class="muted">
+            Cuando completes un reto aparecerá aquí.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+    $("historyList").innerHTML=
+      data.map(match=>`
+
+        <div class="card">
+
+          <div class="row">
+
+            <b>
+              ${esc(match.creator_name)}
+            </b>
+
+            <span>
+              VS
+            </span>
+
+            <b>
+              ${esc(match.accepter_name||"")}
+            </b>
+
+          </div>
+
+          <p>
+
+            Ganador:
+            <strong class="accent">
+              ${esc(match.winner_name||"")}
+            </strong>
+
+          </p>
+
+          <p class="muted">
+
+            ${
+              match.completed_at
+              ?
+              new Date(
+                match.completed_at
+              ).toLocaleString("es-ES")
+              :
+              ""
+            }
+
+          </p>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
 }
 
 
-/* ==========================================
-   UTILIDADES
-========================================== */
+/* =========================
+   ADMIN
+========================= */
 
-function mostrarMensaje(
-  elemento,
-  tipo,
-  texto
-){
+async function loadAdmin(){
 
-  if(!elemento){
+  if(!isAdmin){
+
+    $("adminBox").innerHTML=`
+
+      <div class="card">
+
+        <h2>
+          Acceso denegado
+        </h2>
+
+        <p class="muted">
+          Esta sección solo está disponible
+          para la cuenta ADMIN.
+        </p>
+
+      </div>
+
+    `;
+
     return;
   }
 
-  elemento.className =
-    "message " +
-    tipo;
+  try{
 
-  elemento.textContent =
-    texto;
+    const users=
+      await api(
+        "/api/admin/users"
+      );
+
+    $("adminBox").innerHTML=`
+
+      <div class="card">
+
+        <h2>
+          Gestión de usuarios
+        </h2>
+
+        <p class="muted">
+          Desde aquí puedes bloquear y
+          desbloquear cuentas.
+        </p>
+
+        ${
+          users.length
+          ?
+          users.map(user=>`
+
+            <div
+              class="row"
+              style="
+                padding:12px 0;
+                border-bottom:1px solid var(--line);
+              ">
+
+              <div>
+
+                <b>
+                  ${esc(user.username)}
+                </b>
+
+                <p class="muted">
+                  PSN:
+                  ${
+                    user.psn_id
+                    ?
+                    esc(user.psn_id)
+                    :
+                    "No indicado"
+                  }
+                </p>
+
+              </div>
+
+              <div class="spacer"></div>
+
+              ${
+                user.is_blocked
+                ?
+                `
+                <button
+                  class="btn ok"
+                  onclick="unblockUser(${user.id})">
+
+                  Desbloquear
+
+                </button>
+                `
+                :
+                `
+                <button
+                  class="btn danger"
+                  onclick="blockUser(${user.id})">
+
+                  Bloquear
+
+                </button>
+                `
+              }
+
+            </div>
+
+          `).join("")
+          :
+          "<p>No hay usuarios.</p>"
+        }
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          Ranking
+        </h2>
+
+        <p class="muted">
+          Reiniciar la clasificación de una liga.
+        </p>
+
+        <div class="row">
+
+          <button
+            class="btn"
+            onclick="resetRanking(2)">
+
+            Reiniciar 2v2
+
+          </button>
+
+          <button
+            class="btn"
+            onclick="resetRanking(3)">
+
+            Reiniciar 3v3
+
+          </button>
+
+          <button
+            class="btn"
+            onclick="resetRanking(4)">
+
+            Reiniciar 4v4
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
 }
 
 
-function escapeHTML(
-  valor
-){
+async function blockUser(id){
+
+  if(
+    !confirm(
+      "¿Bloquear este usuario indefinidamente?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/block",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          user_id:id,
+          permanent:true
+        })
+      }
+    );
+
+    toast(
+      "Usuario bloqueado"
+    );
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+async function unblockUser(id){
+
+  try{
+
+    await api(
+      "/api/admin/unblock",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          user_id:id
+        })
+      }
+    );
+
+    toast(
+      "Usuario desbloqueado"
+    );
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+async function resetRanking(league){
+
+  if(
+    !confirm(
+      "¿Seguro que quieres reiniciar el ranking "+
+      league+"v"+league+"?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/api/admin/reset-ranking",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          league
+        })
+      }
+    );
+
+    toast(
+      "Ranking reiniciado"
+    );
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+}
+
+
+/* =========================
+   SEGURIDAD HTML
+========================= */
+
+function esc(value){
 
   return String(
-    valor ?? ""
-  )
-  .replaceAll("&","&amp;")
-  .replaceAll("<","&lt;")
-  .replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;")
-  .replaceAll("'","&#039;");
+    value??""
+  ).replace(
+    /[&<>"']/g,
+    char=>({
+
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+
+    }[char])
+  );
+
 }
 
 
-/* ==========================================
-   SELECTOR DE FORMATO
-========================================== */
-
-document
-  .querySelectorAll(
-    'input[name="teamSize"]'
-  )
-  .forEach(
-    radio => {
-
-      radio.addEventListener(
-        "change",
-        () => {
-
-          const hidden =
-            document.getElementById(
-              "retoTeamSize"
-            );
-
-          if(hidden){
-
-            hidden.value =
-              radio.value;
-          }
-        }
-      );
-
-    }
-  );
-
-
-/* ==========================================
-   CERRAR MODALES AL PULSAR FUERA
-========================================== */
-
-document
-  .querySelectorAll(
-    ".modal"
-  )
-  .forEach(
-    modal => {
-
-      modal.addEventListener(
-        "click",
-        event => {
-
-          if(
-            event.target ===
-            modal
-          ){
-
-            modal.classList.remove(
-              "show"
-            );
-          }
-
-        }
-      );
-
-    }
-  );
-
-
-/* ==========================================
-   ENTER EN CHAT
-========================================== */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if(
-      event.key === "Enter" &&
-      event.ctrlKey
-    ){
-
-      const input =
-        document.getElementById(
-          "chatInput"
-        );
-
-      if(
-        document.activeElement ===
-        input
-      ){
-
-        enviarMensaje();
-      }
-    }
-
-  }
-);
-
-
-/* ==========================================
+/* =========================
    INICIO
-========================================== */
+========================= */
 
 (async function(){
 
-  await cargarUsuario();
+  try{
 
-  actualizarUsuarioUI();
+    await refresh();
 
-  mostrarPagina(
-    "inicio"
+  }catch(error){
+
+    renderNav();
+
+  }
+
+  const page=
+    location.hash
+      .replace("#","");
+
+  if(
+    page &&
+    $(page)
+  ){
+
+    show(page);
+
+  }else{
+
+    show("home");
+
+  }
+
+  setInterval(
+    ()=>{
+
+      if(
+        $("retos") &&
+        $("retos").classList.contains("active")
+      ){
+
+        loadChallenges();
+
+      }
+
+    },
+    30000
   );
 
 })();
-
 </script>
 
 </body>
