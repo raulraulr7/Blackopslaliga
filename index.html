@@ -3350,7 +3350,7 @@ footer{
 <script>
 
 /* =====================================================
-   CONFIGURACIÓN
+   BLOQUE 1 — BASE CORREGIDA
 ===================================================== */
 
 const API = "/api";
@@ -3361,15 +3361,13 @@ let isAdmin = false;
 let currentPage = "home";
 let currentLeague = 4;
 let currentCommunityLeague = 0;
-
 let registerMode = false;
 
-let communityTimer = null;
 let notificationTimer = null;
 
 
 /* =====================================================
-   PETICIONES API
+   API
 ===================================================== */
 
 async function api(path, options = {}){
@@ -3397,13 +3395,9 @@ async function api(path, options = {}){
   let data = {};
 
   try{
-
     data = await response.json();
-
-  }catch(e){
-
+  }catch(error){
     data = {};
-
   }
 
   if(!response.ok){
@@ -3422,11 +3416,9 @@ async function api(path, options = {}){
       data;
 
     throw error;
-
   }
 
   return data;
-
 }
 
 
@@ -3458,7 +3450,10 @@ function initials(name){
   return value
     .split(/\s+/)
     .slice(0,2)
-    .map(x => x.charAt(0))
+    .map(
+      item =>
+        item.charAt(0)
+    )
     .join("")
     .toUpperCase();
 
@@ -3489,59 +3484,41 @@ function leagueName(league){
 
 function statusText(status){
 
-  switch(status){
+  if(status === "open")
+    return "🟢 Disponible";
 
-    case "open":
-      return "🟢 Disponible";
+  if(status === "accepted")
+    return "⚔️ En disputa";
 
-    case "accepted":
-      return "⚔️ En disputa";
+  if(status === "pending_result")
+    return "🏆 Resultado pendiente";
 
-    case "pending_result":
-      return "🏆 Resultado pendiente";
+  if(status === "completed")
+    return "✅ Finalizado";
 
-    case "completed":
-      return "✅ Finalizado";
+  if(status === "cancelled")
+    return "❌ Cancelado";
 
-    case "cancelled":
-      return "❌ Cancelado";
-
-    case "waiting":
-      return "⏳ Esperando";
-
-    default:
-      return status || "—";
-
-  }
+  return status || "—";
 
 }
 
 
 function statusClass(status){
 
-  if(
-    status === "open"
-  )
+  if(status === "open")
     return "green";
 
-  if(
-    status === "accepted"
-  )
+  if(status === "accepted")
     return "blue";
 
-  if(
-    status === "pending_result"
-  )
+  if(status === "pending_result")
     return "yellow";
 
-  if(
-    status === "completed"
-  )
+  if(status === "completed")
     return "green";
 
-  if(
-    status === "cancelled"
-  )
+  if(status === "cancelled")
     return "red";
 
   return "";
@@ -3568,10 +3545,1910 @@ function formatDate(value){
         }
       );
 
-  }catch(e){
+  }catch(error){
 
     return String(value);
 
+  }
+
+}
+
+
+function showToast(
+  message,
+  type = "normal"
+){
+
+  let container =
+    document.getElementById(
+      "toastContainer"
+    );
+
+  if(!container){
+
+    container =
+      document.createElement(
+        "div"
+      );
+
+    container.id =
+      "toastContainer";
+
+    document.body.appendChild(
+      container
+    );
+
+  }
+
+  const toast =
+    document.createElement(
+      "div"
+    );
+
+  toast.style.cssText = `
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:999999;
+    max-width:420px;
+    padding:14px 17px;
+    border-radius:12px;
+    background:#111820;
+    color:#fff;
+    border:1px solid #34404d;
+    box-shadow:0 10px 35px rgba(0,0,0,.35);
+    font-weight:800;
+    font-size:13px;
+  `;
+
+  if(type === "success")
+    toast.style.borderColor =
+      "#22c55e";
+
+  if(type === "error")
+    toast.style.borderColor =
+      "#ef4444";
+
+  toast.textContent =
+    message;
+
+  container.appendChild(
+    toast
+  );
+
+  setTimeout(
+    function(){
+      toast.remove();
+    },
+    4000
+  );
+
+}
+
+
+function showError(error){
+
+  console.error(
+    "WEB ERROR:",
+    error
+  );
+
+  showToast(
+    error &&
+    error.message
+      ? error.message
+      : "Ha ocurrido un error.",
+    "error"
+  );
+
+}
+
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+function toggleMenu(){
+
+  const menu =
+    document.getElementById(
+      "menuPanel"
+    );
+
+  if(!menu)
+    return;
+
+  menu.classList.toggle(
+    "open"
+  );
+
+}
+
+
+function closeMenu(){
+
+  const menu =
+    document.getElementById(
+      "menuPanel"
+    );
+
+  if(!menu)
+    return;
+
+  menu.classList.remove(
+    "open"
+  );
+
+}
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+function showPage(page){
+
+  closeMenu();
+
+  const publicPages = [
+    "home",
+    "leagues",
+    "ranking",
+    "clans",
+    "players",
+    "rules"
+  ];
+
+  if(
+    !me &&
+    !publicPages.includes(page)
+  ){
+
+    openAuth();
+
+    return;
+  }
+
+
+  document
+    .querySelectorAll(
+      ".page"
+    )
+    .forEach(
+      function(section){
+
+        section.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  const target =
+    document.getElementById(
+      page
+    );
+
+  if(!target){
+
+    showToast(
+      "Página no encontrada.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  target.classList.add(
+    "active"
+  );
+
+  currentPage =
+    page;
+
+
+  const back =
+    document.getElementById(
+      "backBtn"
+    );
+
+  if(back){
+
+    back.style.display =
+      page === "home"
+        ? "none"
+        : "inline-flex";
+
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  if(page === "ranking")
+    loadRanking(
+      currentLeague
+    );
+
+  if(page === "challenges")
+    loadChallenges(
+      currentLeague
+    );
+
+  if(page === "myChallenges")
+    loadMyChallenges();
+
+  if(page === "clans")
+    loadClans();
+
+  if(page === "myClans")
+    loadMyClans();
+
+  if(page === "community")
+    loadCommunity(
+      currentCommunityLeague
+    );
+
+  if(page === "players")
+    loadPlayers();
+
+  if(page === "notifications")
+    loadNotifications();
+
+  if(page === "profile")
+    loadProfile();
+
+  if(page === "history")
+    loadHistory();
+
+  if(page === "admin")
+    loadAdmin();
+
+}
+
+
+function goBack(){
+
+  showPage(
+    "home"
+  );
+
+}
+
+
+function openChallenges(
+  league
+){
+
+  currentLeague =
+    Number(league);
+
+  showPage(
+    "challenges"
+  );
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function openAuth(){
+
+  const modal =
+    document.getElementById(
+      "authModal"
+    );
+
+  if(modal)
+    modal.classList.add(
+      "open"
+    );
+
+}
+
+
+function closeAuth(){
+
+  const modal =
+    document.getElementById(
+      "authModal"
+    );
+
+  if(modal)
+    modal.classList.remove(
+      "open"
+    );
+
+}
+
+
+function toggleRegister(){
+
+  registerMode =
+    !registerMode;
+
+
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
+
+  const extra =
+    document.getElementById(
+      "registerExtra"
+    );
+
+  const submit =
+    document.getElementById(
+      "authSubmit"
+    );
+
+
+  if(title){
+
+    title.textContent =
+      registerMode
+        ? "Crear cuenta"
+        : "Iniciar sesión";
+
+  }
+
+
+  if(extra){
+
+    extra.style.display =
+      registerMode
+        ? "block"
+        : "none";
+
+  }
+
+
+  if(submit){
+
+    submit.textContent =
+      registerMode
+        ? "Crear cuenta"
+        : "Entrar";
+
+  }
+
+}
+
+
+async function submitAuth(){
+
+  const usernameInput =
+    document.getElementById(
+      "authUsername"
+    );
+
+  const passwordInput =
+    document.getElementById(
+      "authPassword"
+    );
+
+
+  const username =
+    usernameInput
+      ? usernameInput.value.trim()
+      : "";
+
+  const password =
+    passwordInput
+      ? passwordInput.value
+      : "";
+
+
+  if(
+    !username ||
+    !password
+  ){
+
+    showToast(
+      "Introduce usuario y contraseña.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    if(registerMode){
+
+      const password2Input =
+        document.getElementById(
+          "authPassword2"
+        );
+
+      const password2 =
+        password2Input
+          ? password2Input.value
+          : "";
+
+
+      if(
+        password !==
+        password2
+      ){
+
+        showToast(
+          "Las contraseñas no coinciden.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      await api(
+        "/register",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+
+      showToast(
+        "Cuenta creada correctamente.",
+        "success"
+      );
+
+    }else{
+
+      await api(
+        "/login",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+
+      showToast(
+        "Sesión iniciada.",
+        "success"
+      );
+
+    }
+
+
+    closeAuth();
+
+    await loadMe();
+
+
+    const u =
+      document.getElementById(
+        "authUsername"
+      );
+
+    if(u)
+      u.value = "";
+
+
+    const p =
+      document.getElementById(
+        "authPassword"
+      );
+
+    if(p)
+      p.value = "";
+
+
+    const p2 =
+      document.getElementById(
+        "authPassword2"
+      );
+
+    if(p2)
+      p2.value = "";
+
+
+  }catch(error){
+
+    showError(error);
+
+  }
+
+}
+
+
+async function logout(){
+
+  try{
+
+    await api(
+      "/logout",
+      {
+        method:"POST"
+      }
+    );
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+  }
+
+
+  me = null;
+
+  isAdmin = false;
+
+  updateHeader();
+
+  showPage(
+    "home"
+  );
+
+}
+
+
+/* =====================================================
+   USUARIO
+===================================================== */
+
+async function loadMe(){
+
+  try{
+
+    const data =
+      await api(
+        "/me"
+      );
+
+
+    me =
+      data.user ||
+      data;
+
+
+    isAdmin =
+      Boolean(
+        data.admin ||
+        data.is_admin ||
+        me.is_admin
+      );
+
+
+    updateHeader();
+
+    await refreshNotifications();
+
+
+  }catch(error){
+
+    me = null;
+
+    isAdmin = false;
+
+    updateHeader();
+
+  }
+
+}
+
+
+function updateHeader(){
+
+  const authBtn =
+    document.getElementById(
+      "authBtn"
+    );
+
+  const notificationBtn =
+    document.getElementById(
+      "notificationBtn"
+    );
+
+  const adminMenu =
+    document.getElementById(
+      "adminMenu"
+    );
+
+
+  if(me){
+
+    if(authBtn){
+
+      authBtn.textContent =
+        "👤 " +
+        (
+          me.username ||
+          me.name ||
+          "Cuenta"
+        );
+
+      authBtn.onclick =
+        function(){
+          showPage(
+            "profile"
+          );
+        };
+
+    }
+
+
+    if(notificationBtn)
+      notificationBtn.style.display =
+        "inline-flex";
+
+
+    if(adminMenu)
+      adminMenu.style.display =
+        isAdmin
+          ? "block"
+          : "none";
+
+
+  }else{
+
+    if(authBtn){
+
+      authBtn.textContent =
+        "Iniciar sesión";
+
+      authBtn.onclick =
+        openAuth;
+
+    }
+
+
+    if(notificationBtn)
+      notificationBtn.style.display =
+        "none";
+
+
+    if(adminMenu)
+      adminMenu.style.display =
+        "none";
+
+  }
+
+}
+
+
+/* =====================================================
+   RANKING
+===================================================== */
+
+async function loadRanking(
+  league = 4
+){
+
+  currentLeague =
+    Number(league);
+
+
+  const box =
+    document.getElementById(
+      "rankingBox"
+    );
+
+  if(!box)
+    return;
+
+
+  box.innerHTML =
+    `<div class="card">
+      <div class="loading">
+        Cargando ranking...
+      </div>
+    </div>`;
+
+
+  try{
+
+    const data =
+      await api(
+        "/leaderboard?league=" +
+        currentLeague
+      );
+
+
+    const rows =
+      Array.isArray(data)
+        ? data
+        : (
+            data.rows ||
+            data.clans ||
+            data.leaderboard ||
+            []
+          );
+
+
+    if(!rows.length){
+
+      box.innerHTML =
+        `<div class="card">
+          <div class="empty">
+            Todavía no hay clanes
+            en ${leagueName(
+              currentLeague
+            )}.
+          </div>
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = `
+
+      <div class="card">
+
+        <div
+          class="rank-row"
+          style="
+            color:var(--muted);
+            font-size:11px;
+            font-weight:900;
+          "
+        >
+
+          <div>#</div>
+
+          <div>CLAN</div>
+
+          <div class="hide-mobile">
+            PJ
+          </div>
+
+          <div class="hide-mobile">
+            V
+          </div>
+
+          <div>
+            PUNTOS
+          </div>
+
+        </div>
+
+
+        ${
+          rows.map(
+            function(clan,index){
+
+              return `
+
+                <div
+                  class="rank-row"
+                  style="cursor:pointer"
+                  onclick="
+                    openClan(
+                      ${Number(
+                        clan.id
+                      )}
+                    )
+                  "
+                >
+
+                  <div class="rank-number">
+                    ${index + 1}
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      ${escapeHtml(
+                        clan.name ||
+                        clan.clan_name ||
+                        "Clan"
+                      )}
+                    </strong>
+
+                  </div>
+
+
+                  <div class="hide-mobile">
+                    ${Number(
+                      clan.played ||
+                      clan.matches ||
+                      0
+                    )}
+                  </div>
+
+
+                  <div class="hide-mobile">
+                    ${Number(
+                      clan.wins ||
+                      0
+                    )}
+                  </div>
+
+
+                  <div class="rank-points">
+                    ${Number(
+                      clan.points ||
+                      0
+                    )}
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+          ).join("")
+        }
+
+      </div>
+    `;
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div class="card">
+        <div class="empty">
+          No se pudo cargar
+          el ranking.
+        </div>
+      </div>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   CLANES
+===================================================== */
+
+async function loadClans(){
+
+  const box =
+    document.getElementById(
+      "clansList"
+    );
+
+  if(!box)
+    return;
+
+
+  const searchInput =
+    document.getElementById(
+      "clanSearch"
+    );
+
+  const leagueInput =
+    document.getElementById(
+      "clanLeague"
+    );
+
+
+  const q =
+    searchInput
+      ? searchInput.value.trim()
+      : "";
+
+
+  const league =
+    leagueInput
+      ? Number(
+          leagueInput.value || 0
+        )
+      : 0;
+
+
+  box.innerHTML =
+    `<div class="card">
+      <div class="loading">
+        Cargando clanes...
+      </div>
+    </div>`;
+
+
+  try{
+
+    const data =
+      await api(
+        "/clans?q=" +
+        encodeURIComponent(q) +
+        "&league=" +
+        league
+      );
+
+
+    const rows =
+      Array.isArray(data)
+        ? data
+        : (
+            data.clans ||
+            data.rows ||
+            []
+          );
+
+
+    if(!rows.length){
+
+      box.innerHTML =
+        `<div class="card">
+          <div class="empty">
+
+            No se han encontrado clanes.
+
+            <br><br>
+
+            ${
+              me
+                ? `
+                  <button
+                    class="btn"
+                    onclick="openClanForm()"
+                  >
+                    Crear clan
+                  </button>
+                `
+                : `
+                  <button
+                    class="btn"
+                    onclick="openAuth()"
+                  >
+                    Iniciar sesión
+                  </button>
+                `
+            }
+
+          </div>
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = `
+
+      <div class="grid">
+
+        ${
+          rows.map(
+            function(clan){
+
+              return `
+
+                <div class="card">
+
+                  <div class="clan-card">
+
+                    <div class="clan-logo">
+
+                      ${
+                        clan.logo_url
+                          ? `
+                            <img
+                              src="${escapeHtml(
+                                clan.logo_url
+                              )}"
+                            >
+                          `
+                          : escapeHtml(
+                              clan.clan_code ||
+                              initials(
+                                clan.name ||
+                                clan.clan_name
+                              )
+                            )
+                      }
+
+                    </div>
+
+
+                    <div>
+
+                      <strong>
+                        ${escapeHtml(
+                          clan.name ||
+                          clan.clan_name ||
+                          "Clan"
+                        )}
+                      </strong>
+
+
+                      <div
+                        style="
+                          color:var(--muted);
+                          font-size:11px;
+                          margin-top:4px;
+                        "
+                      >
+
+                        ${leagueName(
+                          clan.league ||
+                          clan.team_size
+                        )}
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+
+                  <button
+                    class="btn dark"
+                    style="margin-top:15px"
+                    onclick="
+                      openClan(
+                        ${Number(
+                          clan.id
+                        )}
+                      )
+                    "
+                  >
+                    Ver clan
+                  </button>
+
+                </div>
+
+              `;
+
+            }
+          ).join("")
+        }
+
+      </div>
+
+    `;
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div class="card">
+        <div class="empty">
+          No se pudieron cargar
+          los clanes.
+        </div>
+      </div>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   CREAR CLAN
+===================================================== */
+
+function openClanForm(){
+
+  if(!me){
+
+    openAuth();
+
+    return;
+  }
+
+
+  const modal =
+    document.getElementById(
+      "clanModal"
+    );
+
+  if(modal)
+    modal.classList.add(
+      "open"
+    );
+
+}
+
+
+function closeClanForm(){
+
+  const modal =
+    document.getElementById(
+      "clanModal"
+    );
+
+  if(modal)
+    modal.classList.remove(
+      "open"
+    );
+
+}
+
+
+async function createClan(){
+
+  if(!me){
+
+    openAuth();
+
+    return;
+  }
+
+
+  const nameInput =
+    document.getElementById(
+      "clanNameInput"
+    );
+
+  const codeInput =
+    document.getElementById(
+      "clanCodeInput"
+    );
+
+  const leagueInput =
+    document.getElementById(
+      "clanLeagueInput"
+    );
+
+
+  const name =
+    nameInput
+      ? nameInput.value.trim()
+      : "";
+
+
+  const code =
+    codeInput
+      ? codeInput.value.trim().toUpperCase()
+      : "";
+
+
+  const league =
+    leagueInput
+      ? Number(
+          leagueInput.value
+        )
+      : 0;
+
+
+  if(!name){
+
+    showToast(
+      "Escribe el nombre del clan.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(!code){
+
+    showToast(
+      "Escribe el código del clan.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(
+    ![1,2,3,4].includes(
+      league
+    )
+  ){
+
+    showToast(
+      "Selecciona un sector válido.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    await api(
+      "/clans",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          name:name,
+          clan_code:code,
+          league:league
+        })
+      }
+    );
+
+
+    closeClanForm();
+
+
+    if(nameInput)
+      nameInput.value = "";
+
+
+    if(codeInput)
+      codeInput.value = "";
+
+
+    showToast(
+      "Clan creado correctamente.",
+      "success"
+    );
+
+
+    await loadMe();
+
+    await loadMyClans();
+
+    await loadClans();
+
+
+  }catch(error){
+
+    showError(error);
+
+  }
+
+}
+
+
+/* =====================================================
+   VER CLAN
+===================================================== */
+
+async function openClan(
+  clanId
+){
+
+  if(!clanId)
+    return;
+
+
+  try{
+
+    const data =
+      await api(
+        "/clans/" +
+        Number(clanId)
+      );
+
+
+    const clan =
+      data.clan ||
+      data;
+
+
+    const members =
+      data.members ||
+      clan.members ||
+      [];
+
+
+    const old =
+      document.getElementById(
+        "dynamicClanModal"
+      );
+
+    if(old)
+      old.remove();
+
+
+    const modal =
+      document.createElement(
+        "div"
+      );
+
+    modal.className =
+      "modal open";
+
+    modal.id =
+      "dynamicClanModal";
+
+
+    modal.innerHTML = `
+
+      <div class="modal-box">
+
+        <div class="modal-head">
+
+          <div>
+
+            <h2>
+              🛡️ ${escapeHtml(
+                clan.name ||
+                clan.clan_name ||
+                "Clan"
+              )}
+            </h2>
+
+            <div
+              style="
+                color:var(--muted);
+                font-size:12px;
+              "
+            >
+
+              ${leagueName(
+                clan.league ||
+                clan.team_size
+              )}
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="close-btn"
+            onclick="
+              document
+                .getElementById(
+                  'dynamicClanModal'
+                )
+                ?.remove()
+            "
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <div class="grid-3">
+
+          <div class="stat">
+
+            <strong>
+              ${Number(
+                clan.points ||
+                0
+              )}
+            </strong>
+
+            <span>
+              Puntos
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <strong>
+              ${Number(
+                clan.wins ||
+                0
+              )}
+            </strong>
+
+            <span>
+              Victorias
+            </span>
+
+          </div>
+
+
+          <div class="stat">
+
+            <strong>
+              ${Number(
+                clan.losses ||
+                0
+              )}
+            </strong>
+
+            <span>
+              Derrotas
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>
+            👥 Jugadores
+          </h3>
+
+
+          ${
+            members.length
+
+              ? members.map(
+                  function(member){
+
+                    return `
+
+                      <div class="member-row">
+
+                        <div class="member-avatar">
+                          ${escapeHtml(
+                            initials(
+                              member.username ||
+                              member.name
+                            )
+                          )}
+                        </div>
+
+
+                        <div>
+
+                          <strong>
+                            ${escapeHtml(
+                              member.username ||
+                              member.name ||
+                              "Jugador"
+                            )}
+                          </strong>
+
+                        </div>
+
+
+                        <div class="spacer"></div>
+
+
+                        ${
+                          member.role ===
+                          "captain"
+
+                            ? `
+                              <span class="pill yellow">
+                                👑 Capitán
+                              </span>
+                            `
+                            : ""
+                        }
+
+                      </div>
+
+                    `;
+
+                  }
+                ).join("")
+
+              : `
+                <div class="empty">
+                  Este clan todavía
+                  no tiene jugadores.
+                </div>
+              `
+          }
+
+        </div>
+
+
+        ${
+          me
+            ? `
+              <button
+                class="btn"
+                onclick="
+                  openInvite(
+                    ${Number(
+                      clan.id
+                    )}
+                  )
+                "
+              >
+                📨 Invitar jugador
+              </button>
+            `
+            : ""
+        }
+
+      </div>
+
+    `;
+
+
+    document.body.appendChild(
+      modal
+    );
+
+
+  }catch(error){
+
+    showError(error);
+
+  }
+
+}
+
+
+/* =====================================================
+   INVITAR
+===================================================== */
+
+function openInvite(
+  clanId
+){
+
+  if(!me){
+
+    openAuth();
+
+    return;
+  }
+
+
+  const username =
+    prompt(
+      "Escribe el usuario que quieres invitar:"
+    );
+
+
+  if(
+    username === null ||
+    !username.trim()
+  )
+    return;
+
+
+  api(
+    "/clans/" +
+    Number(clanId) +
+    "/invite",
+    {
+      method:"POST",
+      body:JSON.stringify({
+        username:
+          username.trim()
+      })
+    }
+  )
+  .then(
+    function(){
+      showToast(
+        "Invitación enviada.",
+        "success"
+      );
+    }
+  )
+  .catch(
+    showError
+  );
+
+}
+
+
+/* =====================================================
+   MIS CLANES
+===================================================== */
+
+async function loadMyClans(){
+
+  const box =
+    document.getElementById(
+      "myClansBox"
+    );
+
+  if(!box)
+    return;
+
+
+  if(!me){
+
+    box.innerHTML =
+      `<div class="card">
+        <div class="empty">
+          Inicia sesión para ver
+          tus clanes.
+        </div>
+      </div>`;
+
+    return;
+  }
+
+
+  box.innerHTML =
+    `<div class="card">
+      <div class="loading">
+        Cargando tus clanes...
+      </div>
+    </div>`;
+
+
+  try{
+
+    const data =
+      await api(
+        "/my-clans"
+      );
+
+
+    const rows =
+      Array.isArray(data)
+        ? data
+        : (
+            data.clans ||
+            data.rows ||
+            []
+          );
+
+
+    if(!rows.length){
+
+      box.innerHTML =
+        `<div class="card">
+          <div class="empty">
+
+            No perteneces todavía
+            a ningún clan.
+
+            <br><br>
+
+            <button
+              class="btn"
+              onclick="openClanForm()"
+            >
+              Crear clan
+            </button>
+
+          </div>
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = `
+
+      <div class="grid">
+
+        ${
+          rows.map(
+            function(clan){
+
+              return `
+
+                <div class="card">
+
+                  <div class="clan-card">
+
+                    <div class="clan-logo">
+                      ${escapeHtml(
+                        clan.clan_code ||
+                        initials(
+                          clan.name ||
+                          clan.clan_name
+                        )
+                      )}
+                    </div>
+
+
+                    <div>
+
+                      <strong>
+                        ${escapeHtml(
+                          clan.name ||
+                          clan.clan_name ||
+                          "Clan"
+                        )}
+                      </strong>
+
+
+                      <div
+                        style="
+                          color:var(--muted);
+                          font-size:11px;
+                          margin-top:4px;
+                        "
+                      >
+
+                        ${leagueName(
+                          clan.league ||
+                          clan.team_size
+                        )}
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+
+                  <div
+                    class="grid-3"
+                    style="margin-top:15px"
+                  >
+
+                    <div class="stat">
+
+                      <strong>
+                        ${Number(
+                          clan.points ||
+                          0
+                        )}
+                      </strong>
+
+                      <span>
+                        Puntos
+                      </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                      <strong>
+                        ${Number(
+                          clan.wins ||
+                          0
+                        )}
+                      </strong>
+
+                      <span>
+                        Victorias
+                      </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                      <strong>
+                        ${Number(
+                          clan.losses ||
+                          0
+                        )}
+                      </strong>
+
+                      <span>
+                        Derrotas
+                      </span>
+
+                    </div>
+
+                  </div>
+
+
+                  <button
+                    class="btn"
+                    style="margin-top:15px"
+                    onclick="
+                      openClan(
+                        ${Number(
+                          clan.id
+                        )}
+                      )
+                    "
+                  >
+                    Ver clan
+                  </button>
+
+                </div>
+
+              `;
+
+            }
+          ).join("")
+        }
+
+      </div>
+
+    `;
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div class="card">
+        <div class="empty">
+          No se pudieron cargar
+          tus clanes.
+        </div>
+      </div>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   COMPATIBILIDAD
+===================================================== */
+
+window.toggleMenu =
+  toggleMenu;
+
+window.closeMenu =
+  closeMenu;
+
+window.showPage =
+  showPage;
+
+window.goBack =
+  goBack;
+
+window.openAuth =
+  openAuth;
+
+window.closeAuth =
+  closeAuth;
+
+window.toggleRegister =
+  toggleRegister;
+
+window.submitAuth =
+  submitAuth;
+
+window.logout =
+  logout;
+
+window.openChallenges =
+  openChallenges;
+
+window.createClan =
+  createClan;
+
+window.openClanForm =
+  openClanForm;
+
+window.closeClanForm =
+  closeClanForm;
+
+window.openClan =
+  openClan;
+
+window.openInvite =
+  openInvite;
+
+window.loadClans =
+  loadClans;
+
+window.loadMyClans =
+  loadMyClans;
+
+
+/* =====================================================
+   ARRANQUE
+===================================================== */
+
+async function boot(){
+
+  try{
+
+    await loadMe();
+
+  }catch(error){
+
+    console.error(
+      "BOOT:",
+      error
+    );
+
+  }
+
+}
+
+
+if(
+  document.readyState ===
+  "loading"
+){
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    boot
+  );
+
+}else{
+
+  boot();
+
+}
+
+</script>
   }
 
 }
