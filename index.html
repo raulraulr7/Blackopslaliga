@@ -499,16 +499,12 @@ main{
   position:relative;
 
   background:
-    radial-gradient(
-      circle at 75% 25%,
-      rgba(245,180,0,.16),
-      transparent 32%
-    ),
     linear-gradient(
-      135deg,
-      #080c11,
-      #111821
-    );
+      90deg,
+      rgba(0,0,0,.82),
+      rgba(0,0,0,.25)
+    ),
+    url("blackops2.jpg") center / cover no-repeat;
 
 }
 
@@ -524,8 +520,8 @@ main{
   background:
     linear-gradient(
       90deg,
-      rgba(0,0,0,.72),
-      rgba(0,0,0,.20)
+      rgba(0,0,0,.35),
+      rgba(0,0,0,.05)
     );
 
   pointer-events:none;
@@ -3044,7 +3040,7 @@ footer{
 ===================================================== -->
 
 <div
-   id="authModal"
+  id="authModal"
   class="modal"
 >
 
@@ -6032,7 +6028,7 @@ async function loadMe(){
     updateHeader();
 
   }
-
+  
 }
 
 
@@ -6090,7 +6086,7 @@ function updateHeader(){
           ? "block"
           : "none";
 
-     }
+    }
 
   }else{
 
@@ -9047,7 +9043,7 @@ async function loadMyChallenges(){
 
 
   box.innerHTML =
-    `<div class="card">
+       `<div class="card">
       <div class="loading">
         Cargando tus retos...
       </div>
@@ -9136,7 +9132,7 @@ async function loadMyChallenges(){
                       ${escapeHtml(
                         challenge.creator_clan_name ||
                         challenge.clan_name ||
-                                                "Clan"
+                        "Clan"
                       )}
                     </strong>
 
@@ -10431,31 +10427,6 @@ async function markAllNotificationsRead(){
    PERFIL
 ===================================================== */
 
-async function saveProfile(){
-
-  if(!me){
-    openAuth();
-    return;
-  }
-
-  const input=document.getElementById("profilePsnInput");
-  const psn=String(input?.value || "").trim().slice(0,32);
-
-  try{
-    await api("/profile",{
-      method:"PUT",
-      body:JSON.stringify({ psn_id:psn })
-    });
-
-    showToast("ID de PS5 guardado correctamente.","success");
-    await loadMe();
-    await loadProfile();
-  }catch(error){
-    showError(error);
-  }
-}
-
-
 async function loadProfile(){
 
   const box =
@@ -10592,23 +10563,6 @@ async function loadProfile(){
 
           </div>
 
-          <div style="margin-top:20px">
-            <label style="display:block;margin-bottom:7px;font-weight:800">
-              🎮 ID de PS5 / PSN
-            </label>
-            <input
-              id="profilePsnInput"
-              value="${escapeHtml(me.psn_id || "")}"
-              maxlength="32"
-              placeholder="Tu ID de PlayStation"
-            >
-            <p class="muted" style="margin:7px 0 10px">
-              Este ID se mostrará a tus compañeros y rivales.
-            </p>
-            <button class="btn" onclick="saveProfile()">
-              Guardar ID de PS5
-            </button>
-          </div>
 
           <div
             style="
@@ -11137,14 +11091,6 @@ async function loadAdmin(){
                                           : "Bloquear"
                                       }
                                     </button>
-
-                                    <button
-                                      class="btn danger small"
-                                      style="margin-left:5px"
-                                      onclick="adminDeleteUser(${Number(user.id)})"
-                                    >
-                                      Borrar
-                                    </button>
                                   `
 
                                   : `
@@ -11267,13 +11213,6 @@ async function loadAdmin(){
                                 "
                               >
                                 Ver
-                              </button>
-
-                              <button
-                                class="btn danger small"
-                                onclick="adminDeleteClan(${Number(clan.id)})"
-                              >
-                                Borrar
                               </button>
 
                             </td>
@@ -11523,69 +11462,6 @@ async function loadAdmin(){
 
     showError(error);
 
-  }
-
-}
-
-
-/* =====================================================
-   ADMIN — BORRAR USUARIO
-===================================================== */
-
-async function adminDeleteUser(userId){
-
-  if(!isAdmin){
-    showToast("No tienes permisos de administrador.","error");
-    return;
-  }
-
-  if(Number(userId) === Number(me?.id)){
-    showToast("No puedes borrar tu propia cuenta.","error");
-    return;
-  }
-
-  if(!confirm("¿Seguro que quieres borrar esta cuenta? Esta acción no se puede deshacer."))
-    return;
-
-  try{
-    await api(
-      `/admin/users/${Number(userId)}`,
-      { method:"DELETE" }
-    );
-
-    showToast("Cuenta eliminada correctamente.","success");
-    await loadAdmin();
-  }catch(error){
-    showError(error);
-  }
-
-}
-
-
-/* =====================================================
-   ADMIN — BORRAR CLAN
-===================================================== */
-
-async function adminDeleteClan(clanId){
-
-  if(!isAdmin){
-    showToast("No tienes permisos de administrador.","error");
-    return;
-  }
-
-  if(!confirm("¿Seguro que quieres borrar este clan? Esta acción no se puede deshacer."))
-    return;
-
-  try{
-    await api(
-      `/admin/clans/${Number(clanId)}`,
-      { method:"DELETE" }
-    );
-
-    showToast("Clan eliminado correctamente.","success");
-    await loadAdmin();
-  }catch(error){
-    showError(error);
   }
 
 }
