@@ -1,1836 +1,2605 @@
-var __defProp = Object.defineProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlackOps2Liga</title>
 
-// worker.js
-var COOKIE = "bol_session";
-var SESSION_DAYS = 7;
-var MAPS = [
-  "Raid",
-  "Standoff",
-  "Slums",
-  "Yemen",
-  "Meltdown",
-  "Express"
-];
-var json = /* @__PURE__ */ __name((data, status = 200, headers = {}) => new Response(
-  JSON.stringify(data),
-  {
-    status,
-    headers: {
-      "content-type": "application/json;charset=UTF-8",
-      ...headers
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#080a0d;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:rgba(5,7,9,.96);
+  border-bottom:1px solid #24282d;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 35px;
+}
+
+.logo{
+  font-weight:900;
+  font-size:22px;
+  letter-spacing:1px;
+}
+
+.logo span{
+  color:#e21d25;
+}
+
+nav{
+  display:flex;
+  gap:8px;
+}
+
+nav button{
+  background:none;
+  color:#bbb;
+  border:0;
+  padding:12px 15px;
+  border-radius:6px;
+}
+
+nav button:hover,
+nav button.active{
+  color:#fff;
+  background:#171a1e;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.avatar-small{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#20242a;
+  border:1px solid #333;
+}
+
+main{
+  padding-top:70px;
+}
+
+.page{
+  min-height:calc(100vh - 70px);
+}
+
+.hero{
+  min-height:calc(100vh - 70px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.88)),
+    radial-gradient(circle at center,#34383d 0%,#111418 40%,#050608 100%);
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 5px,
+      rgba(255,255,255,.015) 6px
+    );
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:900px;
+  padding:30px;
+}
+
+.hero h1{
+  font-size:clamp(48px,9vw,100px);
+  font-weight:900;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  text-shadow:0 5px 30px #000;
+}
+
+.hero h1 span{
+  color:#d71920;
+}
+
+.hero p{
+  color:#aaa;
+  font-size:18px;
+  margin:20px 0 35px;
+}
+
+.btn{
+  border:0;
+  padding:13px 22px;
+  border-radius:6px;
+  font-weight:800;
+  transition:.2s;
+}
+
+.btn-red{
+  background:#d71920;
+  color:white;
+}
+
+.btn-red:hover{
+  background:#f0262d;
+  transform:translateY(-1px);
+}
+
+.btn-dark{
+  background:#1b1f24;
+  color:white;
+  border:1px solid #343941;
+}
+
+.btn-dark:hover{
+  background:#292e35;
+}
+
+.btn-danger{
+  background:#8f1117;
+  color:#fff;
+}
+
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:35px 22px 70px;
+}
+
+.page-title{
+  font-size:34px;
+  margin-bottom:8px;
+}
+
+.page-subtitle{
+  color:#888;
+  margin-bottom:30px;
+}
+
+.grid{
+  display:grid;
+  gap:18px;
+}
+
+.grid-3{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.grid-2{
+  grid-template-columns:repeat(2,1fr);
+}
+
+.card{
+  background:#111418;
+  border:1px solid #252a30;
+  border-radius:10px;
+  padding:22px;
+}
+
+.card h3{
+  margin-bottom:12px;
+}
+
+.league-card{
+  min-height:170px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.league-number{
+  font-size:44px;
+  font-weight:900;
+  color:#d71920;
+}
+
+.form{
+  max-width:500px;
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+.form-group label{
+  display:block;
+  color:#aaa;
+  margin-bottom:7px;
+  font-size:14px;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  background:#0a0c0f;
+  color:white;
+  border:1px solid #343941;
+  padding:12px;
+  border-radius:6px;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#d71920;
+}
+
+.auth-box{
+  max-width:450px;
+  margin:50px auto;
+}
+
+.tabs{
+  display:flex;
+  gap:5px;
+  margin-bottom:25px;
+}
+
+.tabs button{
+  flex:1;
+  padding:12px;
+  background:#15191e;
+  border:1px solid #292e34;
+  color:#999;
+  border-radius:5px;
+}
+
+.tabs button.active{
+  background:#d71920;
+  color:#fff;
+}
+
+.ranking{
+  overflow-x:auto;
+}
+
+.ranking table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+
+.ranking th{
+  text-align:left;
+  color:#777;
+  font-size:13px;
+  padding:14px;
+  border-bottom:1px solid #2a2e33;
+}
+
+.ranking td{
+  padding:14px;
+  border-bottom:1px solid #1e2227;
+}
+
+.rank{
+  font-weight:900;
+  width:55px;
+}
+
+.clan-cell{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.clan-logo{
+  width:42px;
+  height:42px;
+  border-radius:7px;
+  object-fit:cover;
+  background:#24282d;
+  border:1px solid #3a3f46;
+}
+
+.clan-code{
+  color:#d71920;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.points{
+  font-weight:900;
+  color:#fff;
+}
+
+.win{
+  color:#46c76a;
+}
+
+.loss{
+  color:#ed4a53;
+}
+
+.challenge{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px;
+  background:#111418;
+  border:1px solid #292e34;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.challenge-info{
+  flex:1;
+}
+
+.challenge-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.challenge-maps{
+  color:#888;
+  font-size:13px;
+}
+
+.surprise{
+  color:#e4e4e4;
+  font-style:italic;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:5px;
+  background:#242930;
+  color:#bbb;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.rules h2{
+  margin:30px 0 12px;
+}
+
+.rules p,
+.rules li{
+  color:#aaa;
+  line-height:1.7;
+}
+
+.rules ul{
+  padding-left:22px;
+}
+
+.profile{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:25px;
+}
+
+.profile-avatar{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#1c2025;
+  border:3px solid #333;
+}
+
+.center{
+  text-align:center;
+}
+
+.admin-section{
+  margin-bottom:30px;
+}
+
+.admin-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #252a30;
+}
+
+.admin-row input,
+.admin-row select{
+  background:#080a0d;
+  color:white;
+  border:1px solid #333;
+  padding:9px;
+  border-radius:5px;
+}
+
+.notice{
+  padding:13px 15px;
+  background:#161a1f;
+  border-left:3px solid #d71920;
+  color:#bbb;
+  margin-bottom:20px;
+}
+
+.toast{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  z-index:9999;
+  background:#171b20;
+  border:1px solid #343941;
+  padding:14px 18px;
+  border-radius:7px;
+  box-shadow:0 10px 30px #000;
+}
+
+footer{
+  border-top:1px solid #22272c;
+  padding:25px;
+  text-align:center;
+  color:#555;
+}
+
+@media(max-width:900px){
+  header{
+    padding:0 15px;
   }
-), "json");
-var body = /* @__PURE__ */ __name(async (request) => {
-  try {
-    return await request.json();
-  } catch {
-    return {};
+
+  nav{
+    display:none;
   }
-}, "body");
-function cors(request) {
-  const origin = request.headers.get("Origin");
-  return {
-    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Credentials": "true",
-    ...origin ? {
-      "Access-Control-Allow-Origin": origin,
-      "Vary": "Origin"
-    } : {}
-  };
+
+  .grid-3,
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+
+  .profile{
+    grid-template-columns:1fr;
+  }
+
+  .challenge{
+    flex-direction:column;
+    align-items:flex-start;
+  }
 }
-__name(cors, "cors");
-function sessionCookie(token) {
-  return `${COOKIE}=${encodeURIComponent(token)}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; SameSite=Lax; Secure`;
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    BLACKOPS<span>2</span>LIGA
+  </div>
+
+  <nav id="mainNav">
+    <button onclick="showPage('home')">Inicio</button>
+    <button onclick="showPage('ranking')">Ranking</button>
+    <button onclick="showPage('challenges')">Retos</button>
+    <button onclick="showPage('clans')">Clanes</button>
+    <button onclick="showPage('rules')">Reglas</button>
+  </nav>
+
+  <div class="user-area" id="userArea">
+    <button class="btn btn-dark" onclick="showPage('login')">
+      Iniciar sesión
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- INICIO -->
+
+<section id="page-home" class="page">
+
+  <div class="hero">
+    <div class="hero-content">
+
+      <h1>
+        BLACKOPS<span>2</span><br>
+        LIGA
+      </h1>
+
+      <p>
+        Liga competitiva de Call of Duty: Black Ops II
+      </p>
+
+      <div id="heroButtons">
+        <button class="btn btn-red" onclick="showPage('login')">
+          ENTRAR A LA LIGA
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- LOGIN -->
+
+<section id="page-login" class="page hidden">
+
+  <div class="container">
+
+    <div class="auth-box card">
+
+      <div class="tabs">
+        <button id="loginTab" class="active" onclick="authTab('login')">
+          Entrar
+        </button>
+
+        <button id="registerTab" onclick="authTab('register')">
+          Registrarse
+        </button>
+      </div>
+
+      <div id="loginForm">
+
+        <h2>Iniciar sesión</h2>
+
+        <br>
+
+        <div class="form-group">
+          <label>Usuario</label>
+          <input id="loginUser" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input id="loginPass" type="password">
+        </div>
+
+        <button class="btn btn-red" onclick="login()">
+          ENTRAR
+        </button>
+
+      </div>
+
+
+      <div id="registerForm" class="hidden">
+
+        <h2>Crear cuenta</h2>
+
+        <br>
+
+        <div class="form-group">
+          <label>Usuario</label>
+          <input id="registerUser" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input id="registerPass" type="password">
+        </div>
+
+        <button class="btn btn-red" onclick="register()">
+          CREAR CUENTA
+        </button>
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-dark" onclick="goBack()">
+        ← Atrás
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- RANKING -->
+
+<section id="page-ranking" class="page hidden">
+
+  <div class="container">
+
+    <h1 class="page-title">Ranking</h1>
+
+    <p class="page-subtitle">
+      Clasificación competitiva de BlackOps2Liga
+    </p>
+
+    <div class="tabs">
+
+      <button onclick="loadRanking(2)">
+        2 VS 2
+      </button>
+
+      <button onclick="loadRanking(3)">
+        3 VS 3
+      </button>
+
+      <button onclick="loadRanking(4)">
+        4 VS 4
+      </button>
+
+    </div>
+
+    <div class="card ranking">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>#</th>
+            <th>Clan</th>
+            <th>Puntos</th>
+            <th>Victorias</th>
+            <th>Derrotas</th>
+            <th>Partidos</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="rankingBody">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- RETOS -->
+
+<section id="page-challenges" class="page hidden">
+
+  <div class="container">
+
+    <h1 class="page-title">Retos</h1>
+
+    <p class="page-subtitle">
+      Encuentra un rival y compite.
+    </p>
+
+    <div id="challengeActions"></div>
+
+    <div class="tabs">
+
+      <button onclick="loadChallenges(2)">
+        2 VS 2
+      </button>
+
+      <button onclick="loadChallenges(3)">
+        3 VS 3
+      </button>
+
+      <button onclick="loadChallenges(4)">
+        4 VS 4
+      </button>
+
+    </div>
+
+    <div id="challengeList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- CLANES -->
+
+<section id="page-clans" class="page hidden">
+
+  <div class="container">
+
+    <h1 class="page-title">Clanes</h1>
+
+    <p class="page-subtitle">
+      Busca y conoce los clanes de la liga.
+    </p>
+
+    <div class="card">
+
+      <div style="display:flex;gap:10px;">
+
+        <input
+          id="clanSearch"
+          style="flex:1;background:#080a0d;color:white;border:1px solid #333;padding:12px;border-radius:6px;"
+          placeholder="Buscar clan..."
+        >
+
+        <button class="btn btn-red" onclick="loadClans()">
+          Buscar
+        </button>
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <div id="clanList" class="grid grid-3"></div>
+
+  </div>
+
+</section>
+
+
+<!-- CREAR CLAN -->
+
+<section id="page-create-clan" class="page hidden">
+
+  <div class="container">
+
+    <div class="card form">
+
+      <h1>Crear clan</h1>
+
+      <br>
+
+      <div class="form-group">
+
+        <label>Nombre del clan</label>
+
+        <input id="clanName" maxlength="24">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Insignia de clan — 4 letras</label>
+
+        <input
+          id="clanCode"
+          maxlength="4"
+          placeholder="XXXX"
+          oninput="this.value=this.value.toUpperCase()"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Imagen / logo del clan</label>
+
+        <input
+          id="clanLogo"
+          placeholder="URL de la imagen"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Liga</label>
+
+        <select id="clanLeague">
+
+          <option value="2">2 VS 2</option>
+          <option value="3">3 VS 3</option>
+          <option value="4">4 VS 4</option>
+
+        </select>
+
+      </div>
+
+      <button class="btn btn-red" onclick="createClan()">
+        CREAR CLAN
+      </button>
+
+      <button class="btn btn-dark" onclick="goBack()">
+        ← Atrás
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- REGLAS -->
+
+<section id="page-rules" class="page hidden">
+
+  <div class="container rules">
+
+    <h1 class="page-title">Reglamento</h1>
+
+    <p class="page-subtitle">
+      Normativa de la competición.
+    </p>
+
+    <div class="card">
+
+      <h2>Formato</h2>
+
+      <ul>
+        <li>2 VS 2</li>
+        <li>3 VS 3</li>
+        <li>4 VS 4</li>
+      </ul>
+
+      <h2>Mapas</h2>
+
+      <p>
+        Los mapas utilizados en los retos se seleccionan
+        automáticamente entre los mapas disponibles.
+      </p>
+
+      <ul>
+        <li>Raid</li>
+        <li>Standoff</li>
+        <li>Slums</li>
+        <li>Yemen</li>
+        <li>Meltdown</li>
+        <li>Express</li>
+      </ul>
+
+      <h2>Armas y restricciones</h2>
+
+      <p>
+        Aquí colocaremos el reglamento definitivo de armas,
+        accesorios, rachas, equipamiento y restricciones
+        correspondiente a la normativa que quieras utilizar.
+      </p>
+
+      <h2>Conducta</h2>
+
+      <ul>
+        <li>No se permiten trampas.</li>
+        <li>No se permiten exploits.</li>
+        <li>No se permite suplantar a otro jugador.</li>
+        <li>La administración puede revisar cualquier partido.</li>
+      </ul>
+
+      <h2>Resultados</h2>
+
+      <p>
+        Los capitanes deberán confirmar el resultado.
+        Si los dos resultados no coinciden, el partido
+        queda pendiente de revisión administrativa.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PERFIL -->
+
+<section id="page-profile" class="page hidden">
+
+  <div class="container">
+
+    <h1 class="page-title">Mi perfil</h1>
+
+    <br>
+
+    <div class="profile">
+
+      <div class="card center">
+
+        <img
+          id="profileAvatar"
+          class="profile-avatar"
+          src=""
+          alt="Avatar"
+        >
+
+        <br><br>
+
+        <strong id="profileUsername"></strong>
+
+      </div>
+
+      <div class="card">
+
+        <h2>Editar perfil</h2>
+
+        <br>
+
+        <div class="form-group">
+
+          <label>ID de PlayStation</label>
+
+          <input id="profilePsn">
+
+          <small style="color:#777;">
+            Puedes cambiarlo una vez cada 24 horas.
+          </small>
+
+        </div>
+
+        <div class="form-group">
+
+          <label>Foto / icono de perfil</label>
+
+          <input
+            id="profileAvatarUrl"
+            placeholder="URL de tu imagen"
+          >
+
+        </div>
+
+        <button
+          class="btn btn-red"
+          onclick="saveProfile()"
+        >
+          GUARDAR
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="page-admin" class="page hidden">
+
+  <div class="container">
+
+    <h1 class="page-title">Panel de administración</h1>
+
+    <p class="page-subtitle">
+      Control completo de BlackOps2Liga
+    </p>
+
+
+    <div class="card admin-section">
+
+      <h2>Usuarios</h2>
+
+      <br>
+
+      <div id="adminUsers"></div>
+
+    </div>
+
+
+    <div class="card admin-section">
+
+      <h2>Clanes</h2>
+
+      <br>
+
+      <div id="adminClans"></div>
+
+    </div>
+
+
+    <div class="card admin-section">
+
+      <h2>Retos</h2>
+
+      <br>
+
+      <div id="adminChallenges"></div>
+
+    </div>
+
+
+    <div class="card admin-section">
+
+      <h2>Herramientas de liga</h2>
+
+      <br>
+
+      <div class="admin-row">
+
+        <select id="resetLeague">
+
+          <option value="2">Liga 2 VS 2</option>
+          <option value="3">Liga 3 VS 3</option>
+          <option value="4">Liga 4 VS 4</option>
+
+        </select>
+
+        <button
+          class="btn btn-danger"
+          onclick="resetLeague()"
+        >
+          REINICIAR LIGA
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+  BLACKOPS2LIGA © 2026
+</footer>
+
+
+<div id="toast" class="toast hidden"></div>
+
+
+<script>
+
+const API = "/api";
+
+let currentUser = null;
+let isAdmin = false;
+let currentPage = "home";
+let previousPage = "home";
+
+
+function toast(message){
+
+  const el = document.getElementById("toast");
+
+  el.textContent = message;
+  el.classList.remove("hidden");
+
+  setTimeout(()=>{
+    el.classList.add("hidden");
+  },3000);
+
 }
-__name(sessionCookie, "sessionCookie");
-function deleteSessionCookie() {
-  return `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax; Secure`;
-}
-__name(deleteSessionCookie, "deleteSessionCookie");
-function getCookie(request) {
-  const cookies = request.headers.get("Cookie") || "";
-  const match = cookies.match(
-    new RegExp(
-      "(^|;\\s*)" + COOKIE + "=([^;]+)"
-    )
-  );
-  return match ? decodeURIComponent(match[2]) : null;
-}
-__name(getCookie, "getCookie");
-async function hashPassword(password, salt = crypto.randomUUID()) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"]
-  );
-  const bits = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      salt: new TextEncoder().encode(salt),
-      iterations: 1e5,
-      hash: "SHA-256"
+
+
+async function api(path, options={}){
+
+  const response = await fetch(API + path,{
+    credentials:"include",
+    headers:{
+      "Content-Type":"application/json",
+      ...(options.headers || {})
     },
-    key,
-    256
-  );
-  const encoded = btoa(
-    String.fromCharCode(
-      ...new Uint8Array(bits)
-    )
-  ).replaceAll("=", "");
-  return `${salt}.${encoded}`;
-}
-__name(hashPassword, "hashPassword");
-async function verifyPassword(password, stored) {
-  if (!stored || !stored.includes(".")) {
-    return false;
-  }
-  const [
-    salt,
-    hash
-  ] = stored.split(".");
-  const generated = await hashPassword(
-    password,
-    salt
-  );
-  return generated === `${salt}.${hash}`;
-}
-__name(verifyPassword, "verifyPassword");
-async function ensureColumn(env, table, column, definition) {
-  const result = await env.DB.prepare(
-    `PRAGMA table_info(${table})`
-  ).all();
-  const exists = result.results.some(
-    (item) => item.name === column
-  );
-  if (!exists) {
-    await env.DB.prepare(
-      `ALTER TABLE ${table}
-       ADD COLUMN ${column}
-       ${definition}`
-    ).run();
-  }
-}
-__name(ensureColumn, "ensureColumn");
-async function initDatabase(env) {
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS users(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS sessions(
-      token TEXT PRIMARY KEY,
-      user_id INTEGER NOT NULL,
-      expires INTEGER NOT NULL
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS clans(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      captain_id INTEGER NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS members(
-      clan_id INTEGER NOT NULL,
-      user_id INTEGER NOT NULL,
-      joined_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY(clan_id,user_id)
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS invites(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      clan_id INTEGER NOT NULL,
-      inviter_id INTEGER NOT NULL,
-      invitee_id INTEGER NOT NULL,
-      status TEXT DEFAULT 'pending',
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS challenges(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      creator_clan_id INTEGER NOT NULL,
-      accepter_clan_id INTEGER,
-      status TEXT DEFAULT 'open',
-      map1 TEXT NOT NULL,
-      map2 TEXT NOT NULL,
-      map3 TEXT NOT NULL,
-      winner_clan_id INTEGER,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      completed_at TEXT
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS reports(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      challenge_id INTEGER NOT NULL,
-      clan_id INTEGER NOT NULL,
-      winner_clan_id INTEGER NOT NULL,
-      UNIQUE(
-        challenge_id,
-        clan_id
-      )
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS scores(
-      clan_id INTEGER PRIMARY KEY,
-      points INTEGER DEFAULT 0,
-      wins INTEGER DEFAULT 0,
-      losses INTEGER DEFAULT 0,
-      played INTEGER DEFAULT 0
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS notifications(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      title TEXT NOT NULL,
-      message TEXT NOT NULL,
-      type TEXT DEFAULT 'general',
-      is_read INTEGER DEFAULT 0,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS chat_messages(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      challenge_id INTEGER NOT NULL,
-      user_id INTEGER NOT NULL,
-      message TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-  const columns = [
-    [
-      "users",
-      "psn_id",
-      "TEXT"
-    ],
-    [
-      "users",
-      "psn_changed_at",
-      "INTEGER"
-    ],
-    [
-      "users",
-      "avatar_url",
-      "TEXT"
-    ],
-    [
-      "users",
-      "is_blocked",
-      "INTEGER DEFAULT 0"
-    ],
-    [
-      "users",
-      "blocked_until",
-      "INTEGER"
-    ],
-    [
-      "clans",
-      "league",
-      "INTEGER DEFAULT 4"
-    ],
-    [
-      "clans",
-      "clan_code",
-      "TEXT"
-    ],
-    [
-      "clans",
-      "logo_url",
-      "TEXT"
-    ],
-    [
-      "members",
-      "role",
-      "TEXT DEFAULT 'member'"
-    ],
-    [
-      "challenges",
-      "team_size",
-      "INTEGER DEFAULT 4"
-    ],
-    [
-      "challenges",
-      "game_modes",
-      `TEXT DEFAULT '["snd"]'`
-    ],
-    [
-      "challenges",
-      "scheduled_at",
-      "TEXT"
-    ],
-    [
-      "challenges",
-      "expires_at",
-      "TEXT"
-    ],
-    [
-      "challenges",
-      "cancel_reason",
-      "TEXT"
-    ],
-    [
-      "challenges",
-      "cancelled_at",
-      "TEXT"
-    ],
-    [
-      "scores",
-      "league",
-      "INTEGER DEFAULT 4"
-    ]
-  ];
-  for (const [
-    table,
-    column,
-    definition
-  ] of columns) {
-    try {
-      await ensureColumn(
-        env,
-        table,
-        column,
-        definition
-      );
-    } catch (error) {
-      console.log(
-        "MIGRATION",
-        table,
-        column,
-        error.message
-      );
-    }
-  }
-  try {
-    const oldClans = await env.DB.prepare(`
-        SELECT id
-        FROM clans
-        WHERE clan_code IS NULL
-        OR clan_code=''
-      `).all();
-    for (const clan of oldClans.results) {
-      let n = Number(clan.id);
-      let code = "";
-      for (let i=0;i<4;i++) {
-        code = String.fromCharCode(65 + (n % 26)) + code;
-        n = Math.floor(n / 26);
-      }
-      await env.DB.prepare(`UPDATE clans SET clan_code=? WHERE id=?`).bind(code, clan.id).run();
-    }
-  } catch (error) {
-    console.log(
-      "CLAN CODE MIGRATION",
-      error.message
-    );
-  }
-}
-__name(initDatabase, "initDatabase");
-async function getCurrentUser(request, env) {
-  const token = getCookie(request);
-  if (!token) {
-    return null;
-  }
-  return await env.DB.prepare(`
-    SELECT
-      u.*
-    FROM sessions s
-    JOIN users u
-      ON u.id=s.user_id
-    WHERE
-      s.token=?
-      AND s.expires>?
-  `).bind(
-    token,
-    Date.now()
-  ).first();
-}
-__name(getCurrentUser, "getCurrentUser");
-function isAdmin(user) {
-  return !!user && user.username.toLowerCase() === "admin";
-}
-__name(isAdmin, "isAdmin");
-async function getUserClan(env, userId, league = null) {
-  if (league) {
-    return await env.DB.prepare(`
-      SELECT
-        c.*
-      FROM clans c
-      JOIN members m
-        ON m.clan_id=c.id
-      WHERE
-        m.user_id=?
-        AND c.league=?
-      LIMIT 1
-    `).bind(
-      userId,
-      league
-    ).first();
-  }
-  return await env.DB.prepare(`
-    SELECT
-      c.*
-    FROM clans c
-    JOIN members m
-      ON m.clan_id=c.id
-    WHERE
-      m.user_id=?
-    ORDER BY c.league
-    LIMIT 1
-  `).bind(userId).first();
-}
-__name(getUserClan, "getUserClan");
-function randomMaps() {
-  return [
-    ...MAPS
-  ].sort(
-    () => Math.random() - 0.5
-  ).slice(0, 3);
-}
-__name(randomMaps, "randomMaps");
-async function expireChallenges(env) {
-  const now = (/* @__PURE__ */ new Date()).toISOString();
-  await env.DB.prepare(`
-    UPDATE challenges
+    ...options
+  });
 
-    SET
-      status='expired',
-      cancel_reason=
-        'No aceptado en 30 minutos',
-      cancelled_at=?
+  let data={};
 
-    WHERE
-      status='open'
-      AND expires_at IS NOT NULL
-      AND expires_at<=?
-  `).bind(
-    now,
-    now
-  ).run();
+  try{
+    data=await response.json();
+  }catch(e){}
+
+  if(!response.ok){
+
+    throw new Error(
+      data.error ||
+      "Ha ocurrido un error."
+    );
+
+  }
+
+  return data;
+
 }
-__name(expireChallenges, "expireChallenges");
-async function api(request, env, path) {
-  const headers = cors(request);
-  if (request.method === "OPTIONS") {
-    return new Response(
-      null,
-      {
-        status: 204,
-        headers
-      }
-    );
+
+
+function showPage(page){
+
+  previousPage=currentPage;
+  currentPage=page;
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>p.classList.add("hidden"));
+
+  const target=document.getElementById(
+    "page-"+page
+  );
+
+  if(target){
+    target.classList.remove("hidden");
   }
-  await initDatabase(env);
-  await expireChallenges(env);
-  if (request.method === "GET" && path === "/api/me") {
-    const user = await getCurrentUser(
-      request,
-      env
-    );
-    return json(
-      {
-        user,
-        admin: isAdmin(user)
-      },
-      200,
-      headers
-    );
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  if(page==="ranking"){
+    loadRanking(4);
   }
-  if (request.method === "POST" && path === "/api/register") {
-    const data = await body(request);
-    const username = String(
-      data.username || ""
-    ).trim();
-    const password = String(
-      data.password || ""
-    );
-    if (username.length < 3 || username.length > 20 || password.length < 6) {
-      return json(
-        {
-          error: "Usuario 3-20 caracteres y contrase\xF1a m\xEDnimo 6."
-        },
-        400,
-        headers
-      );
-    }
-    const exists = await env.DB.prepare(`
-        SELECT id
-        FROM users
-        WHERE username=?
-      `).bind(username).first();
-    if (exists) {
-      return json(
-        {
-          error: "Ese usuario ya existe."
-        },
-        400,
-        headers
-      );
-    }
-    try {
-      const passwordHash = await hashPassword(
-        password
-      );
-      const created = await env.DB.prepare(`
-          INSERT INTO users
-          (
-            username,
-            password_hash
-          )
-          VALUES (?,?)
-        `).bind(
+
+  if(page==="challenges"){
+    loadChallenges(4);
+  }
+
+  if(page==="clans"){
+    loadClans();
+  }
+
+  if(page==="profile"){
+    loadProfile();
+  }
+
+  if(page==="admin" && isAdmin){
+    loadAdmin();
+  }
+
+}
+
+
+function goBack(){
+
+  showPage(previousPage || "home");
+
+}
+
+
+function authTab(type){
+
+  const login=document.getElementById("loginForm");
+  const register=document.getElementById("registerForm");
+
+  const loginTab=document.getElementById("loginTab");
+  const registerTab=document.getElementById("registerTab");
+
+  if(type==="login"){
+
+    login.classList.remove("hidden");
+    register.classList.add("hidden");
+
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+
+  }else{
+
+    login.classList.add("hidden");
+    register.classList.remove("hidden");
+
+    loginTab.classList.remove("active");
+    registerTab.classList.add("active");
+
+  }
+
+}
+
+
+async function login(){
+
+  const username=
+    document.getElementById("loginUser").value.trim();
+
+  const password=
+    document.getElementById("loginPass").value;
+
+  if(!username || !password){
+
+    toast("Completa todos los campos.");
+    return;
+
+  }
+
+  try{
+
+    await api("/login",{
+      method:"POST",
+      body:JSON.stringify({
         username,
-        passwordHash
-      ).run();
-      const userId = created.meta.last_row_id;
-      const token = crypto.randomUUID();
-      await env.DB.prepare(`
-        INSERT INTO sessions
-        (
-          token,
-          user_id,
-          expires
-        )
-        VALUES (?,?,?)
-      `).bind(
-        token,
-        userId,
-        Date.now() + SESSION_DAYS * 864e5
-      ).run();
-      return json(
-        {
-          ok: true,
-          user: {
-            id: userId,
-            username
-          }
-        },
-        200,
-        {
-          ...headers,
-          "Set-Cookie": sessionCookie(token)
-        }
-      );
-    } catch (error) {
-      console.error(
-        "REGISTER ERROR:",
-        error
-      );
-      return json(
-        {
-          error: "No se pudo crear la cuenta.",
-          detail: error.message
-        },
-        500,
-        headers
-      );
-    }
+        password
+      })
+    });
+
+    toast("Sesión iniciada.");
+
+    await loadMe();
+
+    showPage("home");
+
+  }catch(error){
+
+    toast(error.message);
+
   }
-  if (request.method === "POST" && path === "/api/login") {
-    const data = await body(request);
-    const username = String(
-      data.username || ""
-    ).trim();
-    const password = String(
-      data.password || ""
-    );
-    const user = await env.DB.prepare(`
-        SELECT *
-        FROM users
-        WHERE username=?
-      `).bind(username).first();
-    if (!user || !await verifyPassword(
-      password,
-      user.password_hash
-    )) {
-      return json(
-        {
-          error: "Usuario o contrase\xF1a incorrectos."
-        },
-        401,
-        headers
-      );
+
+}
+
+
+async function register(){
+
+  const username=
+    document.getElementById("registerUser").value.trim();
+
+  const password=
+    document.getElementById("registerPass").value;
+
+  if(!username || !password){
+
+    toast("Completa todos los campos.");
+    return;
+
+  }
+
+  try{
+
+    await api("/register",{
+      method:"POST",
+      body:JSON.stringify({
+        username,
+        password
+      })
+    });
+
+    toast("Cuenta creada.");
+
+    await loadMe();
+
+    showPage("home");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function logout(){
+
+  try{
+
+    await api("/logout",{
+      method:"POST"
+    });
+
+  }catch(e){}
+
+  currentUser=null;
+  isAdmin=false;
+
+  updateHeader();
+
+  showPage("home");
+
+}
+
+
+async function loadMe(){
+
+  try{
+
+    const data=await api("/me");
+
+    currentUser=data.user;
+    isAdmin=!!data.admin;
+
+  }catch(e){
+
+    currentUser=null;
+    isAdmin=false;
+
+  }
+
+  updateHeader();
+
+}
+
+
+function updateHeader(){
+
+  const area=document.getElementById("userArea");
+
+  if(!currentUser){
+
+    area.innerHTML=`
+      <button
+        class="btn btn-dark"
+        onclick="showPage('login')"
+      >
+        Iniciar sesión
+      </button>
+    `;
+
+    return;
+  }
+
+  const avatar=
+    currentUser.avatar_url ||
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%2320242a'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3E%3F%3C/text%3E%3C/svg%3E";
+
+  area.innerHTML=`
+
+    <img
+      class="avatar-small"
+      src="${escapeHtml(avatar)}"
+    >
+
+    <button
+      class="btn btn-dark"
+      onclick="showPage('profile')"
+    >
+      ${escapeHtml(currentUser.username)}
+    </button>
+
+    ${
+      isAdmin
+      ?
+      `<button
+        class="btn btn-red"
+        onclick="showPage('admin')"
+      >
+        ADMIN
+      </button>`
+      :
+      ""
     }
-    if (user.is_blocked && (user.blocked_until === 0 || user.blocked_until > Date.now())) {
-      return json(
-        {
-          error: "Usuario bloqueado."
-        },
-        403,
-        headers
-      );
+
+    <button
+      class="btn btn-dark"
+      onclick="logout()"
+    >
+      Salir
+    </button>
+  `;
+
+}
+
+
+async function loadRanking(league){
+
+  const body=document.getElementById("rankingBody");
+
+  body.innerHTML=`
+    <tr>
+      <td colspan="6">Cargando...</td>
+    </tr>
+  `;
+
+  try{
+
+    const clans=
+      await api("/leaderboard?league="+league);
+
+    if(!clans.length){
+
+      body.innerHTML=`
+        <tr>
+          <td colspan="6">
+            Todavía no hay clanes en esta liga.
+          </td>
+        </tr>
+      `;
+
+      return;
     }
-    const token = crypto.randomUUID();
-    await env.DB.prepare(`
-      INSERT INTO sessions
-      (
-        token,
-        user_id,
-        expires
-      )
-      VALUES (?,?,?)
-    `).bind(
-      token,
-      user.id,
-      Date.now() + SESSION_DAYS * 864e5
-    ).run();
-    return json(
-      {
-        ok: true,
-        user: {
-          id: user.id,
-          username: user.username,
-          psn_id: user.psn_id
+
+    body.innerHTML=clans.map((clan,index)=>`
+
+      <tr>
+
+        <td class="rank">
+          ${index+1}
+        </td>
+
+        <td>
+
+          <div class="clan-cell">
+
+            <img
+              class="clan-logo"
+              src="${escapeHtml(clan.logo_url || defaultLogo())}"
+            >
+
+            <div>
+
+              <strong>
+                ${escapeHtml(clan.name)}
+              </strong>
+
+              <div class="clan-code">
+                ${escapeHtml(clan.clan_code || "----")}
+              </div>
+
+            </div>
+
+          </div>
+
+        </td>
+
+        <td class="points">
+          ${clan.points || 0}
+        </td>
+
+        <td class="win">
+          ${clan.wins || 0}
+        </td>
+
+        <td class="loss">
+          ${clan.losses || 0}
+        </td>
+
+        <td>
+          ${clan.played || 0}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+  }catch(error){
+
+    body.innerHTML=`
+      <tr>
+        <td colspan="6">
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+async function loadChallenges(league){
+
+  const list=
+    document.getElementById("challengeList");
+
+  const actions=
+    document.getElementById("challengeActions");
+
+  if(!currentUser){
+
+    actions.innerHTML=`
+      <div class="notice">
+        Debes iniciar sesión para publicar o aceptar retos.
+      </div>
+    `;
+
+  }else{
+
+    actions.innerHTML=`
+
+      <div style="margin-bottom:20px;">
+
+        <button
+          class="btn btn-red"
+          onclick="createChallenge(${league})"
+        >
+          + PUBLICAR RETO
+        </button>
+
+      </div>
+    `;
+
+  }
+
+  list.innerHTML="Cargando retos...";
+
+  try{
+
+    const challenges=
+      await api("/challenges?league="+league);
+
+    if(!challenges.length){
+
+      list.innerHTML=`
+        <div class="card">
+          No hay retos disponibles.
+        </div>
+      `;
+
+      return;
+
+    }
+
+    list.innerHTML=challenges.map(ch=>{
+
+      const creator=
+        ch.creator_name
+        ?
+        `<strong>${escapeHtml(ch.creator_name)}</strong>`
+        :
+        `<span class="surprise">Reto sorpresa</span>`;
+
+      let action="";
+
+      if(ch.status==="open" && currentUser){
+
+        action=`
+
+          <button
+            class="btn btn-red"
+            onclick="acceptChallenge(${ch.id})"
+          >
+            ACEPTAR
+          </button>
+
+        `;
+
+        if(
+          ch.creator_name &&
+          currentUser.username===ch.creator_name
+        ){
+
+          action+=`
+
+            <button
+              class="btn btn-dark"
+              onclick="cancelChallenge(${ch.id})"
+            >
+              CANCELAR
+            </button>
+
+          `;
+
         }
-      },
-      200,
+
+      }
+
+      return `
+
+        <div class="challenge">
+
+          <div class="challenge-info">
+
+            <div class="challenge-title">
+              ${creator}
+            </div>
+
+            <div class="challenge-maps">
+              Mapas: ${escapeHtml(
+                [ch.map1,ch.map2,ch.map3]
+                .filter(Boolean)
+                .join(" · ")
+              )}
+            </div>
+
+            <br>
+
+            <span class="badge">
+              ${ch.team_size} VS ${ch.team_size}
+            </span>
+
+            <span class="badge">
+              ${ch.status}
+            </span>
+
+          </div>
+
+          <div>
+            ${action}
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  }catch(error){
+
+    list.innerHTML=
+      `<div class="notice">${escapeHtml(error.message)}</div>`;
+
+  }
+
+}
+
+
+async function createChallenge(league){
+
+  if(!currentUser){
+
+    showPage("login");
+    return;
+
+  }
+
+  if(
+    !confirm(
+      "¿Quieres publicar un reto sorpresa de "+league+" VS "+league+"?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api("/challenges",{
+      method:"POST",
+      body:JSON.stringify({
+        league,
+        team_size:league,
+        game_modes:["snd"]
+      })
+    });
+
+    toast("Reto publicado.");
+
+    loadChallenges(league);
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function cancelChallenge(id){
+
+  const reason=
+    prompt(
+      "Motivo de la cancelación:",
+      "Me he equivocado al publicar el reto"
+    );
+
+  if(reason===null){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/challenges/"+id+"/cancel",
       {
-        ...headers,
-        "Set-Cookie": sessionCookie(token)
+        method:"POST",
+        body:JSON.stringify({
+          reason
+        })
       }
     );
+
+    toast("Reto cancelado.");
+
+    loadChallenges(4);
+
+  }catch(error){
+
+    toast(error.message);
+
   }
-  if (request.method === "POST" && path === "/api/logout") {
-    const token = getCookie(request);
-    if (token) {
-      await env.DB.prepare(`
-        DELETE FROM sessions
-        WHERE token=?
-      `).bind(token).run();
-    }
-    return json(
-      { ok: true },
-      200,
+
+}
+
+
+async function acceptChallenge(id){
+
+  if(
+    !confirm("¿Quieres aceptar este reto?")
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/challenges/"+id+"/accept",
       {
-        ...headers,
-        "Set-Cookie": deleteSessionCookie()
+        method:"POST"
       }
     );
+
+    toast("Reto aceptado.");
+
+    loadChallenges(4);
+
+  }catch(error){
+
+    toast(error.message);
+
   }
-  const me = await getCurrentUser(
-    request,
-    env
-  );
-  const publicRoute = request.method === "GET" && (path === "/api/leaderboard" || path === "/api/clans" || path === "/api/users" || /^\/api\/clans\/\d+$/.test(path) || /^\/api\/users\/\d+$/.test(path));
-  if (!me && !publicRoute) {
-    return json(
-      {
-        error: "Debes iniciar sesi\xF3n."
-      },
-      401,
-      headers
-    );
-  }
-  if (me && me.is_blocked && (me.blocked_until === 0 || me.blocked_until > Date.now())) {
-    return json(
-      {
-        error: "Usuario bloqueado."
-      },
-      403,
-      headers
-    );
-  }
-  if (me.is_blocked && (me.blocked_until === 0 || me.blocked_until > Date.now())) {
-    return json(
-      {
-        error: "Usuario bloqueado."
-      },
-      403,
-      headers
-    );
-  }
-  if (request.method === "PUT" && path === "/api/profile") {
-    const data = await body(request);
-    const psn = String(data.psn_id || "").trim().slice(0, 32);
-    const avatar = String(data.avatar_url || "").trim().slice(0, 500);
-    const changingPsn = psn !== String(me.psn_id || "");
-    if (changingPsn && !isAdmin(me) && me.psn_changed_at && Date.now() - Number(me.psn_changed_at) < 24 * 60 * 60 * 1000) {
-      const remaining = 24 * 60 * 60 * 1000 - (Date.now() - Number(me.psn_changed_at));
-      return json({ error: "Solo puedes cambiar tu ID una vez cada 24 horas.", retry_after_ms: remaining }, 400, headers);
-    }
-    await env.DB.prepare(`
-      UPDATE users
-      SET psn_id=?, avatar_url=?, psn_changed_at=?
-      WHERE id=?
-    `).bind(psn, avatar, changingPsn && !isAdmin(me) ? Date.now() : (me.psn_changed_at || null), me.id).run();
-    return json({ ok: true }, 200, headers);
-  }
-  if (request.method === "GET" && path === "/api/users") {
-    const params = new URL(request.url).searchParams;
-    const query = String(
-      params.get("q") || ""
-    ).trim();
-    const result = await env.DB.prepare(`
-        SELECT
-          id,
-          username,
-          psn_id,
-          avatar_url,
-          created_at
-        FROM users
-        WHERE username LIKE ?
-        ORDER BY username
-        LIMIT 50
-      `).bind(
-      "%" + query + "%"
-    ).all();
-    return json(
-      result.results,
-      200,
-      headers
-          );
-  }
-  if (request.method === "GET" && /^\/api\/users\/\d+$/.test(path)) {
-    const id = Number(
-      path.split("/").pop()
-    );
-    const user = await env.DB.prepare(`
-        SELECT
-          id,
-          username,
-          psn_id,
-          avatar_url,
-          created_at
-        FROM users
-        WHERE id=?
-      `).bind(id).first();
-    if (!user) {
-      return json(
-        {
-          error: "Jugador no encontrado."
-        },
-        404,
-        headers
+
+}
+
+
+async function loadClans(){
+
+  const list=
+    document.getElementById("clanList");
+
+  const q=
+    document.getElementById("clanSearch").value.trim();
+
+  list.innerHTML="Cargando...";
+
+  try{
+
+    const clans=
+      await api(
+        "/clans?q="+encodeURIComponent(q)
       );
+
+    if(!clans.length){
+
+      list.innerHTML=`
+        <div class="card">
+          No se encontraron clanes.
+        </div>
+      `;
+
+      return;
+
     }
-    const clans = await env.DB.prepare(`
-        SELECT
-          c.id,
-          c.name,
-          c.clan_code,
-          c.league
-        FROM clans c
-        JOIN members m
-          ON m.clan_id=c.id
-        WHERE m.user_id=?
-        ORDER BY c.league
-      `).bind(id).all();
-    return json(
-      {
-        user,
-        clans: clans.results
-      },
-      200,
-      headers
-    );
-  }
-  if (request.method === "GET" && path === "/api/clans") {
-    const params = new URL(request.url).searchParams;
-    const query = String(
-      params.get("q") || ""
-    );
-    const league = Number(
-      params.get("league") || 0
-    );
-    let sql = `
-      SELECT
-        c.id,
-        c.name,
-        c.clan_code,
-        c.logo_url,
-        c.league,
-        c.captain_id,
 
-        COALESCE(
-          s.points,
-          0
-        ) points,
+    list.innerHTML=clans.map(clan=>`
 
-        COALESCE(
-          s.wins,
-          0
-        ) wins,
+      <div class="card">
 
-        COALESCE(
-          s.losses,
-          0
-        ) losses,
+        <div class="clan-cell">
 
-        COALESCE(
-          s.played,
-          0
-        ) played
+          <img
+            class="clan-logo"
+            src="${escapeHtml(clan.logo_url || defaultLogo())}"
+          >
 
-      FROM clans c
+          <div>
 
-      LEFT JOIN scores s
-        ON s.clan_id=c.id
+            <h3>
+              ${escapeHtml(clan.name)}
+            </h3>
 
-      WHERE c.name LIKE ?
-    `;
-    const values = [
-      "%" + query + "%"
-    ];
-    if ([2, 3, 4].includes(
-      league
-    )) {
-      sql += " AND c.league=?";
-      values.push(
-        league
-      );
-    }
-    sql += `
-      ORDER BY
-        points DESC,
-        name
-      LIMIT 100
-    `;
-    const result = await env.DB.prepare(sql).bind(...values).all();
-    return json(
-      result.results,
-      200,
-      headers
-    );
-  }
-  if (request.method === "GET" && /^\/api\/clans\/\d+$/.test(path)) {
-    const id = Number(
-      path.split("/").pop()
-    );
-    const clan = await env.DB.prepare(`
-        SELECT
-          c.*,
+            <div class="clan-code">
+              ${escapeHtml(clan.clan_code || "----")}
+            </div>
 
-          COALESCE(
-            s.points,
-            0
-          ) points,
+          </div>
 
-          COALESCE(
-            s.wins,
-            0
-          ) wins,
+        </div>
 
-          COALESCE(
-            s.losses,
-            0
-          ) losses,
+        <br>
 
-          COALESCE(
-            s.played,
-            0
-          ) played
+        <div style="color:#888;">
+          Liga ${clan.league} VS ${clan.league}
+        </div>
 
-        FROM clans c
+        <br>
 
-        LEFT JOIN scores s
-          ON s.clan_id=c.id
+        <div>
+          ${clan.points || 0} puntos
+        </div>
 
-        WHERE c.id=?
-      `).bind(id).first();
-    if (!clan) {
-      return json(
-        {
-          error: "Clan no encontrado."
-        },
-        404,
-        headers
-      );
-    }
-    const members = await env.DB.prepare(`
-        SELECT
-          u.id,
-          u.username,
-          u.psn_id,
-          m.role
+        <br>
 
-        FROM members m
-
-        JOIN users u
-          ON u.id=m.user_id
-
-        WHERE
-          m.clan_id=?
-
-        ORDER BY
-          m.role DESC,
-          u.username
-      `).bind(id).all();
-    return json(
-      {
-        clan,
-        members: members.results
-      },
-      200,
-      headers
-    );
-  }
-  if (request.method === "POST" && path === "/api/clans") {
-    const data = await body(request);
-    const name = String(data.name || "").trim();
-    const clanCode = String(data.clan_code || "").trim().toUpperCase();
-    const logoUrl = String(data.logo_url || "").trim().slice(0, 500);
-    const league = Number(data.league);
-    if (name.length < 2 || name.length > 24 || !/^[A-Z]{4}$/.test(clanCode) || ![2, 3, 4].includes(league)) {
-      return json({ error: "Nombre 2-24 caracteres, insignia de exactamente 4 letras y liga 2v2, 3v3 o 4v4." }, 400, headers);
-    }
-    const existingMembership = await getUserClan(env, me.id, league);
-    if (existingMembership) return json({ error: "Ya perteneces a un clan en esta liga." }, 400, headers);
-    const existingClan = await env.DB.prepare(`SELECT id FROM clans WHERE name=? AND league=?`).bind(name, league).first();
-    if (existingClan) return json({ error: "Ese nombre ya existe en esa liga." }, 400, headers);
-    const existingCode = await env.DB.prepare(`SELECT id FROM clans WHERE clan_code=?`).bind(clanCode).first();
-    if (existingCode) return json({ error: "Esa insignia ya está utilizada." }, 400, headers);
-    try {
-      const created = await env.DB.prepare(`INSERT INTO clans (name,captain_id,league,clan_code,logo_url) VALUES (?,?,?,?,?)`).bind(name, me.id, league, clanCode, logoUrl).run();
-      const clanId = created.meta.last_row_id;
-      await env.DB.prepare(`INSERT INTO members (clan_id,user_id,role) VALUES (?,?,?)`).bind(clanId, me.id, "captain").run();
-      await env.DB.prepare(`INSERT OR IGNORE INTO scores (clan_id,league) VALUES (?,?)`).bind(clanId, league).run();
-      return json({ ok: true, clanId, clanCode }, 200, headers);
-    } catch (error) {
-      console.error("CREATE CLAN ERROR:", error);
-      return json({ error: "No se pudo crear el clan.", detail: error.message }, 500, headers);
-    }
-  }
-  if (request.method === "GET" && path === "/api/leaderboard") {
-    const league = Number(
-      new URL(request.url).searchParams.get("league") || 4
-    );
-    if (![2, 3, 4].includes(
-      league
-    )) {
-      return json(
-        {
-          error: "Liga no v\xE1lida."
-        },
-        400,
-        headers
-      );
-    }
-    const result = await env.DB.prepare(`
-        SELECT
-          c.id,
-          c.name,
-          c.clan_code,
-          c.logo_url,
-          c.league,
-
-          COALESCE(
-            s.points,
-            0
-          ) points,
-
-          COALESCE(
-            s.wins,
-            0
-          ) wins,
-
-          COALESCE(
-            s.losses,
-            0
-          ) losses,
-
-          COALESCE(
-            s.played,
-            0
-          ) played
-
-        FROM clans c
-
-        LEFT JOIN scores s
-          ON s.clan_id=c.id
-
-        WHERE c.league=?
-
-        ORDER BY
-          points DESC,
-          wins DESC,
-          name
-      `).bind(league).all();
-    return json(
-      result.results,
-      200,
-      headers
-    );
-  }
-  if (request.method === "POST" && path === "/api/invites") {
-    const data = await body(request);
-    const clanId = Number(data.clan_id);
-    const inviteeId = Number(data.user_id);
-    const clan = await env.DB.prepare(`SELECT * FROM clans WHERE id=?`).bind(clanId).first();
-    if (!clan) return json({ error: "Clan no encontrado." }, 404, headers);
-    if (clan.captain_id !== me.id && !isAdmin(me)) return json({ error: "Solo el capitán puede invitar jugadores." }, 403, headers);
-    if (!inviteeId) return json({ error: "Jugador no válido." }, 400, headers);
-    if (inviteeId === me.id) return json({ error: "No puedes invitarte a ti mismo." }, 400, headers);
-    const user = await env.DB.prepare(`SELECT id,username FROM users WHERE id=? AND is_blocked=0`).bind(inviteeId).first();
-    if (!user) return json({ error: "Jugador no encontrado." }, 404, headers);
-    const member = await env.DB.prepare(`SELECT 1 FROM members WHERE clan_id=? AND user_id=?`).bind(clanId, inviteeId).first();
-    if (member) return json({ error: "Ese jugador ya pertenece al clan." }, 400, headers);
-    const pending = await env.DB.prepare(`SELECT id FROM invites WHERE clan_id=? AND invitee_id=? AND status='pending'`).bind(clanId, inviteeId).first();
-    if (pending) return json({ error: "Ya existe una invitación pendiente." }, 400, headers);
-    const created = await env.DB.prepare(`INSERT INTO invites (clan_id,inviter_id,invitee_id,status) VALUES (?,?,?,'pending')`).bind(clanId, me.id, inviteeId).run();
-    await env.DB.prepare(`INSERT INTO notifications (user_id,title,message,type) VALUES (?,?,?,'clan_invite')`).bind(inviteeId,"Invitación de clan",`Has recibido una invitación para unirte a ${clan.name}.`).run();
-    return json({ ok:true, id:created.meta.last_row_id },200,headers);
-  }
-  if (request.method === "GET" && path === "/api/invites") {
-    const result = await env.DB.prepare(`
-      SELECT i.id,i.clan_id,i.inviter_id,i.invitee_id,i.status,i.created_at,c.name,c.clan_code,c.logo_url
-      FROM invites i JOIN clans c ON c.id=i.clan_id
-      WHERE i.invitee_id=? AND i.status='pending' ORDER BY i.id DESC
-    `).bind(me.id).all();
-    return json(result.results,200,headers);
-  }
-  const inviteAction = path.match(/^\/api\/invites\/(\d+)\/(accept|reject)$/);
-  if (request.method === "POST" && inviteAction) {
-    const inviteId=Number(inviteAction[1]); const action=inviteAction[2];
-    const invite=await env.DB.prepare(`SELECT * FROM invites WHERE id=? AND invitee_id=? AND status='pending'`).bind(inviteId,me.id).first();
-    if(!invite) return json({error:"Invitación no disponible."},404,headers);
-    if(action==='reject') {
-      await env.DB.prepare(`UPDATE invites SET status='rejected' WHERE id=?`).bind(inviteId).run();
-      return json({ok:true},200,headers);
-    }
-    const clan=await env.DB.prepare(`SELECT * FROM clans WHERE id=?`).bind(invite.clan_id).first();
-    if(!clan) return json({error:"Clan no encontrado."},404,headers);
-    const already=await getUserClan(env,me.id,Number(clan.league));
-    if(already) return json({error:"Ya perteneces a un clan en esta liga."},400,headers);
-    await env.DB.batch([
-      env.DB.prepare(`INSERT OR IGNORE INTO members (clan_id,user_id,role) VALUES (?,?,?)`).bind(clan.id,me.id,"member"),
-      env.DB.prepare(`UPDATE invites SET status='accepted' WHERE id=?`).bind(inviteId)
-    ]);
-    return json({ok:true},200,headers);
-  }
-  if (request.method === "POST" && path === "/api/challenges") {
-    const data = await body(request);
-    const league = Number(
-      data.league || 4
-    );
-    const teamSize = Number(
-      data.team_size || league
-    );
-    if (![2, 3, 4].includes(
-      league
-    ) || teamSize !== league) {
-      return json(
-        {
-          error: "El formato del reto no coincide con la liga."
-        },
-        400,
-        headers
-      );
-    }
-    const clan = await getUserClan(
-      env,
-      me.id,
-      league
-    );
-    if (!clan) {
-      return json(
-        {
-          error: "No perteneces a ning\xFAn clan en esta liga."
-        },
-        400,
-        headers
-      );
-    }
-    if (clan.captain_id !== me.id) {
-      return json(
-        {
-          error: "Solo el capit\xE1n puede publicar retos."
-        },
-        403,
-        headers
-      );
-    }
-    const active = await env.DB.prepare(`
-        SELECT id
-        FROM challenges
-
-        WHERE
-        (
-          creator_clan_id=?
-          OR accepter_clan_id=?
-        )
-
-        AND status IN(
-          'open',
-          'accepted'
-        )
-
-        LIMIT 1
-      `).bind(
-      clan.id,
-      clan.id
-    ).first();
-    if (active) {
-      return json(
-        {
-          error: "Tu clan ya tiene un reto activo."
-        },
-        400,
-        headers
-      );
-    }
-    const selectedMaps = randomMaps();
-    const now = Date.now();
-    const createdAt = new Date(
-      now
-    ).toISOString();
-    const expiresAt = new Date(
-      now + 30 * 60 * 1e3
-    ).toISOString();
-    const modes = Array.isArray(
-      data.game_modes
-    ) ? data.game_modes : ["snd"];
-    const created = await env.DB.prepare(`
-        INSERT INTO challenges
-        (
-          creator_clan_id,
-          status,
-          map1,
-          map2,
-          map3,
-          team_size,
-          game_modes,
-          scheduled_at,
-          expires_at
-        )
-
-        VALUES(
-          ?,
-          'open',
-          ?,
-          ?,
-          ?,
-          ?,
-          ?,
-          ?,
+        ${
+          currentUser
           ?
-        )
-      `).bind(
-      clan.id,
-      selectedMaps[0],
-      selectedMaps[1],
-      selectedMaps[2],
-      teamSize,
-      JSON.stringify(modes),
-      createdAt,
-      expiresAt
-    ).run();
-    return json(
-      {
-        ok: true,
-        id: created.meta.last_row_id,
-        expires_at: expiresAt,
-        maps: selectedMaps
-      },
-      200,
-      headers
-    );
-  }
-  if (request.method === "GET" && path === "/api/challenges") {
-    await expireChallenges(env);
-    const params = new URL(request.url).searchParams;
-    const league = Number(params.get("league") || 4);
-    const clan = await getUserClan(env, me.id, league);
-    const clanId = clan ? clan.id : -1;
-    const result = await env.DB.prepare(`
-      SELECT
-        ch.*,
-        CASE WHEN ch.status='open' AND ch.creator_clan_id<>? THEN NULL ELSE creator.name END AS creator_name,
-        CASE WHEN ch.status='open' AND ch.creator_clan_id<>? THEN NULL ELSE creator.clan_code END AS creator_code,
-        accepter.name AS accepter_name,
-        accepter.clan_code AS accepter_code
-      FROM challenges ch
-      JOIN clans creator ON creator.id=ch.creator_clan_id
-      LEFT JOIN clans accepter ON accepter.id=ch.accepter_clan_id
-      WHERE creator.league=?
-        AND ch.status IN('open','accepted')
-        AND (ch.status='open' OR ch.creator_clan_id=? OR ch.accepter_clan_id=?)
-      ORDER BY ch.id DESC
-    `).bind(clanId, clanId, league, clanId, clanId).all();
-    return json(result.results, 200, headers);
-  }
-  const cancelMatch = path.match(
-    /^\/api\/challenges\/(\d+)\/cancel$/
-  );
-  if (request.method === "POST" && cancelMatch) {
-    const challengeId = Number(cancelMatch[1]);
-    const challenge = await env.DB.prepare(`SELECT * FROM challenges WHERE id=? AND status='open'`).bind(challengeId).first();
-    if (!challenge) return json({ error: "El reto no está disponible para cancelar." }, 400, headers);
-    const clan = await getUserClan(env, me.id, Number(challenge.team_size));
-    if (!clan || clan.id !== challenge.creator_clan_id) return json({ error: "Solo el clan que publicó el reto puede cancelarlo." }, 403, headers);
-    if (clan.captain_id !== me.id && !isAdmin(me)) return json({ error: "Solo el capitán puede cancelar el reto." }, 403, headers);
-    const data = await body(request);
-    const reason = String(data.reason || "Cancelado por el creador").trim().slice(0, 120);
-    await env.DB.prepare(`UPDATE challenges SET status='cancelled', cancel_reason=?, cancelled_at=CURRENT_TIMESTAMP WHERE id=? AND status='open'`).bind(reason, challengeId).run();
-    return json({ ok: true }, 200, headers);
+          `
+          <button
+            class="btn btn-dark"
+            onclick="viewClan(${clan.id})"
+          >
+            VER CLAN
+          </button>
+          `
+          :
+          ""
+        }
+
+      </div>
+
+    `).join("");
+
+  }catch(error){
+
+    list.innerHTML=
+      `<div class="notice">${escapeHtml(error.message)}</div>`;
+
   }
 
-  const acceptMatch = path.match(
-    /^\/api\/challenges\/(\d+)\/accept$/
-  );
-  if (request.method === "POST" && acceptMatch) {
-    const challengeId = Number(
-      acceptMatch[1]
-    );
-    const challenge = await env.DB.prepare(`
-        SELECT *
-        FROM challenges
-        WHERE
-          id=?
-          AND status='open'
-      `).bind(
-      challengeId
-    ).first();
-    if (!challenge) {
-      return json(
-        {
-          error: "El reto ya no est\xE1 disponible."
-        },
-        400,
-        headers
-      );
-    }
-    if (challenge.expires_at && challenge.expires_at <= (/* @__PURE__ */ new Date()).toISOString()) {
-      await env.DB.prepare(`
-        UPDATE challenges
-
-        SET
-          status='expired',
-          cancel_reason=
-            'No aceptado en 30 minutos',
-          cancelled_at=CURRENT_TIMESTAMP
-
-        WHERE id=?
-      `).bind(
-        challengeId
-      ).run();
-      return json(
-        {
-          error: "El reto ha caducado."
-        },
-        400,
-        headers
-      );
-    }
-    const league = Number(
-      challenge.team_size
-    );
-    const clan = await getUserClan(
-      env,
-      me.id,
-      league
-    );
-    if (!clan) {
-      return json(
-        {
-          error: "No perteneces a un clan en esta liga."
-        },
-        400,
-        headers
-      );
-    }
-    if (clan.id === challenge.creator_clan_id) {
-      return json(
-        {
-          error: "No puedes aceptar tu propio reto."
-        },
-            400,
-      headers
-    );
-    }
-    if (clan.captain_id !== me.id) {
-      return json(
-        {
-          error: "Solo el capitán puede aceptar un reto."
-        },
-        403,
-        headers
-      );
-    }
-    const active = await env.DB.prepare(`
-        SELECT id
-        FROM challenges
-
-        WHERE
-        (
-          creator_clan_id=?
-          OR accepter_clan_id=?
-        )
-
-        AND status IN(
-          'open',
-          'accepted'
-        )
-
-        AND id<>?
-
-        LIMIT 1
-      `).bind(
-      clan.id,
-      clan.id,
-      challengeId
-    ).first();
-    if (active) {
-      return json(
-        {
-          error: "Tu clan ya tiene otro reto activo."
-        },
-        400,
-        headers
-      );
-    }
-    await env.DB.prepare(`
-      UPDATE challenges
-
-      SET
-        accepter_clan_id=?,
-        status='accepted'
-
-      WHERE
-        id=?
-        AND status='open'
-    `).bind(
-      clan.id,
-      challengeId
-    ).run();
-    return json(
-      {
-        ok: true
-      },
-      200,
-      headers
-    );
-  }
-  const reportMatch = path.match(
-    /^\/api\/challenges\/(\d+)\/report$/
-  );
-  if (request.method === "POST" && reportMatch) {
-    const challengeId = Number(
-      reportMatch[1]
-    );
-    const data = await body(request);
-    const result = String(
-      data.result || ""
-    );
-    if (result !== "win" && result !== "loss") {
-      return json(
-        {
-          error: "Resultado no v\xE1lido."
-        },
-        400,
-        headers
-      );
-    }
-    const challenge = await env.DB.prepare(`
-        SELECT *
-        FROM challenges
-
-        WHERE
-          id=?
-          AND status='accepted'
-      `).bind(
-      challengeId
-    ).first();
-    if (!challenge) {
-      return json(
-        {
-          error: "El reto no est\xE1 disponible."
-        },
-        400,
-        headers
-      );
-    }
-    const clan = await getUserClan(
-      env,
-      me.id,
-      Number(
-        challenge.team_size
-      )
-    );
-    if (!clan) {
-      return json(
-        {
-          error: "No perteneces a un clan de esta liga."
-        },
-        403,
-        headers
-      );
-    }
-    if (![
-      challenge.creator_clan_id,
-      challenge.accepter_clan_id
-    ].includes(clan.id)) {
-      return json(
-        {
-          error: "No participas en este reto."
-        },
-        403,
-        headers
-      );
-    }
-    if (clan.captain_id !== me.id) {
-      return json(
-        {
-          error: "Solo el capitán puede confirmar el resultado."
-        },
-        403,
-        headers
-      );
-    }
-    const winner = result === "win" ? clan.id : clan.id === challenge.creator_clan_id ? challenge.accepter_clan_id : challenge.creator_clan_id;
-    await env.DB.prepare(`
-      INSERT OR REPLACE INTO reports
-      (
-        challenge_id,
-        clan_id,
-        winner_clan_id
-      )
-      VALUES(?,?,?)
-    `).bind(
-      challengeId,
-      clan.id,
-      winner
-    ).run();
-    const reports = await env.DB.prepare(`
-        SELECT *
-        FROM reports
-        WHERE challenge_id=?
-      `).bind(
-      challengeId
-    ).all();
-    if (reports.results.length < 2) {
-      return json(
-        {
-          ok: true,
-          completed: false,
-          message: "Resultado enviado. Falta el otro capitán."
-        },
-        200,
-        headers
-      );
-    }
-    const firstWinner = reports.results[0].winner_clan_id;
-    const secondWinner = reports.results[1].winner_clan_id;
-    if (firstWinner !== secondWinner) {
-      return json(
-        {
-          ok: true,
-          completed: false,
-          conflict: true,
-          message: "Los resultados no coinciden. Administración debe revisarlo."
-        },
-        200,
-        headers
-      );
-    }
-    const winnerClan = firstWinner;
-    const loserClan = winnerClan === challenge.creator_clan_id ? challenge.accepter_clan_id : challenge.creator_clan_id;
-    await env.DB.batch([
-      env.DB.prepare(`
-        UPDATE challenges
-
-        SET
-          status='completed',
-          winner_clan_id=?,
-          completed_at=CURRENT_TIMESTAMP
-
-        WHERE id=?
-      `).bind(
-        winnerClan,
-        challengeId
-      ),
-      env.DB.prepare(`
-        UPDATE scores
-
-        SET
-          played=played+1,
-          wins=wins+1,
-          points=points+3
-
-        WHERE clan_id=?
-      `).bind(
-        winnerClan
-      ),
-      env.DB.prepare(`
-        UPDATE scores
-
-        SET
-          played=played+1,
-          losses=losses+1
-
-        WHERE clan_id=?
-      `).bind(
-        loserClan
-      )
-    ]);
-    return json(
-      {
-        ok: true,
-        completed: true
-      },
-      200,
-      headers
-    );
-  }
-  if (request.method === "GET" && path === "/api/history") {
-    const clan = await getUserClan(
-      env,
-      me.id
-    );
-    const clanId = clan ? clan.id : -1;
-    const result = await env.DB.prepare(`
-        SELECT
-
-          ch.*,
-
-          creator.name
-            AS creator_name,
-
-          accepter.name
-            AS accepter_name,
-
-          winner.name
-            AS winner_name
-
-        FROM challenges ch
-
-        JOIN clans creator
-          ON creator.id=
-             ch.creator_clan_id
-
-        LEFT JOIN clans accepter
-          ON accepter.id=
-             ch.accepter_clan_id
-
-        LEFT JOIN clans winner
-          ON winner.id=
-             ch.winner_clan_id
-
-        WHERE
-          ch.status='completed'
-
-          AND
-          (
-            ch.creator_clan_id=?
-            OR
-            ch.accepter_clan_id=?
-          )
-
-        ORDER BY
-          ch.id DESC
-
-        LIMIT 100
-      `).bind(
-      clanId,
-      clanId
-    ).all();
-    return json(
-      result.results,
-      200,
-      headers
-    );
-  }
-  if (isAdmin(me)) {
-    if (request.method === "GET" && path === "/api/admin/users") {
-      const result = await env.DB.prepare(`
-          SELECT
-            id,
-            username,
-            psn_id,
-            avatar_url,
-            is_blocked,
-            blocked_until,
-            created_at
-          FROM users
-          ORDER BY id DESC
-          LIMIT 500
-        `).all();
-      return json(
-        result.results,
-        200,
-        headers
-      );
-    }
-    if (request.method === "GET" && path === "/api/admin/challenges") {
-      const result=await env.DB.prepare(`
-        SELECT ch.*, creator.name AS creator_name, creator.clan_code AS creator_code, accepter.name AS accepter_name, accepter.clan_code AS accepter_code
-        FROM challenges ch JOIN clans creator ON creator.id=ch.creator_clan_id LEFT JOIN clans accepter ON accepter.id=ch.accepter_clan_id
-        ORDER BY ch.id DESC LIMIT 500
-      `).all();
-      return json(result.results,200,headers);
-    }
-    if (request.method === "GET" && path === "/api/admin/clans") {
-      const result=await env.DB.prepare(`SELECT c.*,COALESCE(s.points,0) points,COALESCE(s.wins,0) wins,COALESCE(s.losses,0) losses,COALESCE(s.played,0) played FROM clans c LEFT JOIN scores s ON s.clan_id=c.id ORDER BY c.league,points DESC,c.name`).all();
-      return json(result.results,200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/block") {
-      const data = await body(request);
-      const userId = Number(
-        data.user_id
-      );
-      let blockedUntil;
-      if (data.permanent) {
-        blockedUntil = 0;
-      } else {
-        const minutes = Number(
-          data.minutes || 60
-        );
-        blockedUntil = Date.now() + minutes * 6e4;
-      }
-      await env.DB.prepare(`
-        UPDATE users
-
-        SET
-          is_blocked=1,
-          blocked_until=?
-
-        WHERE id=?
-      `).bind(
-        blockedUntil,
-        userId
-      ).run();
-      await env.DB.prepare(`
-        DELETE FROM sessions
-        WHERE user_id=?
-      `).bind(
-        userId
-      ).run();
-      return json(
-        {
-          ok: true
-        },
-        200,
-        headers
-      );
-    }
-    if (request.method === "POST" && path === "/api/admin/unblock") {
-      const data = await body(request);
-      const userId = Number(
-        data.user_id
-      );
-      await env.DB.prepare(`
-        UPDATE users
-
-        SET
-          is_blocked=0,
-          blocked_until=NULL
-
-        WHERE id=?
-      `).bind(
-        userId
-      ).run();
-      return json(
-        {
-          ok: true
-        },
-        200,
-        headers
-      );
-    }
-    if (request.method === "POST" && path === "/api/admin/reset-ranking") {
-      const data = await body(request);
-      const league = Number(
-        data.league || 4
-      );
-      if (![2, 3, 4].includes(
-        league
-      )) {
-        return json(
-          {
-            error: "Liga no válida."
-          },
-          400,
-          headers
-        );
-      }
-      await env.DB.prepare(`
-        UPDATE scores
-
-        SET
-          points=0,
-          wins=0,
-          losses=0,
-          played=0
-
-        WHERE league=?
-      `).bind(
-        league
-      ).run();
-      return json(
-        {
-          ok: true
-        },
-        200,
-        headers
-      );
-    }
-    if (request.method === "POST" && path === "/api/admin/set-psn") {
-      const data=await body(request); const userId=Number(data.user_id); const psn=String(data.psn_id||"").trim().slice(0,32);
-      const exists=await env.DB.prepare(`SELECT id FROM users WHERE id=?`).bind(userId).first();
-      if(!exists) return json({error:"Usuario no encontrado."},404,headers);
-      await env.DB.prepare(`UPDATE users SET psn_id=?, psn_changed_at=? WHERE id=?`).bind(psn,Date.now(),userId).run();
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/remove-member") {
-      const data=await body(request); const clanId=Number(data.clan_id); const userId=Number(data.user_id);
-      const clan=await env.DB.prepare(`SELECT * FROM clans WHERE id=?`).bind(clanId).first();
-      if(!clan) return json({error:"Clan no encontrado."},404,headers);
-      if(userId===clan.captain_id) return json({error:"No se puede expulsar al capitán sin cambiar el capitán primero."},400,headers);
-      await env.DB.prepare(`DELETE FROM members WHERE clan_id=? AND user_id=?`).bind(clanId,userId).run();
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/change-captain") {
-      const data=await body(request); const clanId=Number(data.clan_id); const userId=Number(data.user_id);
-      const member=await env.DB.prepare(`SELECT 1 FROM members WHERE clan_id=? AND user_id=?`).bind(clanId,userId).first();
-      if(!member) return json({error:"El jugador no pertenece al clan."},400,headers);
-      await env.DB.batch([
-        env.DB.prepare(`UPDATE clans SET captain_id=? WHERE id=?`).bind(userId,clanId),
-        env.DB.prepare(`UPDATE members SET role='member' WHERE clan_id=?`).bind(clanId),
-        env.DB.prepare(`UPDATE members SET role='captain' WHERE clan_id=? AND user_id=?`).bind(clanId,userId)
-      ]);
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/remove-clan") {
-      const data=await body(request); const clanId=Number(data.clan_id);
-      await env.DB.batch([
-        env.DB.prepare(`DELETE FROM members WHERE clan_id=?`).bind(clanId),
-        env.DB.prepare(`DELETE FROM invites WHERE clan_id=?`).bind(clanId),
-        env.DB.prepare(`DELETE FROM scores WHERE clan_id=?`).bind(clanId),
-        env.DB.prepare(`DELETE FROM clans WHERE id=?`).bind(clanId)
-      ]);
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/set-score") {
-      const data=await body(request); const clanId=Number(data.clan_id); const points=Number(data.points); const wins=Number(data.wins); const losses=Number(data.losses); const played=Number(data.played);
-      if([points,wins,losses,played].some(n=>!Number.isInteger(n)||n<0)) return json({error:"Estadísticas no válidas."},400,headers);
-      await env.DB.prepare(`UPDATE scores SET points=?,wins=?,losses=?,played=? WHERE clan_id=?`).bind(points,wins,losses,played,clanId).run();
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/reset-league") {
-      const data=await body(request); const league=Number(data.league); if(![2,3,4].includes(league)) return json({error:"Liga no válida."},400,headers);
-      await env.DB.batch([
-        env.DB.prepare(`UPDATE scores SET points=0,wins=0,losses=0,played=0 WHERE league=?`).bind(league),
-        env.DB.prepare(`UPDATE challenges SET status='cancelled',cancel_reason='RESET_LEAGUE',cancelled_at=CURRENT_TIMESTAMP WHERE status IN ('open','accepted') AND team_size=?`).bind(league)
-      ]);
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/edit-result") {
-      const data=await body(request);
-      const challengeId=Number(data.challenge_id);
-      const winnerClanId=Number(data.winner_clan_id);
-      const ch=await env.DB.prepare(`SELECT * FROM challenges WHERE id=?`).bind(challengeId).first();
-      if(!ch) return json({error:"Reto no encontrado."},404,headers);
-      if(![ch.creator_clan_id,ch.accepter_clan_id].includes(winnerClanId)) return json({error:"Ganador no válido."},400,headers);
-      await env.DB.prepare(`UPDATE challenges SET status='completed',winner_clan_id=?,completed_at=COALESCE(completed_at,CURRENT_TIMESTAMP) WHERE id=?`).bind(winnerClanId,challengeId).run();
-      const league=Number(ch.team_size);
-      await env.DB.prepare(`UPDATE scores SET points=0,wins=0,losses=0,played=0 WHERE league=?`).bind(league).run();
-      const all=await env.DB.prepare(`SELECT creator_clan_id,accepter_clan_id,winner_clan_id FROM challenges WHERE status='completed' AND team_size=? AND winner_clan_id IS NOT NULL`).bind(league).all();
-      for(const match of all.results){
-        const loser=match.winner_clan_id===match.creator_clan_id?match.accepter_clan_id:match.creator_clan_id;
-        await env.DB.prepare(`UPDATE scores SET played=played+1,wins=wins+1,points=points+3 WHERE clan_id=?`).bind(match.winner_clan_id).run();
-        await env.DB.prepare(`UPDATE scores SET played=played+1,losses=losses+1 WHERE clan_id=?`).bind(loser).run();
-      }
-      return json({ok:true},200,headers);
-    }
-    if (request.method === "POST" && path === "/api/admin/delete-challenge") {
-      const data = await body(request);
-      const challengeId = Number(
-        data.challenge_id
-      );
-      await env.DB.prepare(`
-        UPDATE challenges
-
-        SET
-          status='cancelled',
-          cancel_reason='ADMIN',
-          cancelled_at=CURRENT_TIMESTAMP
-
-        WHERE id=?
-      `).bind(
-        challengeId
-      ).run();
-      return json(
-        {
-          ok: true
-        },
-        200,
-        headers
-      );
-    }
-  }
-  return json(
-    {
-      error: "Ruta no encontrada."
-    },
-    404,
-    headers
-  );
 }
-__name(api, "api");
-async function handleRequest(request, env) {
-  const url = new URL(
-    request.url
-  );
-  if (url.pathname.startsWith(
-    "/api/"
-  )) {
-    return api(
-      request,
-      env,
-      url.pathname
-    );
+
+
+async function viewClan(id){
+
+  try{
+
+    const data=
+      await api("/clans/"+id);
+
+    let members="";
+
+    data.members.forEach(member=>{
+
+      members+=`
+        <div class="admin-row">
+          <strong>
+            ${escapeHtml(member.username)}
+          </strong>
+
+          <span class="badge">
+            ${escapeHtml(member.role)}
+          </span>
+
+          ${
+            member.psn_id
+            ?
+            `<span>${escapeHtml(member.psn_id)}</span>`
+            :
+            ""
+          }
+        </div>
+      `;
+
+    });
+
+    const clan=data.clan;
+
+    document.getElementById("clanList").innerHTML=`
+
+      <div class="card" style="grid-column:1/-1;">
+
+        <div class="clan-cell">
+
+          <img
+            class="profile-avatar"
+            style="width:100px;height:100px;border-radius:10px;"
+            src="${escapeHtml(clan.logo_url || defaultLogo())}"
+          >
+
+          <div>
+
+            <h1>
+              ${escapeHtml(clan.name)}
+            </h1>
+
+            <div class="clan-code">
+              ${escapeHtml(clan.clan_code)}
+            </div>
+
+            <p style="color:#888;">
+              Liga ${clan.league} VS ${clan.league}
+            </p>
+
+          </div>
+
+        </div>
+
+        <br>
+
+        <h2>Miembros</h2>
+
+        ${members}
+
+        <br>
+
+        ${
+          currentUser &&
+          clan.captain_id===currentUser.id
+          ?
+          `
+          <button
+            class="btn btn-red"
+            onclick="invitePlayer(${clan.id})"
+          >
+            INVITAR JUGADOR
+          </button>
+          `
+          :
+          ""
+        }
+
+        <br><br>
+
+        <button
+          class="btn btn-dark"
+          onclick="loadClans()"
+        >
+          ← Volver
+        </button>
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    toast(error.message);
+
   }
-  if (env.ASSETS) {
-    return env.ASSETS.fetch(
-      request
-    );
-  }
-  return new Response(
-    "BlackOpsLALIGA",
-    {
-      status: 200
-    }
-  );
+
 }
-__name(handleRequest, "handleRequest");
-var worker_default = {
-  async fetch(request, env) {
-    try {
-      return await handleRequest(
-        request,
-        env
-      );
-    } catch (error) {
-      console.error(
-        "WORKER ERROR:",
-        error
-      );
-      return json(
-        {
-          error: "Error interno del servidor",
-          detail: error.message
-        },
-        500,
-        cors(request)
-      );
-    }
+
+
+async function invitePlayer(clanId){
+
+  const username=
+    prompt(
+      "Escribe el nombre exacto del jugador:"
+    );
+
+  if(!username){
+    return;
   }
-};
-export {
-  worker_default as default
-};
-//# sourceMappingURL=worker.js.map
+
+  try{
+
+    const users=
+      await api(
+        "/users?q="+encodeURIComponent(username)
+      );
+
+    const user=
+      users.find(
+        u=>u.username.toLowerCase()===username.toLowerCase()
+      );
+
+    if(!user){
+
+      toast("Jugador no encontrado.");
+      return;
+
+    }
+
+    await api("/invites",{
+      method:"POST",
+      body:JSON.stringify({
+        clan_id:clanId,
+        user_id:user.id
+      })
+    });
+
+    toast("Invitación enviada.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function createClan(){
+
+  const name=
+    document.getElementById("clanName").value.trim();
+
+  const clan_code=
+    document.getElementById("clanCode").value.trim();
+
+  const logo_url=
+    document.getElementById("clanLogo").value.trim();
+
+  const league=
+    Number(
+      document.getElementById("clanLeague").value
+    );
+
+  if(!name || clan_code.length!==4){
+
+    toast(
+      "Pon un nombre y una insignia de 4 letras."
+    );
+
+    return;
+
+  }
+
+  try{
+
+    await api("/clans",{
+      method:"POST",
+      body:JSON.stringify({
+        name,
+        clan_code,
+        logo_url,
+        league
+      })
+    });
+
+    toast("Clan creado correctamente.");
+
+    showPage("clans");
+
+    loadClans();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function loadProfile(){
+
+  if(!currentUser){
+
+    showPage("login");
+    return;
+
+  }
+
+  try{
+
+    const data=
+      await api("/users/"+currentUser.id);
+
+    const user=data.user;
+
+    document.getElementById("profileUsername")
+      .textContent=user.username;
+
+    document.getElementById("profilePsn")
+      .value=user.psn_id || "";
+
+    document.getElementById("profileAvatarUrl")
+      .value=user.avatar_url || "";
+
+    document.getElementById("profileAvatar")
+      .src=user.avatar_url || defaultLogo();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function saveProfile(){
+
+  const psn=
+    document.getElementById("profilePsn")
+      .value.trim();
+
+  const avatar=
+    document.getElementById("profileAvatarUrl")
+      .value.trim();
+
+  try{
+
+    await api("/profile",{
+      method:"PUT",
+      body:JSON.stringify({
+        psn_id:psn,
+        avatar_url:avatar
+      })
+    });
+
+    toast("Perfil actualizado.");
+
+    await loadMe();
+
+    loadProfile();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function loadAdmin(){
+
+  if(!isAdmin){
+
+    toast("No tienes permisos.");
+    return;
+
+  }
+
+  try{
+
+    const users=
+      await api("/admin/users");
+
+    document.getElementById("adminUsers").innerHTML=
+      users.map(user=>`
+
+        <div class="admin-row">
+
+          <strong>
+            #${user.id}
+            ${escapeHtml(user.username)}
+          </strong>
+
+          <span>
+            PSN:
+            ${escapeHtml(user.psn_id || "-")}
+          </span>
+
+          <button
+            class="btn btn-dark"
+            onclick="adminSetPSN(${user.id})"
+          >
+            CAMBIAR ID
+          </button>
+
+          ${
+            user.is_blocked
+            ?
+            `<button
+              class="btn btn-dark"
+              onclick="adminUnblock(${user.id})"
+            >
+              DESBLOQUEAR
+            </button>`
+            :
+            `<button
+              class="btn btn-danger"
+              onclick="adminBlock(${user.id})"
+            >
+              EXPULSAR/BLOQUEAR
+            </button>`
+          }
+
+        </div>
+
+      `).join("");
+
+
+    const clans=
+      await api("/admin/clans");
+
+    document.getElementById("adminClans").innerHTML=
+      clans.map(clan=>`
+
+        <div class="admin-row">
+
+          <strong>
+            ${escapeHtml(clan.name)}
+          </strong>
+
+          <span>
+            [${escapeHtml(clan.clan_code)}]
+          </span>
+
+          <span>
+            Liga ${clan.league}
+          </span>
+
+          <span>
+            ${clan.points} pts
+          </span>
+
+          <button
+            class="btn btn-dark"
+            onclick="adminScore(${clan.id})"
+          >
+            MODIFICAR RESULTADOS
+          </button>
+
+          <button
+            class="btn btn-danger"
+            onclick="adminRemoveClan(${clan.id})"
+          >
+            ELIMINAR CLAN
+          </button>
+
+        </div>
+
+      `).join("");
+
+
+    const challenges=
+      await api("/admin/challenges");
+
+    document.getElementById("adminChallenges").innerHTML=
+      challenges.map(ch=>`
+
+        <div class="admin-row">
+
+          <strong>
+            #${ch.id}
+          </strong>
+
+          <span>
+            ${escapeHtml(ch.creator_name)}
+          </span>
+
+          <span>
+            VS
+          </span>
+
+          <span>
+            ${escapeHtml(ch.accepter_name || "?")}
+          </span>
+
+          <span>
+            ${escapeHtml(ch.status)}
+          </span>
+
+          ${
+            ch.status==="completed"
+            ?
+            `
+            <button
+              class="btn btn-dark"
+              onclick="adminEditResult(${ch.id},${ch.creator_clan_id},${ch.accepter_clan_id})"
+            >
+              CAMBIAR GANADOR
+            </button>
+            `
+            :
+            ""
+          }
+
+          <button
+            class="btn btn-danger"
+            onclick="adminDeleteChallenge(${ch.id})"
+          >
+            CANCELAR RETO
+          </button>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminBlock(id){
+
+  const permanent=
+    confirm(
+      "¿Bloqueo permanente?"
+    );
+
+  let minutes=60;
+
+  if(!permanent){
+
+    minutes=Number(
+      prompt(
+        "¿Cuántos minutos?",
+        "60"
+      )
+    );
+
+  }
+
+  try{
+
+    await api("/admin/block",{
+      method:"POST",
+      body:JSON.stringify({
+        user_id:id,
+        permanent,
+        minutes
+      })
+    });
+
+    toast("Usuario bloqueado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminUnblock(id){
+
+  try{
+
+    await api("/admin/unblock",{
+      method:"POST",
+      body:JSON.stringify({
+        user_id:id
+      })
+    });
+
+    toast("Usuario desbloqueado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminSetPSN(id){
+
+  const psn=
+    prompt("Nuevo ID de PlayStation:");
+
+  if(psn===null){
+    return;
+  }
+
+  try{
+
+    await api("/admin/set-psn",{
+      method:"POST",
+      body:JSON.stringify({
+        user_id:id,
+        psn_id:psn
+      })
+    });
+
+    toast("ID cambiado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminRemoveClan(id){
+
+  if(
+    !confirm(
+      "ATENCIÓN: esto eliminará el clan. ¿Continuar?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api("/admin/remove-clan",{
+      method:"POST",
+      body:JSON.stringify({
+        clan_id:id
+      })
+    });
+
+    toast("Clan eliminado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminScore(id){
+
+  const points=
+    Number(prompt("Puntos:","0"));
+
+  const wins=
+    Number(prompt("Victorias:","0"));
+
+  const losses=
+    Number(prompt("Derrotas:","0"));
+
+  const played=
+    Number(prompt("Partidos jugados:","0"));
+
+  try{
+
+    await api("/admin/set-score",{
+      method:"POST",
+      body:JSON.stringify({
+        clan_id:id,
+        points,
+        wins,
+        losses,
+        played
+      })
+    });
+
+    toast("Estadísticas modificadas.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminEditResult(
+  challengeId,
+  creatorId,
+  accepterId
+){
+
+  const winner=
+    prompt(
+      "Escribe el ID del clan ganador:\n\n"+
+      "Clan 1: "+creatorId+
+      "\nClan 2: "+accepterId
+    );
+
+  if(winner===null){
+    return;
+  }
+
+  try{
+
+    await api("/admin/edit-result",{
+      method:"POST",
+      body:JSON.stringify({
+        challenge_id:challengeId,
+        winner_clan_id:Number(winner)
+      })
+    });
+
+    toast("Resultado modificado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function adminDeleteChallenge(id){
+
+  if(
+    !confirm(
+      "¿Cancelar este reto?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api("/admin/delete-challenge",{
+      method:"POST",
+      body:JSON.stringify({
+        challenge_id:id
+      })
+    });
+
+    toast("Reto cancelado.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+async function resetLeague(){
+
+  const league=
+    Number(
+      document.getElementById("resetLeague").value
+    );
+
+  if(
+    !confirm(
+      "ATENCIÓN.\n\n"+
+      "Esto reiniciará los puntos, victorias y derrotas de toda la liga.\n\n"+
+      "¿Estás seguro?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api("/admin/reset-league",{
+      method:"POST",
+      body:JSON.stringify({
+        league
+      })
+    });
+
+    toast("Liga reiniciada.");
+
+    loadAdmin();
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+function defaultLogo(){
+
+  return "data:image/svg+xml,"+
+  "%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E"+
+  "%3Crect width='200' height='200' fill='%231b1f24'/%3E"+
+  "%3Ctext x='100' y='120' text-anchor='middle' fill='%23d71920' font-size='70' font-weight='bold'%3EBO2%3C/text%3E"+
+  "%3C/svg%3E";
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+async function start(){
+
+  await loadMe();
+
+}
+
+
+start();
+
+</script>
+
+</body>
+</html>
