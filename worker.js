@@ -483,7 +483,7 @@ async function api(request, env, path) {
         400,
         headers
       );
-       }
+    }
     try {
       const passwordHash = await hashPassword(
         password
@@ -493,7 +493,7 @@ async function api(request, env, path) {
           (
             username,
             password_hash
-          )
+               )
           VALUES (?,?)
         `).bind(
         username,
@@ -788,7 +788,7 @@ async function api(request, env, path) {
     const values = [
       "%" + query + "%"
     ];
-    if ([2, 3, 4].includes(
+    if ([1, 2, 3, 4].includes(
       league
     )) {
       sql += " AND c.league=?";
@@ -911,7 +911,7 @@ async function api(request, env, path) {
     const league = Number(
       new URL(request.url).searchParams.get("league") || 4
     );
-    if (![2, 3, 4].includes(
+    if (![1, 2, 3, 4].includes(
       league
     )) {
       return json(
@@ -968,7 +968,7 @@ async function api(request, env, path) {
       headers
     );
   }
-   if (request.method === "POST" && path === "/api/invites") {
+  if (request.method === "POST" && path === "/api/invites") {
     const data = await body(request);
     const clanId = Number(data.clan_id);
     const inviteeId = Number(data.user_id);
@@ -988,7 +988,7 @@ async function api(request, env, path) {
     return json({ ok:true, id:created.meta.last_row_id },200,headers);
   }
   if (request.method === "GET" && path === "/api/invites") {
-    const result = await env.DB.prepare(`
+       const result = await env.DB.prepare(`
       SELECT i.id,i.clan_id,i.inviter_id,i.invitee_id,i.status,i.created_at,c.name,c.clan_code,c.logo_url
       FROM invites i JOIN clans c ON c.id=i.clan_id
       WHERE i.invitee_id=? AND i.status='pending' ORDER BY i.id DESC
@@ -1192,6 +1192,45 @@ async function api(request, env, path) {
       })()
     }));
     return json(rows, 200, headers);
+  }
+
+  if (request.method === "GET" && path === "/api/my-challenges") {
+    await expireChallenges(env);
+    const result = await env.DB.prepare(`
+      SELECT
+        ch.*,
+        creator.name AS creator_clan_name,
+        creator.clan_code AS creator_clan_code,
+        accepter.name AS accepter_clan_name,
+        accepter.clan_code AS accepter_clan_code
+      FROM challenges ch
+      JOIN clans creator ON creator.id=ch.creator_clan_id
+      LEFT JOIN clans accepter ON accepter.id=ch.accepter_clan_id
+      WHERE EXISTS (
+        SELECT 1
+        FROM members mine
+        WHERE mine.user_id=?
+          AND (mine.clan_id=ch.creator_clan_id OR mine.clan_id=ch.accepter_clan_id)
+      )
+      ORDER BY ch.id DESC
+      LIMIT 200
+    `).bind(me.id).all();
+
+    const rows=result.results.map(x=>({
+      ...x,
+      league:Number(x.team_size || x.league || 4),
+      team_size:Number(x.team_size || x.league || 4),
+      mode:x.one_vs_one_mode || (()=>{
+        try{
+          const parsed=JSON.parse(x.game_modes || "[]");
+          return Array.isArray(parsed)&&parsed[0] ? parsed[0] : (Number(x.team_size)===1 ? "franco" : "snd");
+        }catch(e){
+          return Number(x.team_size)===1 ? "franco" : "snd";
+        }
+      })()
+    }));
+
+    return json(rows,200,headers);
   }
 
   const detailMatch = path.match(/^\/api\/challenges\/(\d+)$/);
@@ -1444,7 +1483,7 @@ async function api(request, env, path) {
     await env.DB.prepare(`
       INSERT OR REPLACE INTO reports
       (
-        challenge_id,
+            challenge_id,
         clan_id,
         winner_clan_id
       )
@@ -1453,7 +1492,7 @@ async function api(request, env, path) {
       challengeId,
       clan.id,
       winner
-          ).run();
+    ).run();
     const reports = await env.DB.prepare(`
         SELECT *
         FROM reports
@@ -1748,7 +1787,7 @@ async function api(request, env, path) {
       const league = Number(
         data.league || 4
       );
-      if (![2, 3, 4].includes(
+      if (![1, 2, 3, 4].includes(
         league
       )) {
         return json(
@@ -1823,7 +1862,7 @@ async function api(request, env, path) {
       return json({ok:true},200,headers);
     }
     if (request.method === "POST" && path === "/api/admin/reset-league") {
-      const data=await body(request); const league=Number(data.league); if(![2,3,4].includes(league)) return json({error:"Liga no válida."},400,headers);
+      const data=await body(request); const league=Number(data.league); if(![1,2,3,4].includes(league)) return json({error:"Liga no válida."},400,headers);
       await env.DB.batch([
         env.DB.prepare(`UPDATE scores SET points=0,wins=0,losses=0,played=0 WHERE league=?`).bind(league),
         env.DB.prepare(`UPDATE challenges SET status='cancelled',cancel_reason='RESET_LEAGUE',cancelled_at=CURRENT_TIMESTAMP WHERE status IN ('open','accepted') AND team_size=?`).bind(league)
