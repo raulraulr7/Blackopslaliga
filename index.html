@@ -12,6 +12,10 @@
   padding:0;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   font-family:Arial,Helvetica,sans-serif;
   background:#080a0d;
@@ -19,7 +23,9 @@ body{
   min-height:100vh;
 }
 
-button,input,select{
+button,
+input,
+select{
   font:inherit;
 }
 
@@ -43,13 +49,15 @@ header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 35px;
+  gap:12px;
+  padding:0 30px;
 }
 
 .logo{
   font-weight:900;
-  font-size:22px;
+  font-size:21px;
   letter-spacing:1px;
+  white-space:nowrap;
 }
 
 .logo span{
@@ -69,18 +77,20 @@ header{
 
 nav{
   display:flex;
-  gap:8px;
+  align-items:center;
+  gap:5px;
 }
 
 nav button{
   background:none;
-  color:#bbb;
+  color:#aaa;
   border:0;
-  padding:12px 15px;
+  padding:11px 12px;
   border-radius:6px;
 }
 
-nav button:hover{
+nav button:hover,
+nav button.active{
   color:#fff;
   background:#171a1e;
 }
@@ -88,7 +98,8 @@ nav button:hover{
 .user-area{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:7px;
+  min-width:0;
 }
 
 .avatar-small{
@@ -117,8 +128,13 @@ main{
   position:relative;
   overflow:hidden;
   background:
-    linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.88)),
-    radial-gradient(circle at center,#34383d 0%,#111418 40%,#050608 100%);
+    linear-gradient(rgba(0,0,0,.60),rgba(0,0,0,.90)),
+    radial-gradient(
+      circle at center,
+      #34383d 0%,
+      #111418 42%,
+      #050608 100%
+    );
 }
 
 .hero:before{
@@ -137,17 +153,18 @@ main{
 .hero-content{
   position:relative;
   z-index:2;
+  width:100%;
   max-width:900px;
   padding:30px;
 }
 
 .hero h1{
   font-size:clamp(48px,9vw,100px);
+  line-height:.95;
   font-weight:900;
   letter-spacing:4px;
   text-transform:uppercase;
   text-shadow:0 5px 30px #000;
-  line-height:.95;
 }
 
 .hero h1 span{
@@ -157,6 +174,7 @@ main{
 .hero p{
   color:#aaa;
   font-size:18px;
+  line-height:1.5;
   margin:20px 0 35px;
 }
 
@@ -168,19 +186,22 @@ main{
   transition:.2s;
 }
 
+.btn:hover{
+  transform:translateY(-1px);
+}
+
 .btn-red{
   background:#d71920;
-  color:white;
+  color:#fff;
 }
 
 .btn-red:hover{
   background:#f0262d;
-  transform:translateY(-1px);
 }
 
 .btn-dark{
   background:#1b1f24;
-  color:white;
+  color:#fff;
   border:1px solid #343941;
 }
 
@@ -194,6 +215,7 @@ main{
 }
 
 .container{
+  width:100%;
   max-width:1250px;
   margin:auto;
   padding:35px 22px 70px;
@@ -206,6 +228,7 @@ main{
 
 .page-subtitle{
   color:#888;
+  line-height:1.5;
   margin-bottom:30px;
 }
 
@@ -251,8 +274,9 @@ main{
 .form-group input,
 .form-group select{
   width:100%;
+  min-height:44px;
   background:#0a0c0f;
-  color:white;
+  color:#fff;
   border:1px solid #343941;
   padding:12px;
   border-radius:6px;
@@ -313,8 +337,8 @@ main{
 }
 
 .rank{
-  font-weight:900;
   width:55px;
+  font-weight:900;
 }
 
 .clan-cell{
@@ -330,6 +354,7 @@ main{
   object-fit:cover;
   background:#24282d;
   border:1px solid #3a3f46;
+  flex-shrink:0;
 }
 
 .clan-code{
@@ -337,6 +362,7 @@ main{
   font-size:11px;
   font-weight:900;
   letter-spacing:2px;
+  margin-top:3px;
 }
 
 .points{
@@ -365,6 +391,7 @@ main{
 
 .challenge-info{
   flex:1;
+  min-width:0;
 }
 
 .challenge-title{
@@ -376,6 +403,7 @@ main{
 .challenge-maps{
   color:#888;
   font-size:13px;
+  line-height:1.5;
 }
 
 .surprise{
@@ -391,6 +419,7 @@ main{
   color:#bbb;
   font-size:11px;
   font-weight:bold;
+  margin-right:4px;
 }
 
 .rules h2{
@@ -432,9 +461,9 @@ main{
 
 .admin-row{
   display:flex;
-  gap:10px;
-  flex-wrap:wrap;
   align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
   padding:13px 0;
   border-bottom:1px solid #252a30;
 }
@@ -442,7 +471,7 @@ main{
 .admin-row input,
 .admin-row select{
   background:#080a0d;
-  color:white;
+  color:#fff;
   border:1px solid #333;
   padding:9px;
   border-radius:5px;
@@ -453,6 +482,7 @@ main{
   background:#161a1f;
   border-left:3px solid #d71920;
   color:#bbb;
+  line-height:1.5;
   margin-bottom:20px;
 }
 
@@ -460,12 +490,17 @@ main{
   position:fixed;
   bottom:25px;
   right:25px;
+  max-width:90%;
   z-index:9999;
   background:#171b20;
   border:1px solid #343941;
   padding:14px 18px;
   border-radius:7px;
   box-shadow:0 10px 30px #000;
+}
+
+.back-button{
+  margin-bottom:20px;
 }
 
 footer{
@@ -476,7 +511,7 @@ footer{
 }
 
 /* =========================
-   MOVIL
+   MÓVIL
 ========================= */
 
 @media(max-width:700px){
@@ -492,9 +527,8 @@ footer{
   }
 
   .logo{
-    font-size:16px;
+    font-size:15px;
     letter-spacing:.5px;
-    white-space:nowrap;
   }
 
   .mobile-menu-btn{
@@ -528,13 +562,13 @@ footer{
 
   .user-area{
     margin-left:auto;
-    gap:5px;
-    max-width:48%;
+    max-width:45%;
     overflow:hidden;
+    gap:4px;
   }
 
   .user-area .btn{
-    padding:8px 9px;
+    padding:8px 8px;
     font-size:10px;
     white-space:nowrap;
   }
@@ -542,7 +576,6 @@ footer{
   .avatar-small{
     width:31px;
     height:31px;
-    flex-shrink:0;
   }
 
   .hero{
@@ -552,7 +585,6 @@ footer{
 
   .hero-content{
     padding:15px;
-    width:100%;
   }
 
   .hero h1{
@@ -562,7 +594,6 @@ footer{
 
   .hero p{
     font-size:15px;
-    line-height:1.5;
     margin:18px 0 25px;
   }
 
@@ -572,7 +603,6 @@ footer{
   }
 
   .container{
-    width:100%;
     padding:22px 12px 45px;
   }
 
@@ -582,7 +612,7 @@ footer{
 
   .page-subtitle{
     font-size:14px;
-    line-height:1.45;
+    margin-bottom:20px;
   }
 
   .card{
@@ -612,7 +642,6 @@ footer{
 
   .ranking{
     padding:0;
-    overflow-x:auto;
   }
 
   .ranking table{
@@ -636,22 +665,14 @@ footer{
     width:100%;
   }
 
-  .challenge-title{
-    font-size:16px;
-  }
-
-  .challenge-maps{
-    line-height:1.5;
-  }
-
-  .challenge>div:last-child{
+  .challenge > div:last-child{
     width:100%;
     display:flex;
     flex-wrap:wrap;
     gap:8px;
   }
 
-  .challenge>div:last-child .btn{
+  .challenge > div:last-child .btn{
     flex:1;
     min-width:120px;
   }
@@ -667,7 +688,7 @@ footer{
     font-size:16px;
   }
 
-  .form>.btn{
+  .form > .btn{
     width:100%;
     margin-top:8px;
   }
@@ -692,7 +713,6 @@ footer{
   .admin-row{
     align-items:stretch;
     flex-direction:column;
-    gap:8px;
   }
 
   .admin-row input,
@@ -709,7 +729,6 @@ footer{
   .rules p,
   .rules li{
     font-size:14px;
-    line-height:1.65;
   }
 
   footer{
@@ -722,7 +741,7 @@ footer{
 @media(max-width:380px){
 
   .logo{
-    font-size:14px;
+    font-size:13px;
   }
 
   .hero h1{
@@ -750,8 +769,6 @@ footer{
   </button>
 
   <nav id="mainNav">
-
-    <nav id="mainNav">
 
     <button onclick="showPage('home')">
       🏠 Inicio
@@ -781,15 +798,12 @@ footer{
       📜 Reglas
     </button>
 
-</nav>
-
-    <button onclick="showPage('rules')">
-      Reglas
-    </button>
-
   </nav>
 
-  <div class="user-area" id="userArea">
+  <div
+    class="user-area"
+    id="userArea"
+  >
 
     <button
       class="btn btn-dark"
@@ -804,7 +818,10 @@ footer{
 
 <main>
 
-<section id="page-home" class="page">
+<section
+  id="page-home"
+  class="page"
+>
 
   <div class="hero">
 
@@ -833,9 +850,19 @@ footer{
 </section>
 
 
-<section id="page-login" class="page hidden">
+<section
+  id="page-login"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <div class="auth-box card">
 
@@ -860,13 +887,17 @@ footer{
 
       <div id="loginForm">
 
-        <h2>Iniciar sesión</h2>
+        <h2>
+          Iniciar sesión
+        </h2>
 
         <br>
 
         <div class="form-group">
 
-          <label>Usuario</label>
+          <label>
+            Usuario
+          </label>
 
           <input
             id="loginUser"
@@ -878,7 +909,9 @@ footer{
 
         <div class="form-group">
 
-          <label>Contraseña</label>
+          <label>
+            Contraseña
+          </label>
 
           <input
             id="loginPass"
@@ -902,13 +935,17 @@ footer{
         class="hidden"
       >
 
-        <h2>Crear cuenta</h2>
+        <h2>
+          Crear cuenta
+        </h2>
 
         <br>
 
         <div class="form-group">
 
-          <label>Usuario</label>
+          <label>
+            Usuario
+          </label>
 
           <input
             id="registerUser"
@@ -920,7 +957,9 @@ footer{
 
         <div class="form-group">
 
-          <label>Contraseña</label>
+          <label>
+            Contraseña
+          </label>
 
           <input
             id="registerPass"
@@ -939,15 +978,6 @@ footer{
 
       </div>
 
-      <br>
-
-      <button
-        class="btn btn-dark"
-        onclick="goBack()"
-      >
-        ← Atrás
-      </button>
-
     </div>
 
   </div>
@@ -955,9 +985,19 @@ footer{
 </section>
 
 
-<section id="page-ranking" class="page hidden">
+<section
+  id="page-ranking"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Ranking
@@ -1011,9 +1051,19 @@ footer{
 </section>
 
 
-<section id="page-challenges" class="page hidden">
+<section
+  id="page-challenges"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Retos
@@ -1048,9 +1098,19 @@ footer{
 </section>
 
 
-<section id="page-clans" class="page hidden">
+<section
+  id="page-clans"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Clanes
@@ -1074,7 +1134,7 @@ footer{
           style="
             flex:1;
             background:#080a0d;
-            color:white;
+            color:#fff;
             border:1px solid #333;
             padding:12px;
             border-radius:6px;
@@ -1086,7 +1146,7 @@ footer{
           class="btn btn-red"
           onclick="loadClans()"
         >
-          Buscar
+          BUSCAR
         </button>
 
       </div>
@@ -1114,9 +1174,19 @@ footer{
 </section>
 
 
-<section id="page-create-clan" class="page hidden">
+<section
+  id="page-create-clan"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <div class="card form">
 
@@ -1152,9 +1222,9 @@ footer{
           placeholder="VGAM"
           oninput="
             this.value=this.value
-            .replace(/[^a-zA-Z]/g,'')
-            .toUpperCase()
-            .slice(0,4)
+              .replace(/[^a-zA-Z]/g,'')
+              .toUpperCase()
+              .slice(0,4)
           "
         >
 
@@ -1204,13 +1274,6 @@ footer{
         CREAR CLAN
       </button>
 
-      <button
-        class="btn btn-dark"
-        onclick="goBack()"
-      >
-        ← Atrás
-      </button>
-
     </div>
 
   </div>
@@ -1218,9 +1281,19 @@ footer{
 </section>
 
 
-<section id="page-rules" class="page hidden">
+<section
+  id="page-rules"
+  class="page hidden"
+>
 
   <div class="container rules">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Reglamento
@@ -1295,14 +1368,18 @@ footer{
   </div>
 
 </section>
-<section id="page-my-clan" class="page hidden">
+
+
+<section
+  id="page-my-clan"
+  class="page hidden"
+>
 
   <div class="container">
 
     <button
-      class="btn btn-dark"
+      class="btn btn-dark back-button"
       onclick="goBack()"
-      style="margin-bottom:20px;"
     >
       ← VOLVER
     </button>
@@ -1312,21 +1389,33 @@ footer{
     </h1>
 
     <p class="page-subtitle">
-      Gestiona tu clan y sus jugadores.
+      Gestiona tu clan, jugadores y retos.
     </p>
 
-    <div id="myClanContent">
-
+    <div
+      id="myClanContent"
+    >
       <div class="card">
-        Cargando información del clan...
+        Cargando tu clan...
       </div>
-
     </div>
 
   </div>
 
 </section>
+<section
+  id="page-profile"
+  class="page hidden"
+>
+
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Mi perfil
@@ -1347,7 +1436,9 @@ footer{
 
         <br><br>
 
-        <strong id="profileUsername"></strong>
+        <strong
+          id="profileUsername"
+        ></strong>
 
       </div>
 
@@ -1405,16 +1496,26 @@ footer{
 </section>
 
 
-<section id="page-admin" class="page hidden">
+<section
+  id="page-admin"
+  class="page hidden"
+>
 
   <div class="container">
+
+    <button
+      class="btn btn-dark back-button"
+      onclick="goBack()"
+    >
+      ← VOLVER
+    </button>
 
     <h1 class="page-title">
       Panel de administración
     </h1>
 
     <p class="page-subtitle">
-      Control completo de BlackOps2Liga
+      Control completo de BlackOps2Liga.
     </p>
 
     <div class="card admin-section">
@@ -1525,15 +1626,26 @@ let currentUser=null;
 let isAdmin=false;
 let currentPage="home";
 let previousPage="home";
+let myClan=null;
 
+
+/* =========================
+   MENÚ MÓVIL
+========================= */
 
 function toggleMobileMenu(){
 
   const nav=
-    document.getElementById("mainNav");
+    document.getElementById(
+      "mainNav"
+    );
 
   if(nav){
-    nav.classList.toggle("mobile-open");
+
+    nav.classList.toggle(
+      "mobile-open"
+    );
+
   }
 
 }
@@ -1542,55 +1654,89 @@ function toggleMobileMenu(){
 function closeMobileMenu(){
 
   const nav=
-    document.getElementById("mainNav");
+    document.getElementById(
+      "mainNav"
+    );
 
   if(nav){
-    nav.classList.remove("mobile-open");
+
+    nav.classList.remove(
+      "mobile-open"
+    );
+
   }
 
 }
 
 
+/* =========================
+   AVISOS
+========================= */
+
 function toast(message){
 
   const el=
-    document.getElementById("toast");
+    document.getElementById(
+      "toast"
+    );
 
-  el.textContent=message;
+  if(!el){
+    return;
+  }
 
-  el.classList.remove("hidden");
+  el.textContent=
+    message;
+
+  el.classList.remove(
+    "hidden"
+  );
 
   clearTimeout(
     window.toastTimer
   );
 
   window.toastTimer=
-    setTimeout(()=>{
-
-      el.classList.add("hidden");
-
-    },3000);
+    setTimeout(
+      ()=>{
+        el.classList.add(
+          "hidden"
+        );
+      },
+      3000
+    );
 
 }
 
 
-async function api(path,options={}){
+/* =========================
+   API
+========================= */
+
+async function api(
+  path,
+  options={}
+){
 
   const response=
     await fetch(
       API+path,
       {
         credentials:"include",
+
         headers:{
           "Content-Type":
             "application/json",
+
           ...(options.headers||{})
         },
+
         ...options
       }
     );
 
+
   let data={};
+
 
   try{
 
@@ -1598,6 +1744,7 @@ async function api(path,options={}){
       await response.json();
 
   }catch(error){}
+
 
   if(!response.ok){
 
@@ -1608,10 +1755,15 @@ async function api(path,options={}){
 
   }
 
+
   return data;
 
 }
 
+
+/* =========================
+   NAVEGACIÓN
+========================= */
 
 function showPage(page){
 
@@ -1623,16 +1775,24 @@ function showPage(page){
   currentPage=
     page;
 
+
   document
-    .querySelectorAll(".page")
+    .querySelectorAll(
+      ".page"
+    )
     .forEach(
-      p=>p.classList.add("hidden")
+      p=>
+        p.classList.add(
+          "hidden"
+        )
     );
+
 
   const target=
     document.getElementById(
       "page-"+page
     );
+
 
   if(target){
 
@@ -1642,6 +1802,7 @@ function showPage(page){
 
   }
 
+
   window.scrollTo({
     top:0,
     behavior:"smooth"
@@ -1649,22 +1810,37 @@ function showPage(page){
 
 
   if(page==="ranking"){
+
     loadRanking(4);
+
   }
 
 
   if(page==="challenges"){
+
     loadChallenges(4);
+
   }
 
 
   if(page==="clans"){
+
     loadClans();
+
   }
 
 
   if(page==="profile"){
+
     loadProfile();
+
+  }
+
+
+  if(page==="my-clan"){
+
+    loadMyClan();
+
   }
 
 
@@ -1682,13 +1858,25 @@ function showPage(page){
 
 function goBack(){
 
-  showPage(
+  const target=
     previousPage||
-    "home"
+    "home";
+
+
+  previousPage=
+    "home";
+
+
+  showPage(
+    target
   );
 
 }
 
+
+/* =========================
+   LOGIN / REGISTRO
+========================= */
 
 function authTab(type){
 
@@ -1758,17 +1946,25 @@ async function login(){
 
   const username=
     document
-      .getElementById("loginUser")
+      .getElementById(
+        "loginUser"
+      )
       .value
       .trim();
 
+
   const password=
     document
-      .getElementById("loginPass")
+      .getElementById(
+        "loginPass"
+      )
       .value;
 
 
-  if(!username||!password){
+  if(
+    !username||
+    !password
+  ){
 
     toast(
       "Completa todos los campos."
@@ -1802,7 +1998,9 @@ async function login(){
 
     await loadMe();
 
-    showPage("home");
+    showPage(
+      "home"
+    );
 
 
   }catch(error){
@@ -1826,6 +2024,7 @@ async function register(){
       .value
       .trim();
 
+
   const password=
     document
       .getElementById(
@@ -1834,7 +2033,10 @@ async function register(){
       .value;
 
 
-  if(!username||!password){
+  if(
+    !username||
+    !password
+  ){
 
     toast(
       "Completa todos los campos."
@@ -1868,7 +2070,9 @@ async function register(){
 
     await loadMe();
 
-    showPage("home");
+    showPage(
+      "home"
+    );
 
 
   }catch(error){
@@ -1898,31 +2102,44 @@ async function logout(){
 
   currentUser=null;
   isAdmin=false;
+  myClan=null;
 
   updateHeader();
 
-  showPage("home");
+  showPage(
+    "home"
+  );
 
 }
 
+
+/* =========================
+   USUARIO
+========================= */
 
 async function loadMe(){
 
   try{
 
     const data=
-      await api("/me");
+      await api(
+        "/me"
+      );
+
 
     currentUser=
       data.user;
 
+
     isAdmin=
       !!data.admin;
+
 
   }catch(error){
 
     currentUser=null;
     isAdmin=false;
+    myClan=null;
 
   }
 
@@ -1938,6 +2155,36 @@ function updateHeader(){
     document.getElementById(
       "userArea"
     );
+
+
+  const myClanButton=
+    document.getElementById(
+      "myClanMenuBtn"
+    );
+
+
+  if(
+    myClanButton
+  ){
+
+    if(
+      currentUser &&
+      myClan
+    ){
+
+      myClanButton.classList.remove(
+        "hidden"
+      );
+
+    }else{
+
+      myClanButton.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
 
 
   if(!currentUser){
@@ -1967,7 +2214,9 @@ function updateHeader(){
 
     <img
       class="avatar-small"
-      src="${escapeHtml(avatar)}"
+      src="${escapeHtml(
+        avatar
+      )}"
       alt=""
     >
 
@@ -2007,7 +2256,13 @@ function updateHeader(){
 }
 
 
-async function loadRanking(league){
+/* =========================
+   RANKING
+========================= */
+
+async function loadRanking(
+  league
+){
 
   const body=
     document.getElementById(
@@ -2035,13 +2290,17 @@ async function loadRanking(league){
       );
 
 
-    if(!clans.length){
+    if(
+      !clans||
+      !clans.length
+    ){
 
       body.innerHTML=`
 
         <tr>
           <td colspan="6">
-            Todavía no hay clanes en esta liga.
+            Todavía no hay clanes
+            en esta liga.
           </td>
         </tr>
 
@@ -2055,7 +2314,10 @@ async function loadRanking(league){
     body.innerHTML=
       clans
       .map(
-        (clan,index)=>`
+        (
+          clan,
+          index
+        )=>`
 
           <tr>
 
@@ -2065,7 +2327,9 @@ async function loadRanking(league){
 
             <td>
 
-              <div class="clan-cell">
+              <div
+                class="clan-cell"
+              >
 
                 <img
                   class="clan-logo"
@@ -2139,12 +2403,19 @@ async function loadRanking(league){
 }
 
 
-async function loadChallenges(league){
+/* =========================
+   RETOS
+========================= */
+
+async function loadChallenges(
+  league
+){
 
   const list=
     document.getElementById(
       "challengeList"
     );
+
 
   const actions=
     document.getElementById(
@@ -2157,8 +2428,8 @@ async function loadChallenges(league){
     actions.innerHTML=`
 
       <div class="notice">
-        Debes iniciar sesión para publicar
-        o aceptar retos.
+        Debes iniciar sesión
+        para publicar o aceptar retos.
       </div>
 
     `;
@@ -2198,7 +2469,10 @@ async function loadChallenges(league){
       );
 
 
-    if(!challenges.length){
+    if(
+      !challenges||
+      !challenges.length
+    ){
 
       list.innerHTML=`
 
@@ -2218,43 +2492,44 @@ async function loadChallenges(league){
       .map(
         ch=>{
 
-          let action="";
+          let action=`
+            <button
+              class="btn btn-red"
+              onclick="acceptChallenge(${ch.id})"
+            >
+              ACEPTAR
+            </button>
+          `;
 
+
+          /*
+           * Si el reto pertenece al clan
+           * del usuario, mostramos cancelar.
+           * El Worker será quien compruebe
+           * que realmente es el capitán.
+           */
 
           if(
-            ch.status==="open" &&
-            currentUser
+            myClan &&
+            Number(
+              ch.creator_clan_id
+            )===
+            Number(
+              myClan.id
+            ) &&
+            ch.status==="open"
           ){
 
             action=`
 
               <button
-                class="btn btn-red"
-                onclick="acceptChallenge(${ch.id})"
+                class="btn btn-dark"
+                onclick="cancelChallenge(${ch.id})"
               >
-                ACEPTAR
+                ❌ CANCELAR RETO
               </button>
 
             `;
-
-
-            if(
-              ch.creator_clan_id &&
-              currentUser
-            ){
-
-              action+=`
-
-                <button
-                  class="btn btn-dark"
-                  onclick="cancelChallenge(${ch.id})"
-                >
-                  CANCELAR
-                </button>
-
-              `;
-
-            }
 
           }
 
@@ -2282,6 +2557,7 @@ async function loadChallenges(league){
                 <div
                   class="challenge-maps"
                 >
+
                   Mapas:
                   ${escapeHtml(
                     [
@@ -2292,6 +2568,7 @@ async function loadChallenges(league){
                     .filter(Boolean)
                     .join(" · ")
                   )}
+
                 </div>
 
                 <br>
@@ -2340,11 +2617,32 @@ async function loadChallenges(league){
 }
 
 
-async function createChallenge(league){
+async function createChallenge(
+  league
+){
 
   if(!currentUser){
 
-    showPage("login");
+    showPage(
+      "login"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !myClan
+  ){
+
+    toast(
+      "Necesitas tener un clan para publicar un reto."
+    );
+
+    showPage(
+      "my-clan"
+    );
 
     return;
 
@@ -2377,7 +2675,9 @@ async function createChallenge(league){
           JSON.stringify({
             league,
             team_size:league,
-            game_modes:["snd"]
+            game_modes:[
+              "snd"
+            ]
           })
       }
     );
@@ -2404,7 +2704,9 @@ async function createChallenge(league){
 }
 
 
-async function cancelChallenge(id){
+async function cancelChallenge(
+  id
+){
 
   const reason=
     prompt(
@@ -2413,7 +2715,9 @@ async function cancelChallenge(id){
     );
 
 
-  if(reason===null){
+  if(
+    reason===null
+  ){
 
     return;
 
@@ -2436,11 +2740,13 @@ async function cancelChallenge(id){
 
 
     toast(
-      "Reto cancelado."
+      "Reto cancelado correctamente."
     );
 
 
-    loadChallenges(4);
+    loadChallenges(
+      4
+    );
 
 
   }catch(error){
@@ -2454,7 +2760,9 @@ async function cancelChallenge(id){
 }
 
 
-async function acceptChallenge(id){
+async function acceptChallenge(
+  id
+){
 
   if(
     !confirm(
@@ -2482,7 +2790,9 @@ async function acceptChallenge(id){
     );
 
 
-    loadChallenges(4);
+    loadChallenges(
+      4
+    );
 
 
   }catch(error){
@@ -2494,9 +2804,7 @@ async function acceptChallenge(id){
   }
 
 }
-
-
-async function loadClans(){
+  async function loadClans(){
 
   const list=
     document.getElementById(
@@ -2517,7 +2825,7 @@ async function loadClans(){
 
 
   list.innerHTML=
-    "Cargando...";
+    "Cargando clanes...";
 
 
   try{
@@ -2529,7 +2837,10 @@ async function loadClans(){
       );
 
 
-    if(!clans.length){
+    if(
+      !clans||
+      !clans.length
+    ){
 
       list.innerHTML=`
 
@@ -2634,260 +2945,11 @@ async function loadClans(){
   }
 
 }
-  async function viewClan(id){
 
-  try{
 
-    const data=
-      await api("/clans/"+id);
-
-    const clan=data.clan;
-
-    let members="";
-
-    if(data.members){
-
-      data.members.forEach(member=>{
-
-        members+=`
-
-          <div class="admin-row">
-
-            <strong>
-              ${escapeHtml(
-                member.username
-              )}
-            </strong>
-
-            <span class="badge">
-              ${escapeHtml(
-                member.role
-              )}
-            </span>
-
-            ${
-              member.psn_id
-              ?
-              `
-              <span>
-                PSN:
-                ${escapeHtml(
-                  member.psn_id
-                )}
-              </span>
-              `
-              :
-              ""
-            }
-
-          </div>
-
-        `;
-
-      });
-
-    }
-
-
-    document.getElementById(
-      "clanList"
-    ).innerHTML=`
-
-      <div
-        class="card"
-        style="grid-column:1/-1;"
-      >
-
-        <div class="clan-cell">
-
-          <img
-            class="profile-avatar"
-            style="
-              width:100px;
-              height:100px;
-              border-radius:10px;
-            "
-            src="${escapeHtml(
-              clan.logo_url||
-              defaultLogo()
-            )}"
-            alt=""
-          >
-
-          <div>
-
-            <h1>
-              ${escapeHtml(
-                clan.name
-              )}
-            </h1>
-
-            <div class="clan-code">
-              ${escapeHtml(
-                clan.clan_code||
-                "----"
-              )}
-            </div>
-
-            <p
-              style="color:#888;"
-            >
-              Liga
-              ${clan.league}
-              VS
-              ${clan.league}
-            </p>
-
-          </div>
-
-        </div>
-
-        <br>
-
-        <h2>
-          Miembros
-        </h2>
-
-        <br>
-
-        ${
-          members||
-          `<p style="color:#777;">
-            No hay miembros.
-          </p>`
-        }
-
-        <br>
-
-        ${
-          currentUser &&
-          Number(clan.captain_id)===
-          Number(currentUser.id)
-          ?
-          `
-          <button
-            class="btn btn-red"
-            onclick="invitePlayer(${clan.id})"
-          >
-            INVITAR JUGADOR
-          </button>
-          `
-          :
-          ""
-        }
-
-        <br><br>
-
-        <button
-          class="btn btn-dark"
-          onclick="loadClans()"
-        >
-          ← Volver
-        </button>
-
-      </div>
-
-    `;
-
-
-  }catch(error){
-
-    toast(
-      error.message
-    );
-
-  }
-
-}
-
-
-async function invitePlayer(clanId){
-
-  if(!currentUser){
-
-    toast(
-      "Debes iniciar sesión."
-    );
-
-    return;
-
-  }
-
-
-  const username=
-    prompt(
-      "Escribe el nombre exacto del jugador:"
-    );
-
-
-  if(!username){
-
-    return;
-
-  }
-
-
-  try{
-
-    const users=
-      await api(
-        "/users?q="+
-        encodeURIComponent(
-          username
-        )
-      );
-
-
-    const user=
-      users.find(
-        u=>
-          String(
-            u.username
-          ).toLowerCase()===
-          username.toLowerCase()
-      );
-
-
-    if(!user){
-
-      toast(
-        "Jugador no encontrado."
-      );
-
-      return;
-
-    }
-
-
-    await api(
-      "/invites",
-      {
-        method:"POST",
-
-        body:
-          JSON.stringify({
-            clan_id:clanId,
-            user_id:user.id
-          })
-      }
-    );
-
-
-    toast(
-      "Invitación enviada."
-    );
-
-
-  }catch(error){
-
-    toast(
-      error.message
-    );
-
-  }
-
-}
-
+/* =========================
+   CREAR CLAN
+========================= */
 
 async function createClan(){
 
@@ -2897,7 +2959,9 @@ async function createClan(){
       "Primero debes iniciar sesión."
     );
 
-    showPage("login");
+    showPage(
+      "login"
+    );
 
     return;
 
@@ -2953,9 +3017,11 @@ async function createClan(){
   }
 
 
-  if(!/^[A-Z]{4}$/.test(
-    clan_code
-  )){
+  if(
+    !/^[A-Z]{4}$/.test(
+      clan_code
+    )
+  ){
 
     toast(
       "La insignia debe tener exactamente 4 letras."
@@ -2968,20 +3034,21 @@ async function createClan(){
 
   try{
 
-    await api(
-      "/clans",
-      {
-        method:"POST",
+    const data=
+      await api(
+        "/clans",
+        {
+          method:"POST",
 
-        body:
-          JSON.stringify({
-            name,
-            clan_code,
-            logo_url,
-            league
-          })
-      }
-    );
+          body:
+            JSON.stringify({
+              name,
+              clan_code,
+              logo_url,
+              league
+            })
+        }
+      );
 
 
     toast(
@@ -3004,9 +3071,11 @@ async function createClan(){
     ).value="";
 
 
-    showPage("clans");
+    await loadMyClan();
 
-    loadClans();
+    showPage(
+      "my-clan"
+    );
 
 
   }catch(error){
@@ -3020,11 +3089,994 @@ async function createClan(){
 }
 
 
+/* =========================
+   MI CLAN
+========================= */
+
+async function loadMyClan(){
+
+  if(!currentUser){
+
+    showPage(
+      "login"
+    );
+
+    return;
+
+  }
+
+
+  const box=
+    document.getElementById(
+      "myClanContent"
+    );
+
+
+  box.innerHTML=`
+
+    <div class="card">
+      Cargando tu clan...
+    </div>
+
+  `;
+
+
+  /*
+   * El Worker actual necesita una ruta
+   * específica para devolver el clan del
+   * usuario. Mientras añadimos esa ruta,
+   * intentamos localizar el clan mediante
+   * los clanes disponibles.
+   */
+
+  try{
+
+    let found=null;
+
+    const leagues=[
+      2,
+      3,
+      4
+    ];
+
+
+    for(
+      const league
+      of leagues
+    ){
+
+      const clans=
+        await api(
+          "/clans?league="+
+          league
+        );
+
+
+      if(
+        Array.isArray(clans)
+      ){
+
+        const match=
+          clans.find(
+            clan=>
+              Number(
+                clan.captain_id
+              )===
+              Number(
+                currentUser.id
+              )
+          );
+
+
+        if(match){
+
+          found=match;
+
+          break;
+
+        }
+
+      }
+
+    }
+
+
+    if(!found){
+
+      myClan=null;
+
+      updateHeader();
+
+
+      box.innerHTML=`
+
+        <div class="card">
+
+          <h2>
+            Todavía no tienes clan
+          </h2>
+
+          <br>
+
+          <p
+            style="
+              color:#888;
+              line-height:1.6;
+            "
+          >
+            Puedes crear uno y empezar
+            a competir en la liga.
+          </p>
+
+          <br>
+
+          <button
+            class="btn btn-red"
+            onclick="showPage('create-clan')"
+          >
+            + CREAR CLAN
+          </button>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    myClan=found;
+
+    updateHeader();
+
+
+    await renderMyClan(
+      found
+    );
+
+
+  }catch(error){
+
+    box.innerHTML=`
+
+      <div class="notice">
+        ${escapeHtml(
+          error.message
+        )}
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+async function renderMyClan(
+  clan
+){
+
+  const box=
+    document.getElementById(
+      "myClanContent"
+    );
+
+
+  let details=null;
+
+
+  try{
+
+    details=
+      await api(
+        "/clans/"+clan.id
+      );
+
+  }catch(error){}
+
+
+  const members=
+    details &&
+    Array.isArray(
+      details.members
+    )
+    ?
+    details.members
+    :
+    [];
+
+
+  const captainId=
+    Number(
+      clan.captain_id
+    );
+
+
+  const isCaptain=
+    Number(
+      currentUser.id
+    )===
+    captainId;
+
+
+  let membersHtml="";
+
+
+  if(!members.length){
+
+    membersHtml=`
+
+      <p
+        style="color:#777;"
+      >
+        No hay miembros.
+      </p>
+
+    `;
+
+  }else{
+
+    membersHtml=
+      members
+      .map(
+        member=>`
+
+          <div
+            class="admin-row"
+          >
+
+            <div
+              style="
+                flex:1;
+                min-width:0;
+              "
+            >
+
+              <strong>
+                ${escapeHtml(
+                  member.username
+                )}
+              </strong>
+
+              <div
+                style="
+                  color:#777;
+                  font-size:12px;
+                  margin-top:4px;
+                "
+              >
+
+                ${
+                  member.role||
+                  "Miembro"
+                }
+
+                ${
+                  member.psn_id
+                  ?
+                  " · PSN: "+
+                  escapeHtml(
+                    member.psn_id
+                  )
+                  :
+                  ""
+                }
+
+              </div>
+
+            </div>
+
+            ${
+              isCaptain &&
+              Number(
+                member.user_id||
+                member.id
+              )!==
+              Number(
+                currentUser.id
+              )
+              ?
+              `
+              <button
+                class="btn btn-danger"
+                onclick="removeClanMember(
+                  ${clan.id},
+                  ${member.user_id||member.id}
+                )"
+              >
+                EXPULSAR
+              </button>
+              `
+              :
+              ""
+            }
+
+          </div>
+
+        `
+      )
+      .join("");
+
+  }
+
+
+  box.innerHTML=`
+
+    <div class="grid grid-2">
+
+      <div class="card">
+
+        <div class="center">
+
+          <img
+            class="profile-avatar"
+            style="
+              width:130px;
+              height:130px;
+              border-radius:10px;
+            "
+            src="${escapeHtml(
+              clan.logo_url||
+              defaultLogo()
+            )}"
+            alt=""
+          >
+
+        </div>
+
+        <br>
+
+        <h2>
+          ${escapeHtml(
+            clan.name
+          )}
+        </h2>
+
+        <div
+          class="clan-code"
+          style="margin-top:8px;"
+        >
+          ${escapeHtml(
+            clan.clan_code||
+            "----"
+          )}
+        </div>
+
+        <br>
+
+        <span class="badge">
+          Liga
+          ${clan.league}
+          VS
+          ${clan.league}
+        </span>
+
+        <br><br>
+
+        <div
+          style="
+            display:grid;
+            grid-template-columns:
+              repeat(3,1fr);
+            gap:8px;
+            text-align:center;
+          "
+        >
+
+          <div class="card">
+
+            <strong>
+              ${clan.points||0}
+            </strong>
+
+            <div
+              style="
+                color:#777;
+                font-size:11px;
+              "
+            >
+              PUNTOS
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <strong
+              class="win"
+            >
+              ${clan.wins||0}
+            </strong>
+
+            <div
+              style="
+                color:#777;
+                font-size:11px;
+              "
+            >
+              VICTORIAS
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <strong
+              class="loss"
+            >
+              ${clan.losses||0}
+            </strong>
+
+            <div
+              style="
+                color:#777;
+                font-size:11px;
+              "
+            >
+              DERROTAS
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          Miembros
+        </h2>
+
+        <br>
+
+        ${membersHtml}
+
+        ${
+          isCaptain
+          ?
+          `
+          <br>
+
+          <button
+            class="btn btn-red"
+            onclick="invitePlayer(${clan.id})"
+          >
+            + INVITAR JUGADOR
+          </button>
+          `
+          :
+          ""
+        }
+
+      </div>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+      <h2>
+        Gestión del clan
+      </h2>
+
+      <br>
+
+      ${
+        isCaptain
+        ?
+        `
+
+        <div class="form-group">
+
+          <label>
+            Nombre del clan
+          </label>
+
+          <input
+            id="editClanName"
+            value="${escapeHtml(
+              clan.name
+            )}"
+            maxlength="24"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Insignia — 4 letras
+          </label>
+
+          <input
+            id="editClanCode"
+            value="${escapeHtml(
+              clan.clan_code||
+              ""
+            )}"
+            maxlength="4"
+            oninput="
+              this.value=this.value
+                .replace(/[^a-zA-Z]/g,'')
+                .toUpperCase()
+                .slice(0,4)
+            "
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Logo / imagen
+          </label>
+
+          <input
+            id="editClanLogo"
+            value="${escapeHtml(
+              clan.logo_url||
+              ""
+            )}"
+          >
+
+        </div>
+
+
+        <button
+          class="btn btn-red"
+          onclick="updateMyClan(${clan.id})"
+        >
+          GUARDAR CAMBIOS
+        </button>
+
+        `
+        :
+        `
+        <p
+          style="
+            color:#777;
+            line-height:1.6;
+          "
+        >
+          Solo el capitán puede modificar
+          los datos del clan.
+        </p>
+        `
+      }
+
+    </div>
+
+
+    <br>
+
+
+    <div class="card">
+
+      <h2>
+        Retos de mi clan
+      </h2>
+
+      <br>
+
+      <button
+        class="btn btn-dark"
+        onclick="showPage('challenges')"
+      >
+        VER RETOS
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+async function invitePlayer(
+  clanId
+){
+
+  const username=
+    prompt(
+      "Escribe el nombre exacto del jugador:"
+    );
+
+
+  if(!username){
+
+    return;
+
+  }
+
+
+  try{
+
+    const users=
+      await api(
+        "/users?q="+
+        encodeURIComponent(
+          username
+        )
+      );
+
+
+    const user=
+      Array.isArray(users)
+      ?
+      users.find(
+        u=>
+          String(
+            u.username
+          ).toLowerCase()===
+          username.toLowerCase()
+      )
+      :
+      null;
+
+
+    if(!user){
+
+      toast(
+        "Jugador no encontrado."
+      );
+
+      return;
+
+    }
+
+
+    await api(
+      "/invites",
+      {
+        method:"POST",
+
+        body:
+          JSON.stringify({
+            clan_id:clanId,
+            user_id:user.id
+          })
+      }
+    );
+
+
+    toast(
+      "Invitación enviada."
+    );
+
+
+  }catch(error){
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+
+async function removeClanMember(
+  clanId,
+  userId
+){
+
+  if(
+    !confirm(
+      "¿Quieres expulsar a este jugador del clan?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    await api(
+      "/clans/"+clanId+
+      "/members/"+userId,
+      {
+        method:"DELETE"
+      }
+    );
+
+
+    toast(
+      "Jugador expulsado."
+    );
+
+
+    loadMyClan();
+
+
+  }catch(error){
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+
+async function updateMyClan(
+  clanId
+){
+
+  const name=
+    document
+      .getElementById(
+        "editClanName"
+      )
+      .value
+      .trim();
+
+
+  const code=
+    document
+      .getElementById(
+        "editClanCode"
+      )
+      .value
+      .trim()
+      .toUpperCase();
+
+
+  const logo=
+    document
+      .getElementById(
+        "editClanLogo"
+      )
+      .value
+      .trim();
+
+
+  if(!name){
+
+    toast(
+      "El nombre no puede estar vacío."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !/^[A-Z]{4}$/.test(
+      code
+    )
+  ){
+
+    toast(
+      "La insignia debe tener exactamente 4 letras."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    await api(
+      "/clans/"+clanId,
+      {
+        method:"PUT",
+
+        body:
+          JSON.stringify({
+            name,
+            clan_code:code,
+            logo_url:logo
+          })
+      }
+    );
+
+
+    toast(
+      "Clan actualizado."
+    );
+
+
+    loadMyClan();
+
+
+  }catch(error){
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   VER CLAN
+========================= */
+
+async function viewClan(
+  id
+){
+
+  try{
+
+    const data=
+      await api(
+        "/clans/"+id
+      );
+
+
+    const clan=
+      data.clan||
+      data;
+
+
+    const members=
+      Array.isArray(
+        data.members
+      )
+      ?
+      data.members
+      :
+      [];
+
+
+    let membersHtml="";
+
+
+    if(!members.length){
+
+      membersHtml=`
+        <p style="color:#777;">
+          No hay miembros.
+        </p>
+      `;
+
+    }else{
+
+      membersHtml=
+        members
+        .map(
+          member=>`
+
+            <div class="admin-row">
+
+              <strong>
+                ${escapeHtml(
+                  member.username
+                )}
+              </strong>
+
+              <span
+                style="color:#777;"
+              >
+                ${escapeHtml(
+                  member.role||
+                  "Miembro"
+                )}
+              </span>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+    }
+
+
+    document.getElementById(
+      "clanList"
+    ).innerHTML=`
+
+      <div
+        class="card"
+        style="grid-column:1/-1;"
+      >
+
+        <button
+          class="btn btn-dark"
+          onclick="loadClans()"
+        >
+          ← VOLVER
+        </button>
+
+        <br><br>
+
+        <div class="clan-cell">
+
+          <img
+            class="profile-avatar"
+            style="
+              width:100px;
+              height:100px;
+              border-radius:10px;
+            "
+            src="${escapeHtml(
+              clan.logo_url||
+              defaultLogo()
+            )}"
+            alt=""
+          >
+
+          <div>
+
+            <h1>
+              ${escapeHtml(
+                clan.name
+              )}
+            </h1>
+
+            <div class="clan-code">
+              ${escapeHtml(
+                clan.clan_code||
+                "----"
+              )}
+            </div>
+
+            <p
+              style="color:#888;"
+            >
+              Liga
+              ${clan.league}
+              VS
+              ${clan.league}
+            </p>
+
+          </div>
+
+        </div>
+
+        <br>
+
+        <h2>
+          Miembros
+        </h2>
+
+        <br>
+
+        ${membersHtml}
+
+      </div>
+
+    `;
+
+
+  }catch(error){
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   PERFIL
+========================= */
+
 async function loadProfile(){
 
   if(!currentUser){
 
-    showPage("login");
+    showPage(
+      "login"
+    );
 
     return;
 
@@ -3039,25 +4091,30 @@ async function loadProfile(){
       );
 
 
-    const user=data.user;
+    const user=
+      data.user||
+      data;
 
 
     document.getElementById(
       "profileUsername"
     ).textContent=
-      user.username||"";
+      user.username||
+      "";
 
 
     document.getElementById(
       "profilePsn"
     ).value=
-      user.psn_id||"";
+      user.psn_id||
+      "";
 
 
     document.getElementById(
       "profileAvatarUrl"
     ).value=
-      user.avatar_url||"";
+      user.avatar_url||
+      "";
 
 
     document.getElementById(
@@ -3142,6 +4199,10 @@ async function saveProfile(){
 }
 
 
+/* =========================
+   ADMIN
+========================= */
+
 async function loadAdmin(){
 
   if(!isAdmin){
@@ -3150,7 +4211,9 @@ async function loadAdmin(){
       "No tienes permisos."
     );
 
-    showPage("home");
+    showPage(
+      "home"
+    );
 
     return;
 
@@ -3171,7 +4234,10 @@ async function loadAdmin(){
       );
 
 
-    if(!users.length){
+    if(
+      !users||
+      !users.length
+    ){
 
       usersBox.innerHTML=
         `<p style="color:#777;">
@@ -3185,7 +4251,9 @@ async function loadAdmin(){
         .map(
           user=>`
 
-            <div class="admin-row">
+            <div
+              class="admin-row"
+            >
 
               <strong>
                 #${user.id}
@@ -3252,7 +4320,10 @@ async function loadAdmin(){
       );
 
 
-    if(!clans.length){
+    if(
+      !clans||
+      !clans.length
+    ){
 
       clansBox.innerHTML=
         `<p style="color:#777;">
@@ -3266,7 +4337,9 @@ async function loadAdmin(){
         .map(
           clan=>`
 
-            <div class="admin-row">
+            <div
+              class="admin-row"
+            >
 
               <strong>
                 ${escapeHtml(
@@ -3286,11 +4359,6 @@ async function loadAdmin(){
               <span>
                 Liga
                 ${clan.league}
-              </span>
-
-              <span>
-                ${clan.points||0}
-                puntos
               </span>
 
               <button
@@ -3328,7 +4396,10 @@ async function loadAdmin(){
       );
 
 
-    if(!challenges.length){
+    if(
+      !challenges||
+      !challenges.length
+    ){
 
       challengesBox.innerHTML=
         `<p style="color:#777;">
@@ -3342,7 +4413,9 @@ async function loadAdmin(){
         .map(
           ch=>`
 
-            <div class="admin-row">
+            <div
+              class="admin-row"
+            >
 
               <strong>
                 Reto #${ch.id}
@@ -3353,36 +4426,6 @@ async function loadAdmin(){
                   ch.status
                 )}
               </span>
-
-              ${
-                ch.creator_name
-                ?
-                `
-                <span>
-                  Creador:
-                  ${escapeHtml(
-                    ch.creator_name
-                  )}
-                </span>
-                `
-                :
-                ""
-              }
-
-              ${
-                ch.accepter_name
-                ?
-                `
-                <span>
-                  Rival:
-                  ${escapeHtml(
-                    ch.accepter_name
-                  )}
-                </span>
-                `
-                :
-                ""
-              }
 
               <button
                 class="btn btn-danger"
@@ -3412,7 +4455,9 @@ async function loadAdmin(){
 }
 
 
-async function adminBlock(id){
+async function adminBlock(
+  id
+){
 
   const permanent=
     confirm(
@@ -3432,7 +4477,9 @@ async function adminBlock(id){
       );
 
 
-    if(value===null){
+    if(
+      value===null
+    ){
 
       return;
 
@@ -3440,11 +4487,15 @@ async function adminBlock(id){
 
 
     minutes=
-      Number(value);
+      Number(
+        value
+      );
 
 
     if(
-      !Number.isFinite(minutes)||
+      !Number.isFinite(
+        minutes
+      )||
       minutes<=0
     ){
 
@@ -3495,7 +4546,9 @@ async function adminBlock(id){
 }
 
 
-async function adminUnblock(id){
+async function adminUnblock(
+  id
+){
 
   try{
 
@@ -3531,7 +4584,9 @@ async function adminUnblock(id){
 }
 
 
-async function adminSetPSN(id){
+async function adminSetPSN(
+  id
+){
 
   const psn=
     prompt(
@@ -3539,7 +4594,9 @@ async function adminSetPSN(id){
     );
 
 
-  if(psn===null){
+  if(
+    psn===null
+  ){
 
     return;
 
@@ -3581,7 +4638,9 @@ async function adminSetPSN(id){
 }
 
 
-async function adminRemoveClan(id){
+async function adminRemoveClan(
+  id
+){
 
   if(
     !confirm(
@@ -3630,7 +4689,9 @@ async function adminRemoveClan(id){
 }
 
 
-async function adminScore(id){
+async function adminScore(
+  id
+){
 
   const points=
     Number(
@@ -3722,7 +4783,9 @@ async function adminScore(id){
 }
 
 
-async function adminDeleteChallenge(id){
+async function adminDeleteChallenge(
+  id
+){
 
   if(
     !confirm(
@@ -3829,6 +4892,10 @@ async function resetLeague(){
 }
 
 
+/* =========================
+   UTILIDADES
+========================= */
+
 function defaultLogo(){
 
   return "data:image/svg+xml,"+
@@ -3848,7 +4915,9 @@ function defaultLogo(){
 }
 
 
-function escapeHtml(value){
+function escapeHtml(
+  value
+){
 
   return String(
     value??""
@@ -3877,9 +4946,31 @@ function escapeHtml(value){
 }
 
 
+/* =========================
+   INICIO
+========================= */
+
 async function start(){
 
   await loadMe();
+
+  /*
+   * Intentamos cargar el clan del usuario
+   * al iniciar sesión para poder mostrar
+   * MI CLAN y los botones de cancelación.
+   */
+
+  if(
+    currentUser
+  ){
+
+    try{
+
+      await loadMyClan();
+
+    }catch(error){}
+
+  }
 
 }
 
