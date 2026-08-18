@@ -940,26 +940,57 @@ async function api(
 
 
   /* =========================
-     AUTH REQUIRED
-  ========================= */
+   AUTH
+========================= */
 
-  const me =
-    await getCurrentUser(
-      request,
-      env
-    );
+const me =
+  await getCurrentUser(
+    request,
+    env
+  );
 
-  if(!me){
+const publicRoute =
+  (
+    request.method === "GET" &&
+    (
+      path === "/api/leaderboard" ||
+      path === "/api/clans" ||
+      path === "/api/users" ||
+      /^\/api\/clans\/\d+$/.test(path) ||
+      /^\/api\/users\/\d+$/.test(path)
+    )
+  );
 
-    return json(
-      {
-        error:
-          "Debes iniciar sesión."
-      },
-      401,
-      headers
-    );
-  }
+if(!me && !publicRoute){
+
+  return json(
+    {
+      error:
+        "Debes iniciar sesión."
+    },
+    401,
+    headers
+  );
+}
+
+if(
+  me &&
+  me.is_blocked &&
+  (
+    me.blocked_until === 0 ||
+    me.blocked_until > Date.now()
+  )
+){
+
+  return json(
+    {
+      error:
+        "Usuario bloqueado."
+    },
+    403,
+    headers
+  );
+}
 
   if(
     me.is_blocked &&
