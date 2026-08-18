@@ -1499,6 +1499,61 @@ async function api(r,env,path){
   =================================================== */
 
   if(path.startsWith("/api/admin/")){
+    /* ===================================================
+   ADMIN — RESUMEN
+=================================================== */
+
+if(r.method==="GET" && path==="/api/admin"){
+  if(!isAdmin(me)){
+    return json({
+      error:"Acceso de administrador requerido."
+    },403,H);
+  }
+
+  const users = await env.DB.prepare(`
+    SELECT id,username,psn_id,avatar_url,
+           is_blocked,blocked_until,created_at
+    FROM users
+    ORDER BY id DESC
+    LIMIT 500
+  `).all();
+
+  const clans = await env.DB.prepare(`
+    SELECT
+      c.*,
+      u.username captain_username,
+      (SELECT COUNT(*)
+       FROM members m
+       WHERE m.clan_id=c.id) member_count
+    FROM clans c
+    LEFT JOIN users u
+      ON u.id=c.captain_id
+    ORDER BY c.league,c.name
+  `).all();
+
+  const challenges = await env.DB.prepare(`
+    SELECT
+      ch.*,
+      c1.name creator_clan_name,
+      c2.name accepter_clan_name,
+      cw.name winner_clan_name
+    FROM challenges ch
+    JOIN clans c1
+      ON c1.id=ch.creator_clan_id
+    LEFT JOIN clans c2
+      ON c2.id=ch.accepter_clan_id
+    LEFT JOIN clans cw
+      ON cw.id=ch.winner_clan_id
+    ORDER BY ch.id DESC
+    LIMIT 500
+  `).all();
+
+  return json({
+    users: users.results,
+    clans: clans.results,
+    challenges: challenges.results
+  },200,H);
+}
     if(!isAdmin(me))
       return json({
         error:"Acceso de administrador requerido."
