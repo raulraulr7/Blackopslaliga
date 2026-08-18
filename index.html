@@ -9872,6 +9872,65 @@ const isClanInvite =
 
                 ${
                   !read
+                  ${
+  isClanInvite
+    ? `
+      <div
+        style="
+          display:flex;
+          gap:8px;
+          flex-wrap:wrap;
+          margin-top:12px;
+        "
+        onclick="event.stopPropagation()"
+      >
+
+        <button
+          class="btn ok small"
+          onclick="
+            event.stopPropagation();
+            handleClanInvite(
+              ${JSON.stringify(
+                (
+                  text.match(
+                    /unirte a (.+?)(?:\\.|$)/i
+                  ) ||
+                  []
+                )[1] ||
+                ""
+              )},
+              'accept'
+            )
+          "
+        >
+          ✅ Aceptar
+        </button>
+
+        <button
+          class="btn danger small"
+          onclick="
+            event.stopPropagation();
+            handleClanInvite(
+              ${JSON.stringify(
+                (
+                  text.match(
+                    /unirte a (.+?)(?:\\.|$)/i
+                  ) ||
+                  []
+                )[1] ||
+                ""
+              )},
+              'reject'
+            )
+          "
+        >
+          ❌ Rechazar
+        </button>
+
+      </div>
+    `
+    : ""
+}
                     ? `
                       <div
                         style="
