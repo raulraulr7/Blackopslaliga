@@ -86,7 +86,24 @@ main{
 }
 
 .hero{
-  padding:55px 0 35px;
+  position:relative;
+  min-height:430px;
+  padding:60px 45px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+  border-radius:18px;
+  margin-bottom:30px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.90) 0%,
+      rgba(0,0,0,.65) 45%,
+      rgba(0,0,0,.25) 100%
+    ),
+    url("blackops2.jpg") center/cover no-repeat;
 }
 .bo2-cover{
   width:100%;
