@@ -9926,6 +9926,80 @@ const isClanInvite =
 
 
 function updateNotificationCount(
+async function handleClanInvite(
+  clanName,
+  action
+){
+
+  try{
+
+    const data =
+      await api(
+        "/invites"
+      );
+
+    const invites =
+      Array.isArray(data)
+        ? data
+        : (
+            data.invites ||
+            data.rows ||
+            []
+          );
+
+    const invite =
+      invites.find(
+        item =>
+          String(
+            item.name ||
+            item.clan_name ||
+            ""
+          ).trim()
+          ===
+          String(
+            clanName
+          ).trim()
+      );
+
+    if(!invite){
+
+      showToast(
+        "Esta invitación ya no está disponible.",
+        "error"
+      );
+
+      await loadNotifications();
+
+      return;
+    }
+
+    await api(
+      `/invites/${Number(
+        invite.id
+      )}/${action}`,
+      {
+        method:"POST"
+      }
+    );
+
+    showToast(
+      action === "accept"
+        ? "Te has unido al clan correctamente."
+        : "Invitación rechazada.",
+      "success"
+    );
+
+    await loadNotifications();
+
+    await loadMyClans();
+
+  }catch(error){
+
+    showError(error);
+
+  }
+
+}
   count
 ){
 
