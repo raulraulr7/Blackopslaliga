@@ -8066,8 +8066,16 @@ async function createChallenge(){
       {
         method:"POST",
         body:JSON.stringify({
-          league
-        })
+  league,
+  mode:
+    league === 1
+      ? (
+          document.getElementById(
+            "oneVsOneMode"
+          )?.value || "franco"
+        )
+      : "snd"
+})
       }
     );
 
