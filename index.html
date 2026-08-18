@@ -3290,24 +3290,46 @@ footer{
         Sector
       </label>
 
-      <select
-        id="challengeLeagueInput"
-      >
+  <select
+  id="challengeLeagueInput"
+  onchange="updateOneVsOneOptions()"
+>
+  <option value="1">
+    1v1
+  </option>
 
-        <option value="2">
-          2v2
-        </option>
+  <option value="2">
+    2v2
+  </option>
 
-        <option value="3">
-          3v3
-        </option>
+  <option value="3">
+    3v3
+  </option>
 
-        <option value="4"
-                selected>
-          4v4
-        </option>
+  <option value="4" selected>
+    4v4
+  </option>
+</select>
 
-      </select>
+<div
+  id="oneVsOneOptions"
+  class="field"
+  style="display:none;margin-top:12px"
+>
+  <label>
+    Modalidad 1v1
+  </label>
+
+  <select id="oneVsOneMode">
+    <option value="franco">
+      Solo Franco
+    </option>
+
+    <option value="arma">
+      Solo Arma
+    </option>
+  </select>
+</div>
 
     </div>
 
