@@ -9783,7 +9783,11 @@ async function loadNotifications(){
             notification.challenge_id ||
             notification.clan_id ||
             null;
-
+const isClanInvite =
+  String(
+    notification.type ||
+    ""
+  ).toLowerCase() === "clan_invite";
 
           return `
 
