@@ -2269,6 +2269,13 @@ footer{
 
     <button
       class="league-tab"
+      onclick="loadChallenges(1)"
+    >
+      1v1
+    </button>
+
+    <button
+      class="league-tab"
       onclick="loadChallenges(2)"
     >
       2v2
@@ -3010,7 +3017,7 @@ footer{
       <div class="loading">
         Cargando administración...
       </div>
-
+      
     </div>
 
   </div>
@@ -3312,22 +3319,15 @@ footer{
 </select>
 
 <div
-  id="oneVsOneOptions"
+  id="challengeModeOptions"
   class="field"
-  style="display:none;margin-top:12px"
+  style="margin-top:12px"
 >
   <label>
-    Modalidad 1v1
+    Modalidad
   </label>
 
-  <select id="oneVsOneMode">
-    <option value="franco">
-      Solo Franco
-    </option>
-
-    <option value="arma">
-      Solo Arma
-    </option>
+  <select id="challengeModeInput">
   </select>
 </div>
 
@@ -5970,7 +5970,7 @@ async function logout(){
 
   }
 
-  
+
   me = null;
 
   isAdmin = false;
@@ -6036,7 +6036,7 @@ async function loadMe(){
 }
 
 
-function updateHeader(){
+  function updateHeader(){
 
   const authBtn =
     document.getElementById(
@@ -7656,6 +7656,78 @@ async function kickMember(
 <script>
 
 /* =====================================================
+   MODALIDADES DE RETOS
+===================================================== */
+
+function updateOneVsOneOptions(){
+
+  const league = Number(
+    document
+      .getElementById("challengeLeagueInput")
+      ?.value || 0
+  );
+
+  const select =
+    document.getElementById(
+      "challengeModeInput"
+    );
+
+  if(!select) return;
+
+  if(league === 1){
+
+    select.innerHTML = `
+      <option value="franco">
+        Solo Franco
+      </option>
+      <option value="arma">
+        Solo Arma
+      </option>
+    `;
+
+  }else{
+
+    select.innerHTML = `
+      <option value="snd">
+        ByD — Buscar y Destruir
+      </option>
+      <option value="ctf">
+        Tomar la Bandera
+      </option>
+      <option value="hardpoint">
+        Punto Caliente
+      </option>
+    `;
+
+  }
+}
+
+function challengeModeName(mode, league){
+
+  let raw = mode || "";
+
+  if(typeof raw === "string" && raw.trim().startsWith("[")){
+    try{
+      const parsed = JSON.parse(raw);
+      raw = Array.isArray(parsed) ? parsed[0] : raw;
+    }catch(error){}
+  }
+
+  const value =
+    String(raw || "").toLowerCase();
+
+  if(Number(league) === 1){
+    if(value === "arma") return "Solo Arma";
+    return "Solo Franco";
+  }
+
+  if(value === "ctf") return "Tomar la Bandera";
+  if(value === "hardpoint") return "Punto Caliente";
+  return "ByD";
+}
+
+
+/* =====================================================
    RETOS
 ===================================================== */
 
@@ -7702,7 +7774,7 @@ async function loadChallenges(
   const activeButton =
     document.querySelector(
       `#challengeTabs .league-tab:nth-child(${
-        currentLeague - 1
+        currentLeague
       })`
     );
 
@@ -7808,8 +7880,20 @@ async function loadChallenges(
 
                     <span class="pill yellow">
                       ${leagueName(
-                        challenge.league ||
                         challenge.team_size ||
+                        challenge.league ||
+                        currentLeague
+                      )}
+                    </span>
+
+                    <span class="pill">
+                      ${challengeModeName(
+                        challenge.mode ||
+                        challenge.game_mode ||
+                        challenge.game_modes ||
+                        "snd",
+                        challenge.team_size ||
+                        challenge.league ||
                         currentLeague
                       )}
                     </span>
@@ -7999,6 +8083,8 @@ function openChallengeForm(){
     )
     ?.classList.add("open");
 
+  updateOneVsOneOptions();
+
 }
 
 
@@ -8064,13 +8150,13 @@ async function createChallenge(){
         body:JSON.stringify({
   league,
   mode:
-    league === 1
-      ? (
-          document.getElementById(
-            "oneVsOneMode"
-          )?.value || "franco"
-        )
-      : "snd"
+    document
+      .getElementById(
+        "challengeModeInput"
+      )?.value ||
+    (league === 1
+      ? "franco"
+      : "snd")
 })
       }
     );
@@ -8233,8 +8319,22 @@ async function openChallenge(
               "
             >
               ${leagueName(
-                challenge.league ||
-                challenge.team_size
+                challenge.team_size ||
+                challenge.league
+              )}
+            </div>
+
+            <div
+              class="pill"
+              style="display:inline-block;margin-top:8px"
+            >
+              ${challengeModeName(
+                challenge.mode ||
+                challenge.game_mode ||
+                challenge.game_modes ||
+                "snd",
+                challenge.team_size ||
+                challenge.league
               )}
             </div>
 
@@ -8955,7 +9055,7 @@ async function loadMyChallenges(){
 
 
   try{
-
+    
     const data =
       await api(
         "/my-challenges"
@@ -9007,8 +9107,8 @@ async function loadMyChallenges(){
 
                   <span class="pill yellow">
                     ${leagueName(
-                      challenge.league ||
-                      challenge.team_size
+                      challenge.team_size ||
+                      challenge.league
                     )}
                   </span>
 
@@ -9870,65 +9970,83 @@ const isClanInvite =
                 }
 
 
-${
-  isClanInvite
-    ? `
-      <div
-        style="
-          display:flex;
-          gap:8px;
-          flex-wrap:wrap;
-          margin-top:12px;
-        "
-        onclick="event.stopPropagation()"
-      >
+                ${
+                  isClanInvite
+                    ? `
+                      <div
+                        style="
+                          display:flex;
+                          gap:8px;
+                          flex-wrap:wrap;
+                          margin-top:12px;
+                        "
+                        onclick="event.stopPropagation()"
+                      >
 
-        <button
-          class="btn ok small"
-          onclick="
-            event.stopPropagation();
-            handleClanInvite(
-              ${JSON.stringify(
-                (
-                  text.match(
-                    /unirte a (.+?)(?:\\.|$)/i
-                  ) ||
-                  []
-                )[1] ||
-                ""
-              )},
-              'accept'
-            )
-          "
-        >
-          ✅ Aceptar
-        </button>
+                        <button
+                          class="btn ok small"
+                          onclick="
+                            event.stopPropagation();
+                            handleClanInvite(
+                              ${JSON.stringify(
+                                (
+                                  text.match(
+                                    /unirte a (.+?)(?:\\.|$)/i
+                                  ) ||
+                                  []
+                                )[1] ||
+                                ""
+                              )},
+                              'accept'
+                            )
+                          "
+                        >
+                          ✅ Aceptar
+                        </button>
 
-        <button
-          class="btn danger small"
-          onclick="
-            event.stopPropagation();
-            handleClanInvite(
-              ${JSON.stringify(
-                (
-                  text.match(
-                    /unirte a (.+?)(?:\\.|$)/i
-                  ) ||
-                  []
-                )[1] ||
-                ""
-              )},
-              'reject'
-            )
-          "
-        >
-          ❌ Rechazar
-        </button>
+                        <button
+                          class="btn danger small"
+                          onclick="
+                            event.stopPropagation();
+                            handleClanInvite(
+                              ${JSON.stringify(
+                                (
+                                  text.match(
+                                    /unirte a (.+?)(?:\\.|$)/i
+                                  ) ||
+                                  []
+                                )[1] ||
+                                ""
+                              )},
+                              'reject'
+                            )
+                          "
+                        >
+                          ❌ Rechazar
+                        </button>
 
-      </div>
-    `
-    : ""
-}
+                      </div>
+                    `
+                    : ""
+                }
+
+                ${
+                  !read
+                    ? `
+                      <div
+                        style="
+                          margin-top:8px;
+                        "
+                      >
+                        <span
+                          class="pill yellow"
+                        >
+                          Nueva
+                        </span>
+                      </div>
+                    `
+                    : ""
+                }
 
               </div>
 
@@ -10685,8 +10803,8 @@ async function loadHistory(
 
                   <span class="pill yellow">
                     ${leagueName(
-                      challenge.league ||
-                      challenge.team_size
+                      challenge.team_size ||
+                      challenge.league
                     )}
                   </span>
 
@@ -10977,6 +11095,10 @@ async function loadAdmin(){
                                           : "Bloquear"
                                       }
                                     </button>
+
+                                    <button class="btn danger small" onclick="adminDeleteUser(${Number(user.id)})">
+                                      Borrar
+                                    </button>
                                   `
 
                                   : `
@@ -11099,6 +11221,10 @@ async function loadAdmin(){
                                 "
                               >
                                 Ver
+                              </button>
+
+                              <button class="btn danger small" onclick="adminDeleteClan(${Number(clan.id)})">
+                                Borrar
                               </button>
 
                             </td>
@@ -11354,6 +11480,20 @@ async function loadAdmin(){
 
 
 /* =====================================================
+   ADMIN — BORRAR USUARIO
+===================================================== */
+
+async function adminDeleteUser(userId){
+  if(!isAdmin){ showToast("No tienes permisos de administrador.","error"); return; }
+  if(!confirm("ATENCIÓN: se borrará la cuenta y sus datos asociados. ¿Continuar?")) return;
+  try{
+    await api(`/admin/users/${Number(userId)}`,{method:"DELETE"});
+    showToast("🗑️ Cuenta eliminada.","success");
+    await loadAdmin();
+  }catch(error){ showError(error); }
+}
+
+/* =====================================================
    ADMIN — BLOQUEAR USUARIO
 ===================================================== */
 
@@ -11389,18 +11529,10 @@ async function toggleUserBlock(
   try{
 
     await api(
-      `/admin/users/${Number(
-        userId
-      )}/block`,
+      blocked ? "/admin/block" : "/admin/unblock",
       {
         method:"POST",
-        body:JSON.stringify({
-          blocked:
-            Boolean(
-              blocked === true ||
-              blocked === "true"
-            )
-        })
+        body:JSON.stringify({user_id:Number(userId)})
       }
     );
 
