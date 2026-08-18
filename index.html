@@ -1119,79 +1119,38 @@ async function logout(){
   toast("Sesión cerrada");
 }
 
-async function refresh(){
-
-  try{
-
-    const data=
-      await api("/api/me");
-
-    me=data.user||null;
-    isAdmin=!!data.admin;
-
-  }catch{
-
-    me=null;
-    isAdmin=false;
-
-  }
-
-  renderNav();
-
-  if(me){
-    loadProfile();
-  }
-}
-
 function renderNav(){
 
-  let html=`
-    <button onclick="show('home')">
-      Inicio
-    </button>
+  const admin =
+    document.getElementById("adminMenu");
 
-    <button onclick="show('ranking',4)">
-      Ranking
-    </button>
+  if(admin){
 
-    <button onclick="show('clans')">
-      Clanes
-    </button>
+    admin.style.display =
+      isAdmin
+      ? "block"
+      : "none";
 
-    <button onclick="show('retos')">
-      Retos
-    </button>
-
-    <button onclick="show('jugadores')">
-      Jugadores
-    </button>
-
-    <button onclick="show('reglas')">
-      Reglas
-    </button>
-  `;
-
-  if(me){
-
-    html+=`
-      <button onclick="show('perfil')">
-        Mi perfil
-      </button>
-
-      <button onclick="show('historial')">
-        Historial
-      </button>
-    `;
-
-    if(isAdmin){
-
-      html+=`
-        <button onclick="show('admin')">
-          ADMIN
-        </button>
-      `;
-    }
   }
+
+  const auth =
+    document.getElementById("authBtn");
+
+  if(auth){
+
+    auth.textContent =
+      me
+      ? "Cerrar sesión"
+      : "Iniciar sesión";
+
+    auth.onclick =
+      me
+      ? logout
+      : openAuth;
+
+  }
+
+}
 
   $("nav").innerHTML=html;
 
