@@ -890,6 +890,56 @@ function toast(message){
 }
 
 function show(id,league){
+  function toggleMenu(){
+
+  const menu =
+    document.getElementById("menuPanel");
+
+  if(!menu) return;
+
+  menu.classList.toggle("open");
+}
+
+function closeMenu(){
+
+  const menu =
+    document.getElementById("menuPanel");
+
+  if(!menu) return;
+
+  menu.classList.remove("open");
+}
+
+function menuGo(id,league){
+
+  closeMenu();
+
+  show(id,league);
+}
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const menu =
+      document.getElementById("menuPanel");
+
+    const button =
+      document.getElementById("menuBtn");
+
+    if(!menu || !button) return;
+
+    if(
+      !menu.contains(event.target) &&
+      !button.contains(event.target)
+    ){
+
+      closeMenu();
+
+    }
+
+  }
+);
   document
     .querySelectorAll(".page")
     .forEach(x=>x.classList.remove("active"));
