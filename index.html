@@ -284,6 +284,73 @@ select{
       BLACKOPS<span>LALIGA</span>
     </div>
 
+    <div class="nav-actions">
+
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        onclick="toggleMenu()"
+        aria-label="Abrir menú">
+        ⋮
+      </button>
+
+      <button
+        class="btn"
+        id="authBtn"
+        onclick="openAuth()">
+        Iniciar sesión
+      </button>
+
+    </div>
+
+    <div
+      class="menu-panel"
+      id="menuPanel">
+
+      <button onclick="menuGo('home')">
+        🏠 Inicio
+      </button>
+
+      <button onclick="menuGo('ranking',4)">
+        🏆 Ranking
+      </button>
+
+      <button onclick="menuGo('clans')">
+        👥 Clanes
+      </button>
+
+      <button onclick="menuGo('retos')">
+        ⚔️ Retos
+      </button>
+
+      <button onclick="menuGo('jugadores')">
+        👤 Jugadores
+      </button>
+
+      <button onclick="menuGo('perfil')">
+        👤 Mi perfil
+      </button>
+
+      <button onclick="menuGo('historial')">
+        📜 Historial
+      </button>
+
+      <button onclick="menuGo('reglas')">
+        📖 Reglas
+      </button>
+
+      <button
+        id="adminMenu"
+        onclick="menuGo('admin')"
+        style="display:none">
+        🛡️ Administración
+      </button>
+
+    </div>
+
+  </div>
+</header>
+
     <nav id="nav"></nav>
 
     <button
