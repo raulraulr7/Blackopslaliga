@@ -1979,6 +1979,109 @@ async function api(request, env, path) {
   return json(
     {
       error: "Ruta no encontrada."
+        /* =====================================================
+     MIS RETOS
+  ===================================================== */
+
+  if (
+    request.method === "GET" &&
+    path === "/api/my-challenges"
+  ) {
+
+    const result = await env.DB.prepare(`
+      SELECT
+        ch.*,
+
+        creator.name AS creator_clan_name,
+        creator.clan_code AS creator_clan_code,
+        creator.league AS creator_league,
+
+        accepter.name AS accepter_clan_name,
+        accepter.clan_code AS accepter_clan_code,
+        accepter.league AS accepter_league
+
+      FROM challenges ch
+
+      JOIN clans creator
+        ON creator.id = ch.creator_clan_id
+
+      LEFT JOIN clans accepter
+        ON accepter.id = ch.accepter_clan_id
+
+      WHERE
+        ch.creator_clan_id IN (
+          SELECT clan_id
+          FROM members
+          WHERE user_id = ?
+        )
+
+        OR
+
+        ch.accepter_clan_id IN (
+          SELECT clan_id
+          FROM members
+          WHERE user_id = ?
+        )
+
+      ORDER BY ch.id DESC
+
+      LIMIT 100
+    `)
+    .bind(
+      me.id,
+      me.id
+    )
+    .all();
+
+    const rows = result.results.map(ch => {
+
+      let mode = ch.one_vs_one_mode || "";
+
+      if (!mode) {
+        try {
+          const parsed =
+            JSON.parse(
+              ch.game_modes || "[]"
+            );
+
+          if (
+            Array.isArray(parsed) &&
+            parsed.length
+          ) {
+            mode = parsed[0];
+          }
+
+        } catch (e) {
+          mode = "";
+        }
+      }
+
+      return {
+        ...ch,
+
+        league: Number(
+          ch.league ||
+          ch.team_size ||
+          4
+        ),
+
+        team_size: Number(
+          ch.team_size ||
+          ch.league ||
+          4
+        ),
+
+        mode
+      };
+
+    });
+
+    return json(
+      rows,
+      200,
+      headers
+    );
+  }
     },
     404,
     headers
