@@ -1121,17 +1121,56 @@ async function logout(){
 
 function renderNav(){
 
-  const admin =
-    document.getElementById("adminMenu");
+  let html=`
+    <button onclick="show('home')">
+      Inicio
+    </button>
 
-  if(admin){
+    <button onclick="show('ranking',4)">
+      Ranking
+    </button>
 
-    admin.style.display =
-      isAdmin
-      ? "block"
-      : "none";
+    <button onclick="show('clans')">
+      Clanes
+    </button>
 
+    <button onclick="show('retos')">
+      Retos
+    </button>
+
+    <button onclick="show('jugadores')">
+      Jugadores
+    </button>
+
+    <button onclick="show('reglas')">
+      Reglas
+    </button>
+  `;
+
+  if(me){
+
+    html+=`
+      <button onclick="show('perfil')">
+        Mi perfil
+      </button>
+
+      <button onclick="show('historial')">
+        Historial
+      </button>
+    `;
+
+    if(isAdmin){
+
+      html+=`
+        <button onclick="show('admin')">
+          ADMIN
+        </button>
+      `;
+    }
   }
+
+  document.getElementById("nav").innerHTML=html;
+}
 
   const auth =
     document.getElementById("authBtn");
