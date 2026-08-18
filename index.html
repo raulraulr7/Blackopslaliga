@@ -751,21 +751,37 @@ footer{
 
   <nav id="mainNav">
 
+    <nav id="mainNav">
+
     <button onclick="showPage('home')">
-      Inicio
+      🏠 Inicio
     </button>
 
     <button onclick="showPage('ranking')">
-      Ranking
+      🏆 Ranking
     </button>
 
     <button onclick="showPage('challenges')">
-      Retos
+      ⚔️ Retos
     </button>
 
     <button onclick="showPage('clans')">
-      Clanes
+      🛡️ Clanes
     </button>
+
+    <button
+      id="myClanMenuBtn"
+      class="hidden"
+      onclick="showPage('my-clan')"
+    >
+      👑 Mi clan
+    </button>
+
+    <button onclick="showPage('rules')">
+      📜 Reglas
+    </button>
+
+</nav>
 
     <button onclick="showPage('rules')">
       Reglas
