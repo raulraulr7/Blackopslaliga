@@ -216,6 +216,16 @@ async function initDatabase(env) {
   `).run();
   const columns = [
     [
+      "notifications",
+      "target_type",
+      "TEXT"
+    ],
+    [
+      "notifications",
+      "target_id",
+      "INTEGER"
+    ],
+    [
       "users",
       "psn_id",
       "TEXT"
@@ -367,6 +377,19 @@ function isAdmin(user) {
   return !!user && user.username.toLowerCase() === "admin";
 }
 __name(isAdmin, "isAdmin");
+function normalizeLeague(value, fallback = 4) {
+  if (typeof value === "string") {
+    const s = value.trim().toLowerCase();
+    const m = s.match(/^(1|2|3|4)\\s*v\\s*4?$/);
+    if (m) return Number(m[1]);
+    if (/^[1-4]$/.test(s)) return Number(s);
+    const n = Number(s);
+    if ([1,2,3,4].includes(n)) return n;
+  }
+  const n = Number(value);
+  return [1,2,3,4].includes(n) ? n : fallback;
+}
+__name(normalizeLeague, "normalizeLeague");
 async function getUserClan(env, userId, league = null) {
   if (league) {
     return await env.DB.prepare(`
@@ -485,7 +508,7 @@ async function api(request, env, path) {
       );
     }
     try {
-      const passwordHash = await hashPassword(
+        const passwordHash = await hashPassword(
         password
           );
       const created = await env.DB.prepare(`
@@ -903,7 +926,7 @@ async function api(request, env, path) {
     const name = String(data.name || "").trim();
     const clanCode = String(data.clan_code || "").trim().toUpperCase();
     const logoUrl = String(data.logo_url || "").trim().slice(0, 500);
-    const league = Number(data.league);
+    const league = normalizeLeague(data.league, 0);
     if (name.length < 2 || name.length > 24 || !/^[A-Z]{4}$/.test(clanCode) || ![1, 2, 3, 4].includes(league)) {
       return json({ error: "Nombre 2-24 caracteres, insignia de exactamente 4 letras y liga 1v1, 2v2, 3v3 o 4v4." }, 400, headers);
     }
@@ -918,15 +941,28 @@ async function api(request, env, path) {
       const clanId = created.meta.last_row_id;
       await env.DB.prepare(`INSERT INTO members (clan_id,user_id,role) VALUES (?,?,?)`).bind(clanId, me.id, "captain").run();
       await env.DB.prepare(`INSERT OR IGNORE INTO scores (clan_id,league) VALUES (?,?)`).bind(clanId, league).run();
-      return json({ ok: true, clanId, clanCode }, 200, headers);
+      return json({
+        ok: true,
+        clanId,
+        clanCode,
+        clan: {
+          id: clanId,
+          name,
+          clan_code: clanCode,
+          league,
+          captain_id: me.id,
+          role: "captain"
+        }
+      }, 200, headers);
     } catch (error) {
       console.error("CREATE CLAN ERROR:", error);
       return json({ error: "No se pudo crear el clan.", detail: error.message }, 500, headers);
     }
   }
   if (request.method === "GET" && path === "/api/leaderboard") {
-    const league = Number(
-      new URL(request.url).searchParams.get("league") || 4
+    const league = normalizeLeague(
+      new URL(request.url).searchParams.get("league") || 4,
+      4
     );
     if (![1, 2, 3, 4].includes(
       league
@@ -982,9 +1018,36 @@ async function api(request, env, path) {
     return json(
       result.results,
       200,
-      headers
+           headers
     );
   }
+  if (request.method === "GET" && path === "/api/notifications") {
+    const result = await env.DB.prepare(`
+      SELECT id,user_id,title,message,type,target_type,target_id,is_read,created_at
+      FROM notifications
+      WHERE user_id=?
+      ORDER BY id DESC
+      LIMIT 100
+    `).bind(me.id).all();
+    return json(result.results,200,headers);
+  }
+
+  const notificationReadMatch = path.match(/^\/api\/notifications\/(\d+)\/read$/);
+  if (request.method === "POST" && notificationReadMatch) {
+    const id = Number(notificationReadMatch[1]);
+    await env.DB.prepare(`
+      UPDATE notifications SET is_read=1 WHERE id=? AND user_id=?
+    `).bind(id,me.id).run();
+    return json({ok:true},200,headers);
+  }
+
+  if (request.method === "POST" && path === "/api/notifications/read-all") {
+    await env.DB.prepare(`
+      UPDATE notifications SET is_read=1 WHERE user_id=?
+    `).bind(me.id).run();
+    return json({ok:true},200,headers);
+  }
+
   if (request.method === "POST" && path === "/api/invites") {
     const data = await body(request);
     const clanId = Number(data.clan_id);
@@ -1001,7 +1064,16 @@ async function api(request, env, path) {
     const pending = await env.DB.prepare(`SELECT id FROM invites WHERE clan_id=? AND invitee_id=? AND status='pending'`).bind(clanId, inviteeId).first();
     if (pending) return json({ error: "Ya existe una invitación pendiente." }, 400, headers);
     const created = await env.DB.prepare(`INSERT INTO invites (clan_id,inviter_id,invitee_id,status) VALUES (?,?,?,'pending')`).bind(clanId, me.id, inviteeId).run();
-    await env.DB.prepare(`INSERT INTO notifications (user_id,title,message,type) VALUES (?,?,?,'clan_invite')`).bind(inviteeId,"Invitación de clan",`Has recibido una invitación para unirte a ${clan.name}.`).run();
+    await env.DB.prepare(`
+      INSERT INTO notifications
+      (user_id,title,message,type,target_type,target_id,is_read)
+      VALUES (?,?,?,'clan_invite','clan',?,0)
+    `).bind(
+      inviteeId,
+      "Invitación de clan",
+      `Has recibido una invitación para unirte a ${clan.name}.`,
+      clan.id
+    ).run();
     return json({ ok:true, id:created.meta.last_row_id },200,headers);
   }
   if (request.method === "GET" && path === "/api/invites") {
@@ -1024,14 +1096,25 @@ async function api(request, env, path) {
     if(already) return json({error:"Ya perteneces a un clan en esta liga."},400,headers);
     await env.DB.batch([
       env.DB.prepare(`INSERT OR IGNORE INTO members (clan_id,user_id,role) VALUES (?,?,?)`).bind(clan.id,me.id,"member"),
-      env.DB.prepare(`UPDATE invites SET status='accepted' WHERE id=?`).bind(inviteId)
+      env.DB.prepare(`UPDATE invites SET status='accepted' WHERE id=?`).bind(inviteId),
+      env.DB.prepare(`
+        INSERT INTO notifications
+        (user_id,title,message,type,target_type,target_id,is_read)
+        VALUES (?,?,?,'clan_invite_accepted','clan',?,0)
+      `).bind(
+        invite.inviter_id,
+        "Invitación aceptada",
+        `${me.username} ha aceptado la invitación para unirse a ${clan.name}.`,
+        clan.id
+      )
     ]);
     return json({ok:true},200,headers);
   }
   if (request.method === "POST" && path === "/api/challenges") {
     const data = await body(request);
-    const league = Number(
-      data.league || 4
+    const league = normalizeLeague(
+      data.league || 4,
+      4
     );
     const teamSize = Number(
       data.team_size || league
@@ -1178,7 +1261,7 @@ async function api(request, env, path) {
   if (request.method === "GET" && path === "/api/challenges") {
     await expireChallenges(env);
     const params = new URL(request.url).searchParams;
-    const league = Number(params.get("league") || 4);
+    const league = normalizeLeague(params.get("league") || 4, 4);
     const clan = await getUserClan(env, me.id, league);
     const clanId = clan ? clan.id : -1;
     const result = await env.DB.prepare(`
@@ -1445,7 +1528,7 @@ async function api(request, env, path) {
           error: "No participas en este reto."
         },
         403,
-        headers
+                headers
       );
     }
     if (clan.captain_id !== me.id) {
@@ -1763,8 +1846,9 @@ async function api(request, env, path) {
     }
     if (request.method === "POST" && path === "/api/admin/reset-ranking") {
       const data = await body(request);
-      const league = Number(
-        data.league || 4
+      const league = normalizeLeague(
+        data.league || 4,
+        4
       );
       if (![2, 3, 4].includes(
         league
