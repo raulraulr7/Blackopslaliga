@@ -2154,6 +2154,7 @@ async function api(
 
     const inviteeId =
       Number(
+        data.user_id ||
         data.invitee_id
       );
 
