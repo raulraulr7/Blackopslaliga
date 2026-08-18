@@ -5970,7 +5970,7 @@ async function logout(){
 
   }
 
-
+  
   me = null;
 
   isAdmin = false;
@@ -9929,21 +9929,6 @@ ${
     `
     : ""
 }
-                    ? `
-                      <div
-                        style="
-                          margin-top:8px;
-                        "
-                      >
-                        <span
-                          class="pill yellow"
-                        >
-                          Nueva
-                        </span>
-                      </div>
-                    `
-                    : ""
-                }
 
               </div>
 
@@ -10056,6 +10041,8 @@ async function handleClanInvite(
   }
 
 }
+
+function updateNotificationCount(
   count
 ){
 
