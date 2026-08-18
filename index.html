@@ -28,7 +28,6 @@ body{
 }
 
 button,input,select{font:inherit}
-
 button{cursor:pointer}
 
 header{
@@ -39,6 +38,24 @@ header{
   border-bottom:1px solid var(--line);
   backdrop-filter:blur(10px);
 }
+
+.nav{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand{
+  font-weight:900;
+  letter-spacing:1px;
+  font-size:20px;
+  margin-right:auto;
+}
+
+.brand span{color:var(--accent)}
 
 .nav-actions{
   display:flex;
@@ -99,56 +116,6 @@ header{
   color:var(--accent);
 }
 
-@media(max-width:600px){
-
-  .nav{
-    padding:10px 12px;
-  }
-
-  .brand{
-    font-size:16px;
-  }
-
-  .nav-actions{
-    gap:6px;
-  }
-
-  .nav-actions .btn{
-    padding:9px 10px;
-    font-size:13px;
-  }
-
-  .menu-btn{
-    width:40px;
-    height:40px;
-  }
-
-  .menu-panel{
-    position:fixed;
-    top:64px;
-    left:12px;
-    right:12px;
-    width:auto;
-  }
-
-}
-  max-width:1200px;
-  margin:auto;
-  padding:14px 18px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.brand{
-  font-weight:900;
-  letter-spacing:1px;
-  font-size:20px;
-  margin-right:auto;
-}
-
-.brand span{color:var(--accent)}
-
 nav{
   display:flex;
   gap:6px;
@@ -196,6 +163,7 @@ main{
     ),
     url("blackops2.jpg") center/cover no-repeat;
 }
+
 .hero h1{
   font-size:clamp(42px,8vw,86px);
   line-height:.9;
@@ -319,7 +287,6 @@ select{
 }
 
 .ranklink{cursor:pointer}
-
 .ranklink:hover{color:var(--accent)}
 
 .modal{
@@ -363,6 +330,56 @@ select{
   .nav{flex-wrap:wrap}
   .hero{padding-top:30px}
 }
+
+@media(max-width:600px){
+  .nav{
+    padding:10px 12px;
+  }
+
+  .brand{
+    font-size:16px;
+  }
+
+  .nav-actions{
+    gap:6px;
+  }
+
+  .nav-actions .btn{
+    padding:9px 10px;
+    font-size:13px;
+  }
+
+  .menu-btn{
+    width:40px;
+    height:40px;
+  }
+
+  .menu-panel{
+    position:fixed;
+    top:64px;
+    left:12px;
+    right:12px;
+    width:auto;
+  }
+
+  .hero{
+    min-height:360px;
+    padding:35px 22px;
+  }
+
+  .hero h1{
+    font-size:clamp(38px,12vw,62px);
+  }
+
+  .hero p{
+    font-size:15px;
+  }
+
+  .menu-panel button{
+    padding:15px 16px;
+    font-size:16px;
+  }
+}
 </style>
 </head>
 
@@ -381,7 +398,8 @@ select{
         class="menu-btn"
         id="menuBtn"
         onclick="toggleMenu()"
-        aria-label="Abrir menú">
+        aria-label="Abrir menú"
+        aria-expanded="false">
         ⋮
       </button>
 
@@ -394,15 +412,13 @@ select{
 
     </div>
 
-    <div
-      class="menu-panel"
-      id="menuPanel">
+    <div class="menu-panel" id="menuPanel">
 
       <button onclick="menuGo('home')">
         🏠 Inicio
       </button>
 
-      <button onclick="menuGo('ranking',4)">
+      <button onclick="menuGo('ranking',2)">
         🏆 Ranking
       </button>
 
@@ -442,42 +458,24 @@ select{
   </div>
 </header>
 
-    <nav id="nav"></nav>
-
-    <button
-      class="btn dark"
-      onclick="goBack()">
-      ← Atrás
-    </button>
-
-    <button
-      class="btn"
-      id="authBtn"
-      onclick="openAuth()">
-      Iniciar sesión
-    </button>
-
-  </div>
-</header>
-
 <main>
 
 <section id="home" class="page active">
 
   <div class="hero">
-  <h1>
+
     <h1>
-  BLACKOPS2<br>
-  <span>LIGA COMPETITIVA</span>
-</h1>
+      BLACKOPS2<br>
+      <span>LIGA COMPETITIVA</span>
+    </h1>
 
-<p>
-  La competición de Call of Duty:
-  Black Ops II. Tres formatos,
-  clanes, ranking, retos y perfiles.
-</p>
+    <p>
+      La competición de Call of Duty:
+      Black Ops II. Tres formatos,
+      clanes, ranking, retos y perfiles.
+    </p>
 
-</div>
+  </div>
 
   <div class="grid">
 
@@ -651,6 +649,7 @@ select{
       </select>
 
       <select id="challengeMode">
+
         <option value="snd">
           Buscar y Destruir
         </option>
@@ -662,6 +661,7 @@ select{
         <option value="ctf">
           Tomar la Bandera
         </option>
+
       </select>
 
       <button
@@ -789,7 +789,6 @@ select{
   <div id="adminBox"></div>
 
 </section>
-
 </main>
 
 <div
@@ -848,7 +847,9 @@ select{
   class="toast"
   id="toast">
 </div>
+
 <script>
+
 let me=null;
 let isAdmin=false;
 let currentLeague=4;
@@ -856,6 +857,7 @@ let currentLeague=4;
 const $=id=>document.getElementById(id);
 
 async function api(path,opt={}){
+
   const r=await fetch(path,{
     credentials:"include",
     ...opt,
@@ -879,9 +881,11 @@ async function api(path,opt={}){
 }
 
 function toast(message){
+
   const el=$("toast");
 
   el.textContent=message;
+
   el.classList.add("show");
 
   setTimeout(()=>{
@@ -889,30 +893,62 @@ function toast(message){
   },2800);
 }
 
-function show(id,league){
-  function toggleMenu(){
 
-  const menu =
-    document.getElementById("menuPanel");
+/* =========================
+   MENÚ
+========================= */
 
-  if(!menu) return;
+function toggleMenu(){
 
-  menu.classList.toggle("open");
+  const menu=$("menuPanel");
+  const button=$("menuBtn");
+
+  if(!menu||!button)return;
+
+  const open=
+    menu.classList.toggle("open");
+
+  button.setAttribute(
+    "aria-expanded",
+    open?"true":"false"
+  );
 }
 
 function closeMenu(){
 
-  const menu =
-    document.getElementById("menuPanel");
+  const menu=$("menuPanel");
+  const button=$("menuBtn");
 
-  if(!menu) return;
+  if(menu){
+    menu.classList.remove("open");
+  }
 
-  menu.classList.remove("open");
+  if(button){
+    button.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  }
 }
 
 function menuGo(id,league){
 
   closeMenu();
+
+  if(
+    (id==="perfil"||id==="historial") &&
+    !me
+  ){
+
+    openAuth();
+    return;
+  }
+
+  if(id==="admin"&&!isAdmin){
+
+    toast("Acceso solo para ADMIN");
+    return;
+  }
 
   show(id,league);
 }
@@ -921,13 +957,10 @@ document.addEventListener(
   "click",
   function(event){
 
-    const menu =
-      document.getElementById("menuPanel");
+    const menu=$("menuPanel");
+    const button=$("menuBtn");
 
-    const button =
-      document.getElementById("menuBtn");
-
-    if(!menu || !button) return;
+    if(!menu||!button)return;
 
     if(
       !menu.contains(event.target) &&
@@ -940,9 +973,19 @@ document.addEventListener(
 
   }
 );
+
+
+/* =========================
+   NAVEGACIÓN
+========================= */
+
+function show(id,league){
+
   document
     .querySelectorAll(".page")
-    .forEach(x=>x.classList.remove("active"));
+    .forEach(
+      x=>x.classList.remove("active")
+    );
 
   const page=$(id);
 
@@ -992,35 +1035,51 @@ document.addEventListener(
 function goBack(){
 
   if(window.history.length>1){
+
     history.back();
+
   }else{
+
     show("home");
+
   }
 }
 
 window.addEventListener(
   "popstate",
   ()=>{
+
     const id=
-      location.hash.replace("#","")||"home";
+      location.hash
+        .replace("#","")||"home";
 
     document
       .querySelectorAll(".page")
-      .forEach(x=>x.classList.remove("active"));
+      .forEach(
+        x=>x.classList.remove("active")
+      );
 
     const page=$(id);
 
     if(page){
       page.classList.add("active");
     }
+
   }
 );
+
+
+/* =========================
+   AUTENTICACIÓN
+========================= */
 
 function openAuth(){
 
   if(me){
+
     show("perfil");
     return;
+
   }
 
   $("authModal")
@@ -1061,8 +1120,10 @@ async function submitAuth(){
     $("authPass").value;
 
   if(!username||!password){
+
     toast("Completa todos los campos");
     return;
+
   }
 
   try{
@@ -1103,10 +1164,12 @@ async function submitAuth(){
 async function logout(){
 
   try{
+
     await api(
       "/api/logout",
       {method:"POST"}
     );
+
   }catch{}
 
   me=null;
@@ -1119,89 +1182,49 @@ async function logout(){
   toast("Sesión cerrada");
 }
 
+
+/* =========================
+   NAVEGACIÓN / SESIÓN
+========================= */
+
 function renderNav(){
 
-  let html=`
-    <button onclick="show('home')">
-      Inicio
-    </button>
+  const admin=
+    $("adminMenu");
 
-    <button onclick="show('ranking',4)">
-      Ranking
-    </button>
+  if(admin){
 
-    <button onclick="show('clans')">
-      Clanes
-    </button>
+    admin.style.display=
+      isAdmin
+        ?"block"
+        :"none";
 
-    <button onclick="show('retos')">
-      Retos
-    </button>
-
-    <button onclick="show('jugadores')">
-      Jugadores
-    </button>
-
-    <button onclick="show('reglas')">
-      Reglas
-    </button>
-  `;
-
-  if(me){
-
-    html+=`
-      <button onclick="show('perfil')">
-        Mi perfil
-      </button>
-
-      <button onclick="show('historial')">
-        Historial
-      </button>
-    `;
-
-    if(isAdmin){
-
-      html+=`
-        <button onclick="show('admin')">
-          ADMIN
-        </button>
-      `;
-    }
   }
 
-  document.getElementById("nav").innerHTML=html;
-}
-
-  const auth =
-    document.getElementById("authBtn");
+  const auth=
+    $("authBtn");
 
   if(auth){
 
-    auth.textContent =
+    auth.textContent=
       me
-      ? "Cerrar sesión"
-      : "Iniciar sesión";
+        ?"Cerrar sesión"
+        :"Iniciar sesión";
 
-    auth.onclick =
+    auth.onclick=
       me
-      ? logout
-      : openAuth;
+        ?logout
+        :openAuth;
 
   }
 
-}
+  const nav=$("nav");
 
-  $("nav").innerHTML=html;
+  if(nav){
 
-  $("authBtn").textContent=
-    me
-      ?"Cerrar sesión"
-      :"Iniciar sesión";
+    nav.innerHTML="";
 
-  $("authBtn").onclick=
-    me
-      ?logout
-      :openAuth;
+  }
 }
 
 
@@ -1445,7 +1468,7 @@ async function openClan(id){
 
         ${
           data.members.length
-          ?
+            ?
           data.members.map(player=>`
 
             <div
@@ -1458,11 +1481,11 @@ async function openClan(id){
 
               ${
                 player.role==="captain"
-                ?
+                  ?
                 `<span class="pill">
                   CAPITÁN
                 </span>`
-                :""
+                  :""
               }
 
               <p class="muted">
@@ -1470,9 +1493,9 @@ async function openClan(id){
                 PSN:
                 ${
                   player.psn_id
-                  ?
+                    ?
                   esc(player.psn_id)
-                  :
+                    :
                   "No indicado"
                 }
 
@@ -1481,11 +1504,12 @@ async function openClan(id){
             </div>
 
           `).join("")
-          :
+            :
           "<p class='muted'>Sin jugadores.</p>"
         }
 
       </div>
+
     `;
 
   }catch(error){
@@ -1609,11 +1633,11 @@ async function loadChallenges(){
 
         const expires=
           challenge.expires_at
-          ?
+            ?
           new Date(
             challenge.expires_at
           )
-          :
+            :
           null;
 
         return `
@@ -1637,9 +1661,9 @@ async function loadChallenges(){
                 <span class="pill">
                   ${
                     challenge.status==="open"
-                    ?
+                      ?
                     "POR ACEPTAR"
-                    :
+                      :
                     "ACEPTADO"
                   }
                 </span>
@@ -1650,17 +1674,17 @@ async function loadChallenges(){
 
               ${
                 challenge.status==="open"
-                ?
+                  ?
                 `
-                <button
-                  class="btn"
-                  onclick="acceptChallenge(${challenge.id})">
+                  <button
+                    class="btn"
+                    onclick="acceptChallenge(${challenge.id})">
 
-                  Aceptar
+                    Aceptar
 
-                </button>
+                  </button>
                 `
-                :
+                  :
                 ""
               }
 
@@ -1679,54 +1703,56 @@ async function loadChallenges(){
             ${
               expires &&
               challenge.status==="open"
-              ?
+                ?
               `
-              <p class="accent">
-                ⏱️ Caduca:
-                ${expires.toLocaleTimeString(
-                  "es-ES",
-                  {
-                    hour:"2-digit",
-                    minute:"2-digit"
-                  }
-                )}
-              </p>
+                <p class="accent">
+
+                  ⏱️ Caduca:
+                  ${expires.toLocaleTimeString(
+                    "es-ES",
+                    {
+                      hour:"2-digit",
+                      minute:"2-digit"
+                    }
+                  )}
+
+                </p>
               `
-              :
+                :
               ""
             }
 
             ${
               challenge.status==="accepted"
-              ?
+                ?
               `
-              <div class="row">
+                <div class="row">
 
-                <button
-                  class="btn ok"
-                  onclick="reportResult(
-                    ${challenge.id},
-                    'win'
-                  )">
+                  <button
+                    class="btn ok"
+                    onclick="reportResult(
+                      ${challenge.id},
+                      'win'
+                    )">
 
-                  Confirmar victoria
+                    Confirmar victoria
 
-                </button>
+                  </button>
 
-                <button
-                  class="btn dark"
-                  onclick="reportResult(
-                    ${challenge.id},
-                    'loss'
-                  )">
+                  <button
+                    class="btn dark"
+                    onclick="reportResult(
+                      ${challenge.id},
+                      'loss'
+                    )">
 
-                  Confirmar derrota
+                    Confirmar derrota
 
-                </button>
+                  </button>
 
-              </div>
+                </div>
               `
-              :
+                :
               ""
             }
 
@@ -1782,9 +1808,9 @@ async function reportResult(id,result){
 
     toast(
       data.completed
-      ?
+        ?
       "Resultado confirmado"
-      :
+        :
       "Resultado enviado. Falta el otro capitán."
     );
 
@@ -1796,8 +1822,7 @@ async function reportResult(id,result){
 
   }
 }
-  
-async function loadUsers(){
+  async function loadUsers(){
 
   const q=
     encodeURIComponent(
@@ -1807,14 +1832,16 @@ async function loadUsers(){
   try{
 
     const data=
-      await api("/api/users?q="+q);
+      await api(
+        "/api/users?q="+q
+      );
 
     if(!data.length){
 
       $("usersList").innerHTML=`
-        <p class="muted">
+        <div class="card">
           No se encontraron jugadores.
-        </p>
+        </div>
       `;
 
       return;
@@ -1834,138 +1861,37 @@ async function loadUsers(){
               </h3>
 
               <p class="muted">
-
-                PSN ID:
+                PSN:
                 ${
                   user.psn_id
-                  ?
+                    ?
                   esc(user.psn_id)
-                  :
+                    :
                   "No indicado"
                 }
-
               </p>
 
             </div>
 
             <div class="spacer"></div>
 
-            <button
-              class="btn dark"
-              onclick="viewUser(${user.id})">
-
-              Ver perfil
-
-            </button>
+            ${
+              user.clan_name
+                ?
+              `
+                <span class="pill">
+                  ${esc(user.clan_name)}
+                </span>
+              `
+                :
+              ""
+            }
 
           </div>
 
         </div>
 
       `).join("");
-
-  }catch(error){
-
-    toast(error.message);
-
-  }
-}
-
-
-async function viewUser(id){
-
-  try{
-
-    const data=
-      await api(
-        "/api/users/"+id
-      );
-
-    $("usersList").innerHTML=`
-
-      <div class="card">
-
-        <div class="row">
-
-          <h2>
-            ${esc(data.user.username)}
-          </h2>
-
-          <div class="spacer"></div>
-
-          <button
-            class="btn dark"
-            onclick="loadUsers()">
-
-            ← Volver
-
-          </button>
-
-        </div>
-
-        <p>
-
-          <b>ID de jugador:</b>
-          ${data.user.id}
-
-        </p>
-
-        <p>
-
-          <b>PSN ID:</b>
-
-          ${
-            data.user.psn_id
-            ?
-            esc(data.user.psn_id)
-            :
-            "No indicado"
-          }
-
-        </p>
-
-        <h3>
-          Clanes
-        </h3>
-
-        ${
-          data.clans.length
-          ?
-          data.clans.map(clan=>`
-
-            <div class="card">
-
-              <b>
-                ${esc(clan.name)}
-              </b>
-
-              <p class="muted">
-
-                Liga:
-                ${clan.league}v${clan.league}
-
-                ·
-
-                ID:
-                ${esc(clan.clan_code||"")}
-
-              </p>
-
-            </div>
-
-          `).join("")
-          :
-          `
-          <p class="muted">
-            Este jugador todavía no pertenece
-            a ningún clan.
-          </p>
-          `
-        }
-
-      </div>
-
-    `;
 
   }catch(error){
 
@@ -1987,9 +1913,9 @@ async function loadProfile(){
 
       <div class="card">
 
-        <h2>
-          Inicia sesión
-        </h2>
+        <h3>
+          Necesitas iniciar sesión
+        </h3>
 
         <button
           class="btn"
@@ -2006,75 +1932,55 @@ async function loadProfile(){
     return;
   }
 
-  $("profileBox").innerHTML=`
-
-    <div class="card">
-
-      <h2>
-        ${esc(me.username)}
-      </h2>
-
-      <p class="muted">
-        Configura aquí tu perfil de jugador.
-      </p>
-
-      <div class="form">
-
-        <label>
-          ID de PlayStation
-        </label>
-
-        <input
-          id="psn"
-          maxlength="32"
-          placeholder="Tu ID de PlayStation"
-          value="${
-            esc(me.psn_id||"")
-          }">
-
-        <button
-          class="btn"
-          onclick="saveProfile()">
-
-          Guardar perfil
-
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-}
-
-
-async function saveProfile(){
-
-  const psn=
-    $("psn").value.trim();
-
   try{
-
-    await api(
-      "/api/profile",
-      {
-        method:"PUT",
-        body:JSON.stringify({
-          psn_id:psn
-        })
-      }
-    );
 
     const data=
       await api("/api/me");
 
-    me=data.user;
+    me=data.user||me;
 
-    toast(
-      "Perfil actualizado"
-    );
+    $("profileBox").innerHTML=`
 
-    loadProfile();
+      <div class="card">
+
+        <h2>
+          ${esc(me.username)}
+        </h2>
+
+        <p class="muted">
+          PSN:
+          ${
+            me.psn_id
+              ?
+            esc(me.psn_id)
+              :
+            "No indicado"
+          }
+        </p>
+
+        <p>
+
+          <b>Clan:</b>
+          ${
+            me.clan_name
+              ?
+            esc(me.clan_name)
+              :
+            "Sin clan"
+          }
+
+        </p>
+
+        <p>
+
+          <b>Rol:</b>
+          ${me.is_admin?"ADMIN":"Jugador"}
+
+        </p>
+
+      </div>
+
+    `;
 
   }catch(error){
 
@@ -2095,7 +2001,19 @@ async function loadHistory(){
     $("historyList").innerHTML=`
 
       <div class="card">
-        Inicia sesión para ver tu historial.
+
+        <h3>
+          Necesitas iniciar sesión
+        </h3>
+
+        <button
+          class="btn"
+          onclick="openAuth()">
+
+          Iniciar sesión
+
+        </button>
+
       </div>
 
     `;
@@ -2113,15 +2031,7 @@ async function loadHistory(){
       $("historyList").innerHTML=`
 
         <div class="card">
-
-          <h3>
-            Sin partidas todavía
-          </h3>
-
-          <p class="muted">
-            Cuando completes un reto aparecerá aquí.
-          </p>
-
+          Todavía no tienes partidas registradas.
         </div>
 
       `;
@@ -2136,42 +2046,46 @@ async function loadHistory(){
 
           <div class="row">
 
-            <b>
-              ${esc(match.creator_name)}
-            </b>
+            <div>
 
-            <span>
-              VS
+              <h3>
+                ${esc(match.home_clan)}
+                vs
+                ${esc(match.away_clan)}
+              </h3>
+
+              <p class="muted">
+
+                ${match.team_size}v${match.team_size}
+
+                ·
+
+                ${esc(match.mode||"Partida")}
+
+              </p>
+
+            </div>
+
+            <div class="spacer"></div>
+
+            <span
+              class="pill">
+
+              ${
+                match.result==="win"
+                  ?
+                "VICTORIA"
+                  :
+                match.result==="loss"
+                  ?
+                "DERROTA"
+                  :
+                "RESULTADO"
+              }
+
             </span>
 
-            <b>
-              ${esc(match.accepter_name||"")}
-            </b>
-
           </div>
-
-          <p>
-
-            Ganador:
-            <strong class="accent">
-              ${esc(match.winner_name||"")}
-            </strong>
-
-          </p>
-
-          <p class="muted">
-
-            ${
-              match.completed_at
-              ?
-              new Date(
-                match.completed_at
-              ).toLocaleString("es-ES")
-              :
-              ""
-            }
-
-          </p>
 
         </div>
 
@@ -2197,13 +2111,13 @@ async function loadAdmin(){
 
       <div class="card">
 
-        <h2>
-          Acceso denegado
-        </h2>
+        <h3>
+          Acceso restringido
+        </h3>
 
         <p class="muted">
           Esta sección solo está disponible
-          para la cuenta ADMIN.
+          para administración.
         </p>
 
       </div>
@@ -2215,126 +2129,46 @@ async function loadAdmin(){
 
   try{
 
-    const users=
-      await api(
-        "/api/admin/users"
-      );
+    const data=
+      await api("/api/admin");
 
     $("adminBox").innerHTML=`
 
-      <div class="card">
+      <div class="grid">
 
-        <h2>
-          Gestión de usuarios
-        </h2>
+        <div class="card">
 
-        <p class="muted">
-          Desde aquí puedes bloquear y
-          desbloquear cuentas.
-        </p>
+          <h3>
+            Usuarios
+          </h3>
 
-        ${
-          users.length
-          ?
-          users.map(user=>`
+          <strong>
+            ${data.users||0}
+          </strong>
 
-            <div
-              class="row"
-              style="
-                padding:12px 0;
-                border-bottom:1px solid var(--line);
-              ">
+        </div>
 
-              <div>
+        <div class="card">
 
-                <b>
-                  ${esc(user.username)}
-                </b>
+          <h3>
+            Clanes
+          </h3>
 
-                <p class="muted">
-                  PSN:
-                  ${
-                    user.psn_id
-                    ?
-                    esc(user.psn_id)
-                    :
-                    "No indicado"
-                  }
-                </p>
+          <strong>
+            ${data.clans||0}
+          </strong>
 
-              </div>
+        </div>
 
-              <div class="spacer"></div>
+        <div class="card">
 
-              ${
-                user.is_blocked
-                ?
-                `
-                <button
-                  class="btn ok"
-                  onclick="unblockUser(${user.id})">
+          <h3>
+            Partidas
+          </h3>
 
-                  Desbloquear
-
-                </button>
-                `
-                :
-                `
-                <button
-                  class="btn danger"
-                  onclick="blockUser(${user.id})">
-
-                  Bloquear
-
-                </button>
-                `
-              }
-
-            </div>
-
-          `).join("")
-          :
-          "<p>No hay usuarios.</p>"
-        }
-
-      </div>
-
-
-      <div class="card">
-
-        <h2>
-          Ranking
-        </h2>
-
-        <p class="muted">
-          Reiniciar la clasificación de una liga.
-        </p>
-
-        <div class="row">
-
-          <button
-            class="btn"
-            onclick="resetRanking(2)">
-
-            Reiniciar 2v2
-
-          </button>
-
-          <button
-            class="btn"
-            onclick="resetRanking(3)">
-
-            Reiniciar 3v3
-
-          </button>
-
-          <button
-            class="btn"
-            onclick="resetRanking(4)">
-
-            Reiniciar 4v4
-
-          </button>
+          <strong>
+            ${data.matches||0}
+          </strong>
 
         </div>
 
@@ -2350,128 +2184,55 @@ async function loadAdmin(){
 }
 
 
-async function blockUser(id){
+/* =========================
+   REFRESH
+========================= */
 
-  if(
-    !confirm(
-      "¿Bloquear este usuario indefinidamente?"
-    )
-  ){
-    return;
-  }
+async function refresh(){
 
   try{
 
-    await api(
-      "/api/admin/block",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          user_id:id,
-          permanent:true
-        })
-      }
-    );
+    const data=
+      await api("/api/me");
 
-    toast(
-      "Usuario bloqueado"
-    );
+    me=data.user||null;
 
-    loadAdmin();
+    isAdmin=
+      !!(
+        data.user &&
+        (
+          data.user.is_admin ||
+          data.user.role==="admin"
+        )
+      );
 
   }catch(error){
 
-    toast(error.message);
+    me=null;
+    isAdmin=false;
 
   }
-}
 
-
-async function unblockUser(id){
-
-  try{
-
-    await api(
-      "/api/admin/unblock",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          user_id:id
-        })
-      }
-    );
-
-    toast(
-      "Usuario desbloqueado"
-    );
-
-    loadAdmin();
-
-  }catch(error){
-
-    toast(error.message);
-
-  }
-}
-
-
-async function resetRanking(league){
-
-  if(
-    !confirm(
-      "¿Seguro que quieres reiniciar el ranking "+
-      league+"v"+league+"?"
-    )
-  ){
-    return;
-  }
-
-  try{
-
-    await api(
-      "/api/admin/reset-ranking",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          league
-        })
-      }
-    );
-
-    toast(
-      "Ranking reiniciado"
-    );
-
-    loadAdmin();
-
-  }catch(error){
-
-    toast(error.message);
-
-  }
+  renderNav();
 }
 
 
 /* =========================
-   SEGURIDAD HTML
+   UTILIDADES
 ========================= */
 
 function esc(value){
 
-  return String(
-    value??""
-  ).replace(
-    /[&<>"']/g,
-    char=>({
+  if(value===null||value===undefined){
+    return "";
+  }
 
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-
-    }[char])
-  );
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
@@ -2482,26 +2243,14 @@ function esc(value){
 
 (async function(){
 
-  try{
+  await refresh();
 
-    await refresh();
+  const hash=
+    location.hash.replace("#","");
 
-  }catch(error){
+  if(hash && $(hash)){
 
-    renderNav();
-
-  }
-
-  const page=
-    location.hash
-      .replace("#","");
-
-  if(
-    page &&
-    $(page)
-  ){
-
-    show(page);
+    show(hash);
 
   }else{
 
@@ -2509,23 +2258,8 @@ function esc(value){
 
   }
 
-  setInterval(
-    ()=>{
-
-      if(
-        $("retos") &&
-        $("retos").classList.contains("active")
-      ){
-
-        loadChallenges();
-
-      }
-
-    },
-    30000
-  );
-
 })();
+
 </script>
 
 </body>
