@@ -2438,6 +2438,10 @@ footer{
           Todos
         </option>
 
+        <option value="1">
+          1v1
+        </option>
+
         <option value="2">
           2v2
         </option>
@@ -3032,7 +3036,7 @@ footer{
 
   Competición independiente de la comunidad.
 
-</footer>
+  </footer>
 
 
 <!-- =====================================================
@@ -5048,22 +5052,48 @@ async function openClan(
 
 
         ${
-          me
+          !me
             ? `
               <button
                 class="btn"
-                onclick="
-                  openInvite(
-                    ${Number(
-                      clan.id
-                    )}
-                  )
-                "
+                onclick="openAuth()"
               >
-                📨 Invitar jugador
+                Inicia sesión para solicitar unirte
               </button>
             `
-            : ""
+            : clan.viewer_is_member
+              ? `
+                ${
+                  clan.viewer_role === "captain"
+                    ? `
+                      <button
+                        class="btn"
+                        onclick="loadJoinRequests(${Number(clan.id)})"
+                      >
+                        👑 Ver solicitudes de ingreso
+                      </button>
+                    `
+                    : `
+                      <div class="pill green">
+                        Ya perteneces a este clan
+                      </div>
+                    `
+                }
+              `
+              : clan.viewer_join_pending
+                ? `
+                  <div class="pill yellow">
+                    ⏳ Solicitud pendiente
+                  </div>
+                `
+                : `
+                  <button
+                    class="btn"
+                    onclick="requestJoinClan(${Number(clan.id)})"
+                  >
+                    ➕ Solicitar unirse al clan
+                  </button>
+                `
         }
 
       </div>
@@ -5082,6 +5112,214 @@ async function openClan(
 
   }
 
+}
+
+
+/* =====================================================
+   SOLICITAR UNIRSE A UN CLAN
+===================================================== */
+
+async function requestJoinClan(clanId){
+
+  if(!me){
+    openAuth();
+    return;
+  }
+
+  if(!confirm("¿Quieres solicitar unirte a este clan?"))
+    return;
+
+  try{
+    await api(
+      "/clans/" + Number(clanId) + "/join",
+      {
+        method:"POST"
+      }
+    );
+
+    showToast(
+      "Solicitud enviada al capitán.",
+      "success"
+    );
+
+    await openClan(clanId);
+
+  }catch(error){
+    showError(error);
+  }
+}
+
+
+async function loadJoinRequests(clanId){
+
+  if(!me){
+    openAuth();
+    return;
+  }
+
+  try{
+
+    const data =
+      await api("/clan-join-requests");
+
+    const rows =
+      data.requests ||
+      data.rows ||
+      [];
+
+    const old =
+      document.getElementById(
+        "joinRequestsModal"
+      );
+
+    if(old)
+      old.remove();
+
+    const modal =
+      document.createElement("div");
+
+    modal.className =
+      "modal open";
+
+    modal.id =
+      "joinRequestsModal";
+
+    modal.innerHTML = `
+      <div class="modal-box">
+
+        <div class="modal-head">
+          <h2>📥 Solicitudes de ingreso</h2>
+
+          <button
+            class="close-btn"
+            onclick="
+              document
+                .getElementById('joinRequestsModal')
+                ?.remove()
+            "
+          >
+            ×
+          </button>
+        </div>
+
+        ${
+          rows.length
+            ? rows.map(function(item){
+                return `
+                  <div
+                    class="card"
+                    style="margin-bottom:10px"
+                  >
+                    <div class="member-row">
+
+                      <div class="member-avatar">
+                        ${escapeHtml(
+                          initials(
+                            item.username ||
+                            "Jugador"
+                          )
+                        )}
+                      </div>
+
+                      <div>
+                        <strong>
+                          ${escapeHtml(
+                            item.username ||
+                            "Jugador"
+                          )}
+                        </strong>
+
+                        <div class="muted">
+                          ${escapeHtml(
+                            item.psn_id ||
+                            "Sin PSN"
+                          )}
+                        </div>
+                      </div>
+
+                      <div class="spacer"></div>
+
+                      <button
+                        class="btn"
+                        onclick="
+                          handleJoinRequest(
+                            ${Number(item.id)},
+                            'accept'
+                          )
+                        "
+                      >
+                        ✅ Aceptar
+                      </button>
+
+                      <button
+                        class="btn dark"
+                        onclick="
+                          handleJoinRequest(
+                            ${Number(item.id)},
+                            'reject'
+                          )
+                        "
+                      >
+                        ❌ Rechazar
+                      </button>
+
+                    </div>
+                  </div>
+                `;
+              }).join("")
+            : `
+              <div class="empty">
+                No hay solicitudes pendientes.
+              </div>
+            `
+        }
+
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+  }catch(error){
+    showError(error);
+  }
+}
+
+
+async function handleJoinRequest(
+  requestId,
+  action
+){
+
+  try{
+
+    await api(
+      "/clan-join-requests/" +
+      Number(requestId) +
+      "/" +
+      action,
+      {
+        method:"POST"
+      }
+    );
+
+    showToast(
+      action === "accept"
+        ? "Jugador incorporado al clan."
+        : "Solicitud rechazada.",
+      "success"
+    );
+
+    const modal =
+      document.getElementById(
+        "joinRequestsModal"
+      );
+
+    if(modal)
+      modal.remove();
+
+  }catch(error){
+    showError(error);
+  }
 }
 
 
@@ -5422,6 +5660,15 @@ window.openClan =
 
 window.openInvite =
   openInvite;
+
+window.requestJoinClan =
+  requestJoinClan;
+
+window.loadJoinRequests =
+  loadJoinRequests;
+
+window.handleJoinRequest =
+  handleJoinRequest;
 
 window.loadClans =
   loadClans;
@@ -5827,7 +6074,7 @@ async function submitAuth(){
     document
       .getElementById(
         "authPassword"
-      )
+              )
       ?.value || "";
 
 
@@ -6597,294 +6844,140 @@ async function loadClans(){
    ABRIR CLAN
 ===================================================== */
 
-async function openClan(
-  clanId
-){
-
-  if(!clanId)
-    return;
-
+async function openClan(clanId){
+  if(!clanId) return;
 
   try{
+    const data = await api(`/clans/${Number(clanId)}`);
+    const clan = data.clan || data;
+    const members = data.members || clan.members || [];
+    const isMember = !!me && members.some(m => Number(m.user_id) === Number(me.id));
+    const isCaptain = !!me && (
+      Boolean(data.is_captain) ||
+      Number(clan.captain_id || clan.owner_id || 0) === Number(me.id)
+    );
+    const requestPending = Boolean(data.join_request_pending);
+    const full = Number(clan.member_count || members.length || 0) >= Number(clan.league || clan.team_size || 4);
 
-    const data =
-      await api(
-        `/clans/${Number(clanId)}`
-      );
+    const old = document.getElementById("dynamicClanModal");
+    if(old) old.remove();
 
-
-    const clan =
-      data.clan ||
-      data;
-
-
-    const members =
-      data.members ||
-      clan.members ||
-      [];
-
-
-    const modal =
-      document.createElement(
-        "div"
-      );
-
-    modal.className =
-      "modal open";
-
-    modal.id =
-      "dynamicClanModal";
-
+    const modal = document.createElement("div");
+    modal.className = "modal open";
+    modal.id = "dynamicClanModal";
 
     modal.innerHTML = `
-
       <div class="modal-box">
-
         <div class="modal-head">
-
           <div>
-
-            <h2>
-              🛡️ ${escapeHtml(
-                clan.name ||
-                clan.clan_name ||
-                "Clan"
-              )}
-            </h2>
-
-            <div
-              style="
-                color:var(--muted);
-                font-size:12px;
-                margin-top:4px;
-              "
-            >
-
-              ${leagueName(
-                clan.league ||
-                clan.team_size
-              )}
-
-              ·
-
-              ${escapeHtml(
-                clan.clan_code ||
-                ""
-              )}
-
+            <h2>🛡️ ${escapeHtml(clan.name || clan.clan_name || "Clan")}</h2>
+            <div style="color:var(--muted);font-size:12px">
+              ${leagueName(clan.league || clan.team_size)}
+              · ${Number(clan.member_count || members.length || 0)}/${Number(clan.league || clan.team_size || 4)} jugadores
             </div>
-
           </div>
-
-
-          <button
-            class="close-btn"
-            onclick="
-              document
-                .getElementById(
-                  'dynamicClanModal'
-                )
-                ?.remove()
-            "
-          >
-            ×
-          </button>
-
+          <button class="close-btn" onclick="document.getElementById('dynamicClanModal')?.remove()">×</button>
         </div>
-
 
         <div class="grid-3">
-
-          <div class="stat">
-
-            <strong>
-              ${Number(
-                clan.points ||
-                0
-              )}
-            </strong>
-
-            <span>
-              Puntos
-            </span>
-
-          </div>
-
-
-          <div class="stat">
-
-            <strong>
-              ${Number(
-                clan.wins ||
-                0
-              )}
-            </strong>
-
-            <span>
-              Victorias
-            </span>
-
-          </div>
-
-
-          <div class="stat">
-
-            <strong>
-              ${Number(
-                clan.losses ||
-                0
-              )}
-            </strong>
-
-            <span>
-              Derrotas
-            </span>
-
-          </div>
-
+          <div class="stat"><strong>${Number(clan.points || 0)}</strong><span>Puntos</span></div>
+          <div class="stat"><strong>${Number(clan.wins || 0)}</strong><span>Victorias</span></div>
+          <div class="stat"><strong>${Number(clan.losses || 0)}</strong><span>Derrotas</span></div>
         </div>
-
 
         <div class="card">
-
-          <h3>
-            👥 Jugadores
-          </h3>
-
-
-          ${
-            members.length
-
-              ? members.map(
-                  member => `
-
-                    <div class="member-row">
-
-                      <div class="member-avatar">
-
-                        ${
-                          member.avatar_url
-                            ? `
-                              <img
-                                src="${escapeHtml(
-                                  member.avatar_url
-                                )}"
-                              >
-                            `
-                            : escapeHtml(
-                                initials(
-                                  member.username ||
-                                  member.name
-                                )
-                              )
-                        }
-
-                      </div>
-
-
-                      <div>
-
-                        <strong>
-                          ${escapeHtml(
-                            member.username ||
-                            member.name ||
-                            "Jugador"
-                          )}
-                        </strong>
-
-
-                        ${
-                          member.psn_id
-                            ? `
-                              <div
-                                style="
-                                  color:var(--muted);
-                                  font-size:11px;
-                                  margin-top:3px;
-                                "
-                              >
-                                PSN:
-                                ${escapeHtml(
-                                  member.psn_id
-                                )}
-                              </div>
-                            `
-                            : ""
-                        }
-
-                      </div>
-
-
-                      <div class="spacer"></div>
-
-
-                      ${
-                        member.role ===
-                        "captain"
-
-                          ? `
-                            <span class="pill yellow">
-                              👑 Capitán
-                            </span>
-                          `
-                          : ""
-                      }
-
-                    </div>
-
-                  `
-                ).join("")
-
-              : `
-                <div class="empty">
-                  Este clan todavía
-                  no tiene jugadores.
-                </div>
-              `
-          }
-
+          <h3>👥 Jugadores</h3>
+          ${members.length ? members.map(member => `
+            <div class="member-row">
+              <div class="member-avatar">${escapeHtml(initials(member.username || member.name))}</div>
+              <div>
+                <strong>${escapeHtml(member.username || member.name || "Jugador")}</strong>
+              </div>
+              <div class="spacer"></div>
+              ${Number(member.user_id) === Number(clan.captain_id) ? `<span class="pill yellow">👑 Capitán</span>` : ""}
+            </div>
+          `).join("") : `<div class="empty">Este clan todavía no tiene jugadores.</div>`}
         </div>
 
-
-        ${
-          me
-
-            ? `
-              <button
-                class="btn"
-                onclick="
-                  openInvite(
-                    ${Number(clan.id)}
-                  )
-                "
-              >
-                📨 Invitar jugador
-              </button>
-            `
-            : ""
-        }
-
+        ${!me ? `
+          <button class="btn" onclick="openAuth()">Inicia sesión para solicitar entrar</button>
+        ` : isMember ? `
+          <div class="card"><div class="empty">Ya perteneces a este clan.</div></div>
+        ` : isCaptain ? `
+          <div class="card">
+            <h3>📥 Solicitudes de ingreso</h3>
+            <div id="joinRequestsBox" class="loading">Cargando solicitudes...</div>
+          </div>
+        ` : requestPending ? `
+          <div class="card"><div class="empty">⏳ Ya has enviado una solicitud. Espera a que el capitán la acepte.</div></div>
+        ` : full ? `
+          <div class="card"><div class="empty">Este clan está completo.</div></div>
+        ` : `
+          <button class="btn" onclick="requestToJoinClan(${Number(clan.id)})">➕ Solicitar unirse al clan</button>
+        `}
       </div>
     `;
 
+    document.body.appendChild(modal);
 
-    document.body.appendChild(
-      modal
-    );
-
-
+    if(isCaptain){
+      await loadClanJoinRequests(Number(clan.id));
+    }
   }catch(error){
-
     showError(error);
-
   }
-
 }
 
+async function requestToJoinClan(clanId){
+  if(!me){ openAuth(); return; }
+  try{
+    await api(`/clans/${Number(clanId)}/join-request`, {method:"POST"});
+    showToast("Solicitud enviada al capitán.", "success");
+    await openClan(Number(clanId));
+  }catch(error){ showError(error); }
+}
 
-/* =====================================================
-   INVITACIONES A CLAN
-===================================================== */
+async function loadClanJoinRequests(clanId){
+  const box = document.getElementById("joinRequestsBox");
+  if(!box) return;
+  try{
+    const data = await api(`/clans/${Number(clanId)}/join-requests`);
+    const rows = Array.isArray(data) ? data : (data.requests || data.rows || []);
+    if(!rows.length){
+      box.innerHTML = `<div class="empty">No hay solicitudes pendientes.</div>`;
+      return;
+    }
+    box.innerHTML = rows.map(item => `
+      <div class="member-row" style="margin-bottom:10px">
+        <div class="member-avatar">${escapeHtml(initials(item.username || item.psn_id || "J"))}</div>
+        <div style="flex:1">
+          <strong>${escapeHtml(item.username || "Jugador")}</strong>
+          ${item.psn_id ? `<div style="color:var(--muted);font-size:11px">PSN: ${escapeHtml(item.psn_id)}</div>` : ""}
+        </div>
+        <button class="btn" onclick="acceptClanJoinRequest(${Number(item.id)}, ${Number(clanId)})">✓ Aceptar</button>
+        <button class="btn dark" onclick="rejectClanJoinRequest(${Number(item.id)}, ${Number(clanId)})">✕ Rechazar</button>
+      </div>
+    `).join("");
+  }catch(error){ showError(error); }
+}
+
+async function acceptClanJoinRequest(requestId, clanId){
+  try{
+    await api(`/clan-join-requests/${Number(requestId)}/accept`, {method:"POST"});
+    showToast("Jugador incorporado al clan.", "success");
+    await openClan(Number(clanId));
+    await loadMyClans();
+    await loadClans();
+  }catch(error){ showError(error); }
+}
+
+async function rejectClanJoinRequest(requestId, clanId){
+  try{
+    await api(`/clan-join-requests/${Number(requestId)}/reject`, {method:"POST"});
+    showToast("Solicitud rechazada.", "success");
+    await loadClanJoinRequests(Number(clanId));
+  }catch(error){ showError(error); }
+}
 
 function openInvite(
   clanId
@@ -9019,7 +9112,7 @@ async function sendChallengeMessage(
 async function loadMyChallenges(){
 
   const box =
-    document.getElementById(
+     document.getElementById(
       "myChallengesBox"
     );
 
