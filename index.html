@@ -499,16 +499,12 @@ main{
   position:relative;
 
   background:
-    radial-gradient(
-      circle at 75% 25%,
-      rgba(245,180,0,.16),
-      transparent 32%
-    ),
     linear-gradient(
-      135deg,
-      #080c11,
-      #111821
-    );
+      90deg,
+      rgba(0,0,0,.82),
+      rgba(0,0,0,.25)
+    ),
+    url("blackops2.jpg") center / cover no-repeat;
 
 }
 
@@ -524,8 +520,8 @@ main{
   background:
     linear-gradient(
       90deg,
-      rgba(0,0,0,.72),
-      rgba(0,0,0,.20)
+      rgba(0,0,0,.35),
+      rgba(0,0,0,.05)
     );
 
   pointer-events:none;
@@ -2269,6 +2265,13 @@ footer{
 
     <button
       class="league-tab"
+      onclick="loadChallenges(1)"
+    >
+      1v1
+    </button>
+
+    <button
+      class="league-tab"
       onclick="loadChallenges(2)"
     >
       2v2
@@ -2400,7 +2403,7 @@ footer{
 
   <div
     class="form-row"
-      style="margin-bottom:18px"
+    style="margin-bottom:18px"
   >
 
     <div class="field">
@@ -3312,22 +3315,15 @@ footer{
 </select>
 
 <div
-  id="oneVsOneOptions"
+  id="challengeModeOptions"
   class="field"
-  style="display:none;margin-top:12px"
+  style="margin-top:12px"
 >
   <label>
-    Modalidad 1v1
+    Modalidad
   </label>
 
-  <select id="oneVsOneMode">
-    <option value="franco">
-      Solo Franco
-    </option>
-
-    <option value="arma">
-      Solo Arma
-    </option>
+  <select id="challengeModeInput">
   </select>
 </div>
 
@@ -4543,27 +4539,6 @@ async function loadClans(){
 
     box.innerHTML = `
 
-      <div class="card" style="margin-bottom:15px;">
-        <h3>🎮 ID de PS5 / PSN</h3>
-        <p class="muted" style="margin-top:-4px;">
-          Este ID aparecerá en tu perfil y para los rivales.
-        </p>
-        <div class="field">
-          <label>ID de PS5 / PSN</label>
-          <input
-            id="profilePsnId"
-            maxlength="32"
-            value="${escapeHtml(me.psn_id || "")}"
-            placeholder="Tu ID de PlayStation"
-          >
-        </div>
-        <div style="margin-top:10px;">
-          <button class="btn" onclick="savePSNId()">
-            💾 Guardar ID de PS5
-          </button>
-        </div>
-      </div>
-
       <div class="grid">
 
         ${
@@ -4802,7 +4777,7 @@ async function createClan(){
     await api(
       "/clans",
       {
-                method:"POST",
+        method:"POST",
         body:JSON.stringify({
           name:name,
           clan_code:code,
@@ -6053,7 +6028,7 @@ async function loadMe(){
     updateHeader();
 
   }
-
+  
 }
 
 
@@ -7204,7 +7179,7 @@ async function loadMyClans(){
                           "
                         >
                           ⚙️ Gestionar
-                      </button>
+                        </button>
                       `
                       : ""
                   }
@@ -7677,6 +7652,78 @@ async function kickMember(
 <script>
 
 /* =====================================================
+   MODALIDADES DE RETOS
+===================================================== */
+
+function updateOneVsOneOptions(){
+
+  const league = Number(
+    document
+      .getElementById("challengeLeagueInput")
+      ?.value || 0
+  );
+
+  const select =
+    document.getElementById(
+      "challengeModeInput"
+    );
+
+  if(!select) return;
+
+  if(league === 1){
+
+    select.innerHTML = `
+      <option value="franco">
+        Solo Franco
+      </option>
+      <option value="arma">
+        Solo Arma
+      </option>
+    `;
+
+  }else{
+
+    select.innerHTML = `
+      <option value="snd">
+        ByD — Buscar y Destruir
+      </option>
+      <option value="ctf">
+        Tomar la Bandera
+      </option>
+      <option value="hardpoint">
+        Punto Caliente
+      </option>
+    `;
+
+  }
+}
+
+function challengeModeName(mode, league){
+
+  let raw = mode || "";
+
+  if(typeof raw === "string" && raw.trim().startsWith("[")){
+    try{
+      const parsed = JSON.parse(raw);
+      raw = Array.isArray(parsed) ? parsed[0] : raw;
+    }catch(error){}
+  }
+
+  const value =
+    String(raw || "").toLowerCase();
+
+  if(Number(league) === 1){
+    if(value === "arma") return "Solo Arma";
+    return "Solo Franco";
+  }
+
+  if(value === "ctf") return "Tomar la Bandera";
+  if(value === "hardpoint") return "Punto Caliente";
+  return "ByD";
+}
+
+
+/* =====================================================
    RETOS
 ===================================================== */
 
@@ -7723,7 +7770,7 @@ async function loadChallenges(
   const activeButton =
     document.querySelector(
       `#challengeTabs .league-tab:nth-child(${
-        currentLeague - 1
+        currentLeague
       })`
     );
 
@@ -7829,6 +7876,18 @@ async function loadChallenges(
 
                     <span class="pill yellow">
                       ${leagueName(
+                        challenge.league ||
+                        challenge.team_size ||
+                        currentLeague
+                      )}
+                    </span>
+
+                    <span class="pill">
+                      ${challengeModeName(
+                        challenge.mode ||
+                        challenge.game_mode ||
+                        challenge.game_modes ||
+                        "snd",
                         challenge.league ||
                         challenge.team_size ||
                         currentLeague
@@ -8020,6 +8079,8 @@ function openChallengeForm(){
     )
     ?.classList.add("open");
 
+  updateOneVsOneOptions();
+
 }
 
 
@@ -8085,13 +8146,13 @@ async function createChallenge(){
         body:JSON.stringify({
   league,
   mode:
-    league === 1
-      ? (
-          document.getElementById(
-            "oneVsOneMode"
-          )?.value || "franco"
-        )
-      : "snd"
+    document
+      .getElementById(
+        "challengeModeInput"
+      )?.value ||
+    (league === 1
+      ? "franco"
+      : "snd")
 })
       }
     );
@@ -8254,6 +8315,20 @@ async function openChallenge(
               "
             >
               ${leagueName(
+                challenge.league ||
+                challenge.team_size
+              )}
+            </div>
+
+            <div
+              class="pill"
+              style="display:inline-block;margin-top:8px"
+            >
+              ${challengeModeName(
+                challenge.mode ||
+                challenge.game_mode ||
+                challenge.game_modes ||
+                "snd",
                 challenge.league ||
                 challenge.team_size
               )}
@@ -8968,7 +9043,7 @@ async function loadMyChallenges(){
 
 
   box.innerHTML =
-    `<div class="card">
+       `<div class="card">
       <div class="loading">
         Cargando tus retos...
       </div>
@@ -9606,7 +9681,7 @@ async function loadPlayers(){
       </div>`;
 
     showError(error);
-    
+
   }
 
 }
@@ -9891,87 +9966,94 @@ const isClanInvite =
                 }
 
 
-${
-  isClanInvite
-    ? `
-      <div
-        style="
-          display:flex;
-          gap:8px;
-          flex-wrap:wrap;
-          margin-top:12px;
-        "
-        onclick="event.stopPropagation()"
-      >
+                ${
+                  isClanInvite
+                    ? `
+                      <div
+                        style="
+                          display:flex;
+                          gap:8px;
+                          flex-wrap:wrap;
+                          margin-top:12px;
+                        "
+                        onclick="event.stopPropagation()"
+                      >
 
-        <button
-          class="btn ok small"
-          onclick="
-            event.stopPropagation();
-            handleClanInvite(
-              ${JSON.stringify(
-                (
-                  text.match(
-                    /unirte a (.+?)(?:\\.|$)/i
-                  ) ||
-                  []
-                )[1] ||
-                ""
-              )},
-              'accept'
-            )
-          "
-        >
-          ✅ Aceptar
-        </button>
+                        <button
+                          class="btn ok small"
+                          onclick="
+                            event.stopPropagation();
+                            handleClanInvite(
+                              ${JSON.stringify(
+                                (
+                                  text.match(
+                                    /unirte a (.+?)(?:\\.|$)/i
+                                  ) ||
+                                  []
+                                )[1] ||
+                                ""
+                              )},
+                              'accept'
+                            )
+                          "
+                        >
+                          ✅ Aceptar
+                        </button>
 
-        <button
-          class="btn danger small"
-          onclick="
-            event.stopPropagation();
-            handleClanInvite(
-              ${JSON.stringify(
-                (
-                  text.match(
-                    /unirte a (.+?)(?:\\.|$)/i
-                  ) ||
-                  []
-                )[1] ||
-                ""
-              )},
-              'reject'
-            )
-          "
-        >
-          ❌ Rechazar
-        </button>
+                        <button
+                          class="btn danger small"
+                          onclick="
+                            event.stopPropagation();
+                            handleClanInvite(
+                              ${JSON.stringify(
+                                (
+                                  text.match(
+                                    /unirte a (.+?)(?:\\.|$)/i
+                                  ) ||
+                                  []
+                                )[1] ||
+                                ""
+                              )},
+                              'reject'
+                            )
+                          "
+                        >
+                          ❌ Rechazar
+                        </button>
 
-      </div>
-    `
-    : ""
-}
+                      </div>
+                    `
+                    : ""
+                }
+
+                ${
+                  !read
+                    ? `
+                      <div
+                        style="
+                          margin-top:8px;
+                        "
+                      >
+                        <span
+                          class="pill yellow"
+                        >
+                          Nueva
+                        </span>
+                      </div>
+                    `
+                    : ""
+                }
 
               </div>
 
 
               <div
                 style="
-                  display:flex;
-                  align-items:center;
-                  gap:7px;
+                  color:var(--muted);
+                  font-size:18px;
                 "
-                onclick="event.stopPropagation()"
               >
-                <button
-                  class="btn danger small"
-                  title="Borrar notificación"
-                  onclick="
-                    event.stopPropagation();
-                    deleteNotification(${Number(notification.id)})
-                  "
-                >
-                  🗑️
-                </button>
+                →
               </div>
 
             </div>
@@ -10244,36 +10326,6 @@ async function markNotificationRead(
 
 }
 
-
-async function deleteNotification(id){
-  try{
-    await api(`/notifications/${Number(id)}`,{
-      method:"DELETE"
-    });
-    await loadNotifications();
-    await refreshNotifications();
-  }catch(error){
-    showError(error);
-  }
-}
-
-async function savePSNId(){
-  if(!me) return;
-
-  const input=document.getElementById("profilePsnId");
-  const psn_id=String(input?.value || "").trim();
-
-  try{
-    await api("/profile",{
-      method:"PUT",
-      body:JSON.stringify({psn_id})
-    });
-    me.psn_id=psn_id;
-    showToast("ID de PS5 guardado correctamente.","success");
-  }catch(error){
-    showError(error);
-  }
-}
 
 async function markAllNotificationsRead(){
 
@@ -11966,12 +12018,6 @@ window.publishResult =
 
 window.markNotificationsRead =
   markAllNotificationsRead;
-
-window.deleteNotification =
-  deleteNotification;
-
-window.savePSNId =
-  savePSNId;
 
 
 /* =====================================================
