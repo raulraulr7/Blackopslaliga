@@ -783,6 +783,47 @@ async function api(request, env, path) {
     return json({ clans: result.results }, 200, headers);
   }
   if (request.method === "GET" && path === "/api/clans") {
+    if (
+  request.method === "GET" &&
+  /^\/api\/clans\/\d+$/.test(path)
+) {
+  const id = Number(path.split("/").pop());
+
+  const clan = await env.DB.prepare(`
+    SELECT *
+    FROM clans
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!clan) {
+    return json(
+      { error: "Clan no encontrado." },
+      404,
+      headers
+    );
+  }
+
+  const members = await env.DB.prepare(`
+    SELECT
+      m.user_id,
+      m.role,
+      m.joined_at,
+      u.username
+    FROM members m
+    JOIN users u ON u.id = m.user_id
+    WHERE m.clan_id = ?
+    ORDER BY m.role DESC, u.username
+  `).bind(id).all();
+
+  return json(
+    {
+      clan,
+      members: members.results || []
+    },
+    200,
+    headers
+  );
+}
     const params = new URL(request.url).searchParams;
     const query = String(
       params.get("q") || ""
