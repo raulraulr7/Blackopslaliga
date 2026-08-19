@@ -2967,7 +2967,7 @@ footer{
     </h3>
 
     <p class="muted">
-
+      
       La administración puede intervenir
       ante incidencias y corregir resultados.
 
@@ -5936,7 +5936,7 @@ async function submitAuth(){
     document
       .getElementById(
         "authPassword2"
-      )
+           )
       .value = "";
 
 
@@ -7217,189 +7217,6 @@ async function loadMyClans(){
 /* =====================================================
    CREAR CLAN
 ===================================================== */
-
-function openClanForm(){
-
-  if(!me){
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  document
-    .getElementById(
-      "clanModal"
-    )
-    ?.classList.add("open");
-
-}
-
-
-function closeClanForm(){
-
-  document
-    .getElementById(
-      "clanModal"
-    )
-    ?.classList.remove("open");
-
-}
-
-
-async function createClan(){
-
-  if(!me){
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  const name =
-    document
-      .getElementById(
-        "clanNameInput"
-      )
-      ?.value
-      .trim() || "";
-
-
-  const code =
-    document
-      .getElementById(
-        "clanCodeInput"
-      )
-      ?.value
-      .trim()
-      .toUpperCase() || "";
-
-
-  const league =
-    Number(
-      document
-        .getElementById(
-          "clanLeagueInput"
-        )
-        ?.value || 0
-    );
-
-
-  if(!name){
-
-    showToast(
-      "Escribe el nombre del clan.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(!code){
-
-    showToast(
-      "Escribe el código del clan.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
- if(
-  ![1,2,3,4].includes(
-    league
-  )
-){
-
-    showToast(
-      "Selecciona un sector válido.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    /*
-      El Worker actual crea
-      el clan con name,
-      clan_code y league.
-    */
-
-    await api(
-      "/clans",
-      {
-        method:"POST",
-        body:JSON.stringify({
-          name,
-          clan_code:code,
-          league
-        })
-      }
-    );
-
-
-    closeClanForm();
-
-
-    document
-      .getElementById(
-        "clanNameInput"
-      )
-      .value = "";
-
-    document
-      .getElementById(
-        "clanCodeInput"
-      )
-      .value = "";
-
-
-    showToast(
-      "Clan creado correctamente.",
-      "success"
-    );
-
-
-    await loadMe();
-
-    await loadMyClans();
-
-
-    if(
-      currentPage ===
-      "clans"
-    ){
-
-      await loadClans();
-
-    }
-
-
-  }catch(error){
-
-    /*
-      Aquí mostramos el error real
-      que devuelve el Worker.
-    */
-
-    showError(error);
-
-  }
-
-}
-
 
 /* =====================================================
    GESTIÓN DEL CLAN
@@ -9088,7 +8905,7 @@ async function loadMyChallenges(){
       <div class="grid">
 
         ${
-          rows.map(
+                    rows.map(
             challenge => `
 
               <div class="card">
